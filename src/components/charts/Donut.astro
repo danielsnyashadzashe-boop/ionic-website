@@ -1,0 +1,103 @@
+---
+/**
+ * Donut, drawn at build time with stroke-dasharray segments.
+ * A gap is left between segments so adjacent slices stay separable without
+ * relying on a stroke colour that would fight the palette.
+ */
+interface Slice {
+  label: string;
+  value: number;
+  tone: string;
+}
+
+interface Props {
+  slices: Slice[];
+  centreValue: string;
+  centreLabel: string;
+  size?: number;
+}
+
+const { slices, centreValue, centreLabel, size = 184 } = Astro.props;
+
+const R = 62;
+const C = 2 * Math.PI * R;
+const total = slices.reduce((s, x) => s + x.value, 0) || 1;
+const GAP = 3; // px of circumference between segments
+
+let cursor = 0;
+const segs = slices.map((s, i) => {
+  const len = Math.max((s.value / total) * C - GAP, 1);
+  const seg = { ...s, len, offset: -cursor, i };
+  cursor += (s.value / total) * C;
+  return seg;
+});
+---
+
+<svg
+  viewBox="0 0 160 160"
+  width={size}
+  height={size}
+  role="img"
+  aria-label={`${centreValue} ${centreLabel}: ${slices.map((s) => `${s.label} ${s.value}`).join(', ')}`}
+  class="mx-auto max-w-full"
+>
+  <circle cx="80" cy="80" r={R} fill="none" stroke="var(--panel)" stroke-width="17" />
+
+  {
+    segs.map((s) => (
+      <circle
+        class="seg"
+        cx="80"
+        cy="80"
+        r={R}
+        fill="none"
+        stroke={`var(--${s.tone})`}
+        stroke-width="17"
+        stroke-dasharray={`${s.len} ${C - s.len}`}
+        stroke-dashoffset={s.offset}
+        transform="rotate(-90 80 80)"
+        style={`--i:${s.i}; --len:${s.len}; --rest:${C - s.len}`}
+      >
+        <title>{`${s.label}: ${s.value}`}</title>
+      </circle>
+    ))
+  }
+
+  <text
+    x="80"
+    y="73"
+    text-anchor="middle"
+    dominant-baseline="central"
+    fill="var(--fg)"
+    style="font-family: var(--font-mono); font-size: 26px; font-weight: 500"
+  >
+    {centreValue}
+  </text>
+  <text
+    x="80"
+    y="94"
+    text-anchor="middle"
+    dominant-baseline="central"
+    fill="var(--fg-4)"
+    style="font-family: var(--font-mono); font-size: 8px; letter-spacing: 1.4px"
+  >
+    {centreLabel}
+  </text>
+</svg>
+
+<style>
+  .seg {
+    animation: seg-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 110ms);
+  }
+  @keyframes seg-in {
+    from { stroke-dasharray: 0 calc(var(--len) + var(--rest)); }
+    to { stroke-dasharray: var(--len) var(--rest); }
+  }
+  @supports (animation-timeline: view()) {
+    .seg { animation-timeline: view(); animation-range: entry 0% entry 52%; animation-delay: 0s; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .seg { animation: none; stroke-dasharray: var(--len) var(--rest); }
+  }
+</style>

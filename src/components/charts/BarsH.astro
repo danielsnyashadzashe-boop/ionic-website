@@ -1,0 +1,64 @@
+---
+/**
+ * Horizontal bar chart, drawn at build time.
+ * Labels are real DOM text rather than SVG, so they wrap and scale with the
+ * page's type settings instead of being baked into a viewBox.
+ */
+interface Item {
+  label: string;
+  value: number;
+  tone?: string;
+  /** Optional trailing note, e.g. "6 modules". */
+  note?: string;
+}
+
+interface Props {
+  items: Item[];
+  /** Fixed scale ceiling. Defaults to the largest value. */
+  max?: number;
+  /** Single hue used at varying intensity when items carry no tone. */
+  tone?: string;
+  labelWidth?: string;
+}
+
+const { items, max, tone = 'd2', labelWidth = '9rem' } = Astro.props;
+const top = max ?? Math.max(...items.map((i) => i.value));
+---
+
+<ul class="space-y-2.5">
+  {
+    items.map((it, i) => {
+      const pct = top > 0 ? (it.value / top) * 100 : 0;
+      const fill = it.tone
+        ? `var(--${it.tone})`
+        : `color-mix(in oklch, var(--${tone}) ${46 + (it.value / top) * 54}%, var(--panel))`;
+      return (
+        <li class="grid items-center gap-3" style={`grid-template-columns: ${labelWidth} minmax(0,1fr) 2.25rem`}>
+          <span class="truncate font-mono text-[0.625rem] uppercase tracking-[0.06em] text-fg-4" title={it.label}>
+            {it.label}
+          </span>
+
+          <span class="relative block h-[11px] rounded-[2px] bg-panel">
+            <span
+              class="bar absolute inset-y-0 left-0 origin-left rounded-[2px]"
+              style={`width: ${pct}%; background: ${fill}; --i:${i}`}
+            />
+          </span>
+
+          <span class="figure text-right text-[0.6875rem] tabular-nums">{it.note ?? it.value}</span>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .bar {
+    animation: draw-x 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 70ms);
+  }
+  @supports (animation-timeline: view()) {
+    .bar { animation-timeline: view(); animation-range: entry 0% entry 48%; animation-delay: 0s; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bar { animation: none; } }
+</style>

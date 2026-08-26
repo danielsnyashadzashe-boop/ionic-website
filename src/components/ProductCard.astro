@@ -1,0 +1,70 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+  index?: number;
+  wide?: boolean;
+}
+
+const { product, index = 0, wide = false } = Astro.props;
+const d = product.data;
+---
+
+<a
+  href={`/${d.slug}/`}
+  class:list={[
+    'surface card-i rise group relative flex flex-col overflow-hidden p-6 md:p-7',
+    wide && 'lg:col-span-2',
+  ]}
+  style={`--step:${index}`}
+>
+  <!-- Tone wash keyed to the product's data hue -->
+  <span
+    class="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 blur-[60px] transition-opacity duration-500 group-hover:opacity-40"
+    style={`background: var(--${d.tone})`}
+    aria-hidden="true"
+  ></span>
+
+  <div class="relative flex items-start justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <span class="h-1.5 w-1.5 rounded-full" style={`background: var(--${d.tone})`}></span>
+      <h3 class="text-[1.0625rem] font-medium tracking-[-0.02em] text-fg">{d.name}</h3>
+    </div>
+    {d.flagship && <span class="chip !py-0.5 !text-[0.5625rem] !text-primary">Flagship</span>}
+  </div>
+
+  <p class="relative mt-1 pl-4 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">{d.kicker}</p>
+
+  <p class="relative mt-4 text-[0.875rem] leading-relaxed text-fg-3">{d.lede}</p>
+
+  <!-- Module meter: one bar per capability -->
+  <div class="relative mt-6 flex items-end gap-1" aria-hidden="true">
+    {
+      d.capabilities.map((_, i) => (
+        <span
+          class="cap-bar h-6 flex-1 origin-bottom rounded-[1px]"
+          style={`background: color-mix(in oklch, var(--${d.tone}) ${34 + i * 11}%, transparent); --i:${i}`}
+        />
+      ))
+    }
+  </div>
+
+  <div class="relative mt-3 flex items-center justify-between">
+    <span class="font-mono text-[0.625rem] text-fg-4">{d.capabilities.length} modules</span>
+    <span class="font-mono text-[0.625rem] text-fg-4 transition-colors group-hover:text-primary">
+      Explore →
+    </span>
+  </div>
+</a>
+
+<style>
+  .cap-bar {
+    animation: draw-y 0.55s var(--ease-out-soft) both;
+    animation-delay: calc(var(--i) * 55ms);
+  }
+  @supports (animation-timeline: view()) {
+    .cap-bar { animation-timeline: view(); animation-range: entry 0% entry 45%; animation-delay: 0s; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cap-bar { animation: none; } }
+</style>

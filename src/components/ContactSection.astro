@@ -1,0 +1,67 @@
+---
+import ContactForm from './ContactForm.tsx';
+import SectionHead from './SectionHead.astro';
+import { contact, localityLine, site } from '@/data/site';
+
+interface Props {
+  source: string;
+  returnPath: string;
+  n?: string;
+  title?: string;
+  titleAccent?: string;
+  lede?: string;
+  showInvestor?: boolean;
+}
+
+const {
+  source,
+  returnPath,
+  n = '07',
+  title = 'Start a',
+  titleAccent = 'conversation.',
+  lede,
+  showInvestor = false,
+} = Astro.props;
+
+const facts = [
+  { label: 'Email', value: contact.email, href: `mailto:${contact.email}`, mono: true },
+  ...(showInvestor
+    ? [{ label: 'Investment', value: contact.investorEmail, href: `mailto:${contact.investorEmail}`, mono: true }]
+    : []),
+  { label: 'Locations', value: localityLine, mono: false },
+  { label: 'Reply time', value: `A real person, ${site.responseTime}`, mono: false },
+];
+---
+
+<section id="contact" class="seam relative scroll-mt-16 overflow-hidden">
+  <div class="halo right-[-12rem] top-10 h-[26rem] w-[26rem]"></div>
+
+  <div class="shell relative py-20 md:py-24">
+    <SectionHead {n} marker="Contact" {title} {titleAccent} {lede} />
+
+    <div class="mt-12 grid gap-3 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
+      <dl class="surface divide-y divide-line overflow-hidden">
+        {
+          facts.map((f, i) => (
+            <div class="rise px-5 py-4" style={`--step:${i}`}>
+              <dt class="mono-label">{f.label}</dt>
+              <dd class="mt-1.5">
+                {f.href ? (
+                  <a href={f.href} class:list={['link-u text-[0.9375rem]', f.mono && 'font-mono text-[0.875rem]']}>
+                    {f.value}
+                  </a>
+                ) : (
+                  <span class="text-[0.9375rem] text-fg-3">{f.value}</span>
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="surface rise p-6 md:p-8" style="--step:2">
+        <ContactForm {source} {returnPath} action={contact.formAction} email={contact.email} client:visible />
+      </div>
+    </div>
+  </div>
+</section>

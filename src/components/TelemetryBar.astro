@@ -1,0 +1,59 @@
+---
+import { projectStats } from '@/data/projects';
+
+/**
+ * Slim status strip above the header.
+ *
+ * The reference had one of these and it was the strongest thing on the page,
+ * but it ran at full contrast and fought the nav directly beneath it. Here it
+ * sits at label weight, pauses on hover, and carries facts the site can
+ * actually stand behind rather than invented server chatter.
+ */
+
+const items = [
+  { k: 'Engagements', v: String(projectStats.total) },
+  { k: 'In production', v: String(projectStats.live) },
+  { k: 'Regions', v: '5' },
+  { k: 'Platforms', v: '4' },
+  { k: 'Reply time', v: '< 1 business day' },
+  { k: 'Sectors', v: '6' },
+  { k: 'Faster processing', v: '85%' },
+  { k: 'Cost reduction', v: '60%' },
+  { k: 'Accuracy', v: '99%+' },
+];
+---
+
+<div class="relative z-40 border-b border-line bg-base/80 backdrop-blur-md">
+  <div class="flex h-8 items-center">
+    <div class="flex shrink-0 items-center gap-2 border-r border-line px-4">
+      <span class="pulse"></span>
+      <span class="mono-label !text-[0.625rem] !tracking-[0.14em]">Operational</span>
+    </div>
+
+    <div class="ticker min-w-0 flex-1">
+      <div class="ticker-track">
+        {
+          [0, 1].map(() => (
+            <ul class="flex shrink-0 items-center">
+              {items.map((it) => (
+                <li class="flex items-center gap-2.5 whitespace-nowrap px-5 font-mono text-[0.625rem]">
+                  <span class="uppercase tracking-[0.12em] text-fg-4">{it.k}</span>
+                  <span class="tnum text-fg-2">{it.v}</span>
+                  <span class="h-2.5 w-px bg-line-strong" aria-hidden="true"></span>
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+    </div>
+
+    <a
+      href="/case-studies/"
+      class="hidden h-8 shrink-0 items-center gap-2 border-l border-line px-4 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-3 transition-colors hover:bg-raised hover:text-primary md:flex"
+    >
+      Proof of work
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</div>

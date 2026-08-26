@@ -1,0 +1,57 @@
+---
+import Logo from './Logo.astro';
+import { getCollection } from 'astro:content';
+import { site, contact, localityLine, nav } from '@/data/site';
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+const year = new Date().getFullYear();
+---
+
+<footer class="seam relative mt-24 overflow-hidden">
+  <div class="blueprint pointer-events-none absolute inset-0 opacity-50"></div>
+
+  <div class="shell relative grid gap-10 py-14 md:grid-cols-[1.5fr_1fr_1fr] md:py-16">
+    <div class="rise">
+      <Logo size={22} class="text-primary" />
+      <p class="mt-5 max-w-sm text-[0.875rem] leading-relaxed text-fg-3">{site.description}</p>
+
+      <a href={`mailto:${contact.email}`} class="link-u mt-5 inline-block font-mono text-[0.8125rem] text-fg-2">
+        {contact.email}
+      </a>
+
+      <div class="mt-6 flex flex-wrap gap-1.5">
+        {['South Africa', 'Canada', 'Australia'].map((l) => <span class="chip">{l}</span>)}
+      </div>
+    </div>
+
+    <nav class="rise" style="--step:1" aria-label="Platforms">
+      <p class="mono-label mb-4">Platforms</p>
+      <ul class="space-y-2.5">
+        {
+          products.map((p) => (
+            <li>
+              <a href={`/${p.data.slug}/`} class="group -my-1 inline-flex items-center gap-2.5 py-1.5 text-[0.875rem] text-fg-3 transition-colors hover:text-fg">
+                <span class="h-1 w-1 rounded-full transition-transform duration-300 group-hover:scale-[2.2]" style={`background: var(--${p.data.tone})`} />
+                {p.data.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav class="rise" style="--step:2" aria-label="Company">
+      <p class="mono-label mb-4">Company</p>
+      <ul class="space-y-2.5">
+        {nav.footer.map((l) => (
+          <li><a href={l.href} class="-my-1 inline-block py-1.5 text-[0.875rem] text-fg-3 transition-colors hover:text-fg">{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="shell relative flex flex-col gap-2 border-t border-line py-5 sm:flex-row sm:items-center sm:justify-between">
+    <p class="font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">&copy; {year} {site.name}</p>
+    <p class="font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">{localityLine}</p>
+  </div>
+</footer>

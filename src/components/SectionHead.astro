@@ -1,0 +1,32 @@
+---
+interface Props {
+  n?: string;
+  marker?: string;
+  title: string;
+  /** Rendered in the primary accent, appended to the title. */
+  titleAccent?: string;
+  lede?: string;
+  class?: string;
+}
+
+const { n, marker, title, titleAccent, lede, class: className = '' } = Astro.props;
+---
+
+<header class={className}>
+  {
+    (n || marker) && (
+      <p class="marker veil">
+        {n && <b>{n}</b>}
+        {n && marker && <span class="text-fg-4" aria-hidden="true">/</span>}
+        {marker && <span>{marker}</span>}
+      </p>
+    )
+  }
+
+  <h2 class="t-section rise mt-5 max-w-3xl" style="--step:1">
+    {title}
+    {titleAccent && <> <span class="text-primary">{titleAccent}</span></>}
+  </h2>
+
+  {lede && <p class="t-lede rise measure mt-5 text-fg-3" style="--step:2">{lede}</p>}
+</header>

@@ -1,0 +1,74 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+/**
+ * Case-study tile. The Active Theory cue is here and nowhere else: a card
+ * with real depth that pushes forward on hover, with its own light. Kept to
+ * transform + opacity so it stays on the compositor.
+ */
+
+interface Props {
+  study: CollectionEntry<'caseStudies'>;
+  index?: number;
+  compact?: boolean;
+}
+
+const { study, index = 0, compact = false } = Astro.props;
+const d = study.data;
+---
+
+<a
+  href={`/case-studies/${study.id}/`}
+  class="surface card-i cine rise group relative flex flex-col overflow-hidden"
+  style={`--step:${index}; --tone: var(--${d.tone})`}
+>
+  <!-- Header strip -->
+  <div class="flex items-center justify-between gap-3 border-b border-line px-5 py-3">
+    <span class="font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">{d.sector}</span>
+    <span class="flex items-center gap-1.5 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-3">
+      <span class="h-1.5 w-1.5 rounded-full" style="background: var(--tone)"></span>
+      {d.stage}
+    </span>
+  </div>
+
+  <div class="relative flex flex-1 flex-col px-5 py-6">
+    <!-- Depth light, keyed to the engagement's tone -->
+    <span
+      class="cine-glow pointer-events-none absolute -left-10 -top-10 h-44 w-44 rounded-full opacity-0 blur-[70px]"
+      style="background: var(--tone)"
+      aria-hidden="true"
+    ></span>
+
+    <h3 class="relative text-[1.25rem] font-medium tracking-[-0.025em] text-fg">{d.client}</h3>
+    <p class="relative mt-1.5 font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.08em] text-fg-4">
+      {d.engagement}
+    </p>
+
+    {!compact && <p class="relative mt-4 text-[0.875rem] leading-relaxed text-fg-3">{d.summary}</p>}
+
+    {
+      d.highlights.length > 0 && !compact && (
+        <dl class="relative mt-6 grid grid-cols-3 gap-3 border-t border-line pt-4">
+          {d.highlights.map((h) => (
+            <div>
+              <dd class="figure text-[0.9375rem] leading-none">{h.value}</dd>
+              <dt class="mt-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-fg-4">{h.label}</dt>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    <span class="relative mt-auto flex items-center justify-between gap-2 pt-6 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">
+      Read engagement
+      <span class="transition-transform duration-400 group-hover:translate-x-1" aria-hidden="true">→</span>
+    </span>
+  </div>
+</a>
+
+<style>
+  .cine { transform-style: preserve-3d; }
+  .cine-glow { transition: opacity 0.5s var(--ease-out-soft); }
+  .cine:hover .cine-glow { opacity: 0.30; }
+  .cine:hover { border-color: color-mix(in oklch, var(--tone) 45%, var(--line-strong)); }
+</style>

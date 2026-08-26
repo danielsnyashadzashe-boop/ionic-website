@@ -1,0 +1,195 @@
+---
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { site } from '@/data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, schema, noindex = false } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.domain).href;
+const ogImage = new URL('/og-default.png', site.domain).href;
+const schemaList = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+
+const favicon =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-130 -148 260 260'%3E%3Cg stroke='%235FD8E8' fill='%235FD8E8'%3E%3Cpath d='M -53 -84.8 A 100 100 0 1 0 66.9 -74.3' fill='none' stroke-width='21' stroke-linecap='round'/%3E%3Cpath d='M -3 -19 L 32 0 L -3 19 L 4 0 Z' transform='translate(66.9,-74.3) rotate(-138)' stroke='none'/%3E%3Cline x1='-17' y1='-140' x2='-17' y2='-52' stroke-width='13' stroke-linecap='round'/%3E%3Cline x1='17' y1='-140' x2='17' y2='-52' stroke-width='13' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={favicon} />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14181F" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F7F9" />
+    <meta name="generator" content={Astro.generator} />
+
+    {/* Theme resolved before first paint. Dark is the default, so the class
+        applied is `.light`. */}
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('ionic-theme');
+          const light = saved
+            ? saved === 'light'
+            : window.matchMedia('(prefers-color-scheme: light)').matches;
+          document.documentElement.classList.toggle('light', light);
+        } catch {
+          /* storage blocked — fall through to the dark default */
+        }
+      })();
+    </script>
+
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {!noindex && <meta name="robots" content="index, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} — Insights`} href="/rss.xml" />
+
+    {schemaList.map((s) => <script type="application/ld+json" is:inline set:html={JSON.stringify(s)} />)}
+
+    <ClientRouter />
+  </head>
+
+  <body class="min-h-dvh antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[300] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-on-primary"
+    >
+      Skip to content
+    </a>
+
+    {/* Pointer-tracked light. The tactile nod from the Resn/Lusion end of the
+        brief, kept to one restrained effect: fine pointers only, no motion
+        under reduced-motion, and purely decorative. */}
+    <div id="cursor-light" class="pointer-events-none fixed inset-0 z-0 hidden" aria-hidden="true"></div>
+
+    <slot />
+
+    <script is:inline>
+      /* ClientRouter swaps the document element on navigation, which drops the
+         `light` class. Reapply it during the swap, before paint, or every
+         client-side navigation silently reverts to the OS preference. */
+      document.addEventListener('astro:after-swap', () => {
+        try {
+          const saved = localStorage.getItem('ionic-theme');
+          const light = saved
+            ? saved === 'light'
+            : window.matchMedia('(prefers-color-scheme: light)').matches;
+          document.documentElement.classList.toggle('light', light);
+        } catch {
+          /* no-op */
+        }
+      });
+    </script>
+
+    <script>
+      /* Reveal fallback for browsers without scroll-driven animations. */
+      const reveals = () => {
+        if (CSS.supports('animation-timeline', 'view()')) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const targets = document.querySelectorAll('.rise, .veil, .lift, .slide-x');
+        if (!targets.length) return;
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add('seen');
+              io.unobserve(e.target);
+            }
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -6% 0px' },
+        );
+        targets.forEach((el) => io.observe(el));
+      };
+
+      const cursorLight = () => {
+        const el = document.getElementById('cursor-light');
+        if (!el) return;
+        if (!window.matchMedia('(pointer: fine)').matches) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (el.dataset.bound === '1') return;
+        el.dataset.bound = '1';
+        el.classList.remove('hidden');
+
+        let tx = window.innerWidth / 2;
+        let ty = window.innerHeight / 3;
+        let x = tx;
+        let y = ty;
+        let raf = 0;
+
+        const loop = () => {
+          // Trailing follow, so it feels like weight rather than a hard cursor.
+          x += (tx - x) * 0.075;
+          y += (ty - y) * 0.075;
+          el.style.setProperty('--mx', `${x}px`);
+          el.style.setProperty('--my', `${y}px`);
+          raf = requestAnimationFrame(loop);
+        };
+
+        window.addEventListener(
+          'pointermove',
+          (e) => {
+            tx = e.clientX;
+            ty = e.clientY;
+            if (!raf) raf = requestAnimationFrame(loop);
+          },
+          { passive: true },
+        );
+      };
+
+      reveals();
+      cursorLight();
+      document.addEventListener('astro:page-load', () => {
+        reveals();
+        cursorLight();
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  #cursor-light {
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 30%),
+      color-mix(in oklch, var(--primary) 9%, transparent),
+      transparent 70%
+    );
+    transition: opacity 0.4s linear;
+  }
+
+  /* Page transition: content lifts in, nothing flashes. */
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root) { animation: vt-out 0.18s var(--ease-mech) both; }
+    ::view-transition-new(root) { animation: vt-in 0.36s var(--ease-out-soft) both; }
+  }
+
+  @keyframes vt-out { to { opacity: 0; } }
+  @keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+</style>

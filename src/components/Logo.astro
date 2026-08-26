@@ -1,0 +1,39 @@
+---
+/**
+ * The Ionic mark — an open arc terminating in an arrowhead, with two
+ * ascending bars. Geometry carried over from the original site so the brand
+ * stays continuous.
+ */
+interface Props {
+  size?: number;
+  withWord?: boolean;
+  class?: string;
+}
+
+const { size = 22, withWord = true, class: className = '' } = Astro.props;
+---
+
+<span class={`inline-flex items-center gap-2.5 ${className}`}>
+  <svg viewBox="-130 -148 260 260" width={size} height={size} role="img" aria-label="Ionic" class="shrink-0 overflow-visible">
+    <path
+      d="M -53 -84.8 A 100 100 0 1 0 66.9 -74.3"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="21"
+      stroke-linecap="round"
+    />
+    <path
+      d="M -3 -19 L 32 0 L -3 19 L 4 0 Z"
+      transform="translate(66.9,-74.3) rotate(-138)"
+      fill="currentColor"
+    />
+    <line x1="-17" y1="-140" x2="-17" y2="-52" stroke="currentColor" stroke-width="13" stroke-linecap="round" />
+    <line x1="17" y1="-140" x2="17" y2="-52" stroke="currentColor" stroke-width="13" stroke-linecap="round" />
+  </svg>
+
+  {
+    withWord && (
+      <span class="text-[0.9375rem] font-semibold tracking-[-0.02em] text-fg">Ionic</span>
+    )
+  }
+</span>

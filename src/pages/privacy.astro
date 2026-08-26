@@ -1,0 +1,116 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { site, contact } from '@/data/site';
+
+/** Update this when the policy text changes. */
+const lastUpdated = new Date('2026-08-15');
+const fmt = lastUpdated.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Privacy policy',
+  url: new URL('/privacy/', site.domain).href,
+  dateModified: lastUpdated.toISOString(),
+  publisher: { '@type': 'Organization', name: site.name, url: site.domain },
+  about: 'Personal information collected through this website, under POPIA and PIPEDA.',
+};
+---
+
+<PageLayout
+  title={`Privacy Policy | ${site.name}`}
+  description="How Ionic collects, uses and protects personal information submitted through this website, in line with POPIA and PIPEDA."
+  {schema}
+>
+  <section class="relative overflow-hidden">
+
+    <div class="shell relative pb-14 pt-14">
+      <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Privacy' }]} />
+
+      <h1 class="t-title mt-12 font-display" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:80ms">
+        Privacy policy
+      </h1>
+
+      <div class="rule mt-8 w-24" style="animation-delay:240ms"></div>
+
+      <p class="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-fg-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:300ms">
+        Last updated: {fmt}
+      </p>
+    </div>
+  </section>
+
+  <div class="border-t border-line">
+    <div class="shell py-16 md:py-20">
+      <div class="prose-tech rise">
+        <p>
+          Ionic (&ldquo;we&rdquo;, &ldquo;us&rdquo;) respects your privacy. This policy explains what
+          personal information we collect through this website, why we collect it, and the choices
+          you have. We process personal information in line with South Africa&rsquo;s Protection of
+          Personal Information Act (POPIA) and, for Canadian visitors, the Personal Information
+          Protection and Electronic Documents Act (PIPEDA).
+        </p>
+
+        <h2>Information we collect</h2>
+        <p>
+          <strong>Contact form submissions:</strong> your name, email address, company (optional) and
+          message, together with the date and the IP address the submission came from.
+        </p>
+        <p>
+          <strong>Technical information:</strong> our web server records standard access logs (IP
+          address, browser type, pages requested) for security and troubleshooting.
+        </p>
+
+        <h2>How we use it</h2>
+        <ul>
+          <li>To respond to your enquiry and communicate with you about our services.</li>
+          <li>To protect the website against abuse and spam.</li>
+        </ul>
+        <p>
+          We do not sell personal information, and we do not use the details you submit through the
+          contact form for marketing lists without your consent.
+        </p>
+
+        <h2>Analytics and advertising</h2>
+        <p>
+          This website currently runs no analytics, advertising or third-party tracking scripts. If we
+          introduce analytics or advertising measurement tools (such as Google Analytics or Google Ads
+          conversion tracking), these may set cookies and collect usage data such as pages visited and
+          approximate location. Where required, we will ask for your consent before setting
+          non-essential cookies. You can also control cookies through your browser settings.
+        </p>
+
+        <h2>How long we keep it</h2>
+        <p>
+          Contact enquiries are kept for as long as needed to handle your enquiry and any business
+          relationship that follows, after which they are deleted. Server logs are retained for a
+          limited period for security purposes.
+        </p>
+
+        <h2>Sharing</h2>
+        <p>
+          We share personal information only with service providers that host our website and email
+          (acting on our instructions), or where the law requires it. We do not otherwise disclose
+          your information to third parties.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>
+          You may ask us to access, correct or delete the personal information we hold about you, or
+          object to its processing. To exercise any of these rights, email
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>. If you are in South Africa, you may
+          also lodge a complaint with the Information Regulator.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Questions about this policy: <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</PageLayout>

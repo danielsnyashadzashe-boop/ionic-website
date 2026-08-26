@@ -1,0 +1,196 @@
+---
+import { brandRows } from '@/data/brands';
+
+/**
+ * Logo marquee — three offset rows of tiles sliding horizontally behind an
+ * edge fade.
+ *
+ * Details that make it read as designed rather than as a loop:
+ *   - rows run at different speeds and the middle one runs the other way, so
+ *     the block never resolves into a single moving slab
+ *   - each row starts at a different offset, so tiles do not line up in
+ *     columns
+ *   - the track is duplicated exactly once and translated -50%, which is what
+ *     makes the wrap seamless; any other duplication count jumps
+ *   - `mask-image` fades both edges, so tiles dissolve instead of being cut
+ *   - it pauses on hover, and under reduced-motion it stops and becomes a
+ *     normal horizontally scrollable strip
+ */
+
+interface Props {
+  title?: string;
+  caption?: string;
+}
+
+const {
+  title = 'Delivered for · integrated with',
+  caption = 'Enterprises running our platforms in production, and the systems the integration hub connects to.',
+} = Astro.props;
+
+/**
+ * A -50% loop is only seamless if one *set* is already wider than the viewport,
+ * or the wrap point lands on screen as a gap. Each row carries the full brand
+ * list (rotated to a different start), which is ~2.7k px — wide enough on any
+ * display, with no brand repeating within a row.
+ */
+const rows = [
+  { items: brandRows[0], dur: 64, reverse: false, offset: '0%' },
+  { items: brandRows[1], dur: 78, reverse: true, offset: '-7%' },
+  { items: brandRows[2], dur: 71, reverse: false, offset: '-3%' },
+];
+---
+
+<section class="seam relative overflow-hidden py-14 md:py-16" aria-labelledby="brands-title">
+  <div class="shell mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p id="brands-title" class="mono-label">{title}</p>
+      <p class="mt-1.5 max-w-md text-sm text-fg-3">{caption}</p>
+    </div>
+    <a href="/case-studies/" class="link-u font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3">
+      See the engagements →
+    </a>
+  </div>
+
+  <div class="marquee-band space-y-2.5">
+    {
+      rows.map((row) => (
+        <div class="mq" style={`--dur:${row.dur}s; --offset:${row.offset}`}>
+          <div class:list={['mq-track', row.reverse && 'rev']}>
+            {/* Duplicated exactly once — the -50% translate depends on it. */}
+            {[0, 1].map((copy) => (
+              <ul class="mq-set flex shrink-0 items-center gap-2.5" aria-hidden={copy === 1}>
+                {row.items.map((b, k) => (
+                  <li class="mq-tile group" data-k={`${copy}-${k}`}>
+                    <span class="mq-mark" style={`--tone: var(--${b.tone})`}>
+                      {b.file ? (
+                        <img
+                          src={`/logos/${b.file}`}
+                          alt=""
+                          width="20"
+                          height="20"
+                          loading="lazy"
+                          decoding="async"
+                          class="h-5 w-5 object-contain"
+                        />
+                      ) : (
+                        <span class="mq-mono">{b.mono}</span>
+                      )}
+                    </span>
+                    <span class="min-w-0">
+                      <span class="mq-name">{b.name}</span>
+                      <span class="mq-kind">{b.kind === 'client' ? 'Client' : 'Integration'}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* One fade for the whole band, so all three rows dissolve on the same line. */
+  .marquee-band {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+
+  .mq {
+    overflow: hidden;
+    /* Row offset staggers the columns without touching the animation. */
+    transform: translateX(var(--offset));
+  }
+
+  .mq-track {
+    display: flex;
+    width: max-content;
+    gap: 0.625rem;
+    animation: mq-run var(--dur) linear infinite;
+    will-change: transform;
+  }
+  .mq-track.rev { animation-direction: reverse; }
+
+  /* Exactly half the track, because the set is duplicated once. */
+  @keyframes mq-run {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+
+  /* Pausing the whole band together reads as intentional; pausing one row
+     while its neighbours keep moving looks broken. */
+  .marquee-band:hover .mq-track { animation-play-state: paused; }
+
+  .mq-tile {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-shrink: 0;
+    min-width: 13rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--raised);
+    box-shadow: var(--depth);
+    transition: border-color 0.35s var(--ease-out-soft), background-color 0.35s var(--ease-out-soft);
+  }
+  .mq-tile:hover {
+    border-color: color-mix(in oklch, var(--primary) 40%, var(--line-strong));
+    background: var(--panel);
+  }
+
+  .mq-mark {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: calc(var(--radius) * 0.8);
+    background: color-mix(in oklch, var(--tone) 16%, transparent);
+    border: 1px solid color-mix(in oklch, var(--tone) 28%, transparent);
+  }
+
+  .mq-mono {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--tone);
+  }
+
+  .mq-name {
+    display: block;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    color: var(--fg-3);
+    white-space: nowrap;
+    transition: color 0.35s var(--ease-out-soft);
+  }
+
+  /* Keeps the claim precise: SAP and Oracle are integration targets, not
+     clients, and a logo wall that blurs the two overstates the client list. */
+  .mq-kind {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-4);
+    white-space: nowrap;
+  }
+  .mq-tile:hover .mq-name { color: var(--fg); }
+
+  @media (max-width: 640px) {
+    .mq-tile { min-width: 11rem; padding: 0.6rem 0.8rem; }
+    .mq-name { font-size: 0.75rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mq-track { animation: none; }
+    /* Still reachable — it becomes a plain scrollable strip. */
+    .mq { overflow-x: auto; transform: none; }
+    .mq-track .mq-set[aria-hidden='true'] { display: none; }
+  }
+</style>

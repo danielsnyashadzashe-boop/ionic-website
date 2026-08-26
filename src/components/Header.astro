@@ -1,0 +1,286 @@
+---
+import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { getCollection } from 'astro:content';
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+const studies = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+
+const links = [
+  { label: 'Work', href: '/#work' },
+  { label: 'Case studies', href: '/case-studies/' },
+  { label: 'Insights', href: '/insights/' },
+];
+---
+
+<header class="sticky top-0 z-50">
+  <div id="bar" class="border-b border-line bg-base/70 backdrop-blur-xl transition-colors duration-300">
+    <div class="shell flex h-14 items-center justify-between gap-6">
+      <div class="flex items-center gap-7">
+        <a href="/" class="group -m-1 shrink-0 p-1" aria-label="Ionic — home">
+          <Logo size={20} class="text-primary transition-opacity duration-300 group-hover:opacity-80" />
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+          <div class="relative" id="mm-wrap">
+            <button
+              type="button"
+              id="mm-trigger"
+              class="flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.8125rem] text-fg-2 transition-colors hover:bg-panel hover:text-fg"
+              aria-expanded="false"
+              aria-controls="mm-panel"
+            >
+              Platforms
+              <svg id="mm-chev" width="9" height="9" viewBox="0 0 10 10" class="mt-px text-fg-4 transition-transform duration-300" aria-hidden="true">
+                <path d="M1 3.5 5 7l4-3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          {
+            links.map((l) => (
+              <a
+                href={l.href}
+                class:list={[
+                  'rounded-md px-3 py-2 text-[0.8125rem] transition-colors hover:bg-panel hover:text-fg',
+                  isActive(l.href) ? 'text-fg' : 'text-fg-2',
+                ]}
+              >
+                {l.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Command affordance -->
+        <button
+          type="button"
+          id="cmd-open"
+          class="hidden items-center gap-2.5 rounded-md border border-line-strong bg-raised/60 py-2 pl-3 pr-2 text-[0.75rem] text-fg-4 transition-colors hover:border-primary/40 hover:text-fg-2 md:flex"
+          aria-label="Open search"
+        >
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.4" />
+            <path d="m11 11 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+          Search
+          <kbd class="rounded border border-line-strong bg-panel px-1.5 py-0.5 font-mono text-[0.625rem] text-fg-4">⌘K</kbd>
+        </button>
+
+        <ThemeToggle />
+
+        <a href="/contact/" class="btn hidden !px-3.5 !py-2 !text-[0.8125rem] lg:inline-flex">
+          <span>Talk to us</span>
+        </a>
+
+        <button
+          type="button"
+          id="burger"
+          class="-mr-1 flex h-9 w-9 items-center justify-center rounded-md lg:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+          aria-label="Open menu"
+        >
+          <span class="relative block h-3 w-[18px]">
+            <span class="bl absolute left-0 top-0 h-[1.5px] w-full rounded bg-fg"></span>
+            <span class="bl absolute left-0 top-[5.5px] h-[1.5px] w-full rounded bg-fg"></span>
+            <span class="bl absolute left-0 top-[11px] h-[1.5px] w-full rounded bg-fg"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mega panel, full-bleed under the bar -->
+  <div id="mm-panel" class="invisible absolute inset-x-0 top-full opacity-0" aria-hidden="true">
+    <div class="border-b border-line bg-base/95 backdrop-blur-2xl shadow-[0_28px_60px_-30px_rgba(0,0,0,0.7)]">
+      <div class="shell grid gap-8 py-8 lg:grid-cols-[1.6fr_1fr]">
+        <div>
+          <p class="mono-label mb-4">Platforms</p>
+          <div class="grid gap-1.5 sm:grid-cols-2">
+            {
+              products.map((p, i) => (
+                <a
+                  href={`/${p.data.slug}/`}
+                  class="mm-item group flex items-start gap-3 rounded-lg border border-transparent p-3 transition-colors hover:border-line-strong hover:bg-raised"
+                  style={`--i:${i}`}
+                >
+                  <span
+                    class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full transition-transform duration-300 group-hover:scale-150"
+                    style={`background: var(--${p.data.tone})`}
+                  />
+                  <span class="min-w-0">
+                    <span class="flex items-baseline gap-2">
+                      <span class="text-sm font-medium text-fg">{p.data.name}</span>
+                      <span class="font-mono text-[0.625rem] text-fg-4">{p.data.capabilities.length} modules</span>
+                    </span>
+                    <span class="mt-0.5 block text-xs leading-relaxed text-fg-3">{p.data.kicker}</span>
+                  </span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="lg:border-l lg:border-line lg:pl-8">
+          <p class="mono-label mb-4">Recent engagements</p>
+          <div class="space-y-1">
+            {
+              studies.map((s, i) => (
+                <a
+                  href={`/case-studies/${s.id}/`}
+                  class="mm-item group flex items-center justify-between gap-4 rounded-lg px-3 py-2.5 transition-colors hover:bg-raised"
+                  style={`--i:${i + 4}`}
+                >
+                  <span class="min-w-0">
+                    <span class="block truncate text-sm text-fg">{s.data.client}</span>
+                    <span class="block truncate font-mono text-[0.625rem] text-fg-4">{s.data.sector}</span>
+                  </span>
+                  <span class="shrink-0 text-fg-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true">→</span>
+                </a>
+              ))
+            }
+          </div>
+          <a href="/case-studies/" class="link-u mt-4 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3">
+            All case studies →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile sheet -->
+<div id="mobile-nav" class="fixed inset-0 top-14 z-40 hidden bg-base lg:hidden" aria-hidden="true">
+  <nav class="h-full overflow-y-auto pb-24" aria-label="Mobile">
+    <p class="mono-label px-5 pb-2 pt-5">Platforms</p>
+    {
+      products.map((p, i) => (
+        <a href={`/${p.data.slug}/`} class="mob flex items-center gap-3 border-b border-line px-5 py-4" style={`--i:${i}`}>
+          <span class="h-1.5 w-1.5 shrink-0 rounded-full" style={`background: var(--${p.data.tone})`} />
+          <span class="text-[0.9375rem] text-fg">{p.data.name}</span>
+        </a>
+      ))
+    }
+    <p class="mono-label px-5 pb-2 pt-6">Company</p>
+    {
+      [...links, { label: 'Contact', href: '/contact/' }].map((l, i) => (
+        <a href={l.href} class="mob block border-b border-line px-5 py-4 text-[0.9375rem] text-fg-2" style={`--i:${i + 4}`}>
+          {l.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>
+
+<style>
+  #bar.stuck { background: color-mix(in oklch, var(--base) 88%, transparent); border-bottom-color: var(--line-strong); }
+
+  #mm-panel {
+    transform: translateY(-6px);
+    transition: opacity 0.22s var(--ease-out-soft), transform 0.28s var(--ease-out-soft), visibility 0.22s;
+  }
+  #mm-panel.open { visibility: visible; opacity: 1; transform: translateY(0); }
+  #mm-panel.open .mm-item {
+    animation: lift 0.32s var(--ease-out-soft) both;
+    animation-delay: calc(var(--i) * 32ms);
+  }
+
+  .bl { transition: transform 0.35s var(--ease-mech), opacity 0.2s; }
+  #burger[aria-expanded='true'] .bl:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  #burger[aria-expanded='true'] .bl:nth-child(2) { opacity: 0; }
+  #burger[aria-expanded='true'] .bl:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+  #mobile-nav.showing { display: block; }
+  #mobile-nav.showing .mob {
+    animation: slide-x 0.34s var(--ease-out-soft) both;
+    animation-delay: calc(var(--i) * 36ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #mm-panel.open .mm-item,
+    #mobile-nav.showing .mob { animation: none; }
+  }
+</style>
+
+<script>
+  const bind = () => {
+    const bar = document.getElementById('bar');
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        bar?.classList.toggle('stuck', window.scrollY > 8);
+        queued = false;
+      });
+    };
+    if (document.documentElement.dataset.hdrBound !== '1') {
+      document.documentElement.dataset.hdrBound = '1';
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+    onScroll();
+
+    const trigger = document.getElementById('mm-trigger');
+    const panel = document.getElementById('mm-panel');
+    const chev = document.getElementById('mm-chev');
+    const wrap = document.getElementById('mm-wrap');
+    const header = trigger?.closest('header');
+
+    const setPanel = (open: boolean) => {
+      panel?.classList.toggle('open', open);
+      panel?.setAttribute('aria-hidden', String(!open));
+      trigger?.setAttribute('aria-expanded', String(open));
+      if (chev) chev.style.transform = open ? 'rotate(180deg)' : '';
+    };
+
+    if (trigger && trigger.dataset.bound !== '1') {
+      trigger.dataset.bound = '1';
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setPanel(!panel?.classList.contains('open'));
+      });
+      // Close when the pointer leaves the whole header region, not on a
+      // per-item mouseout, which would flicker crossing the gap.
+      header?.addEventListener('mouseleave', () => setPanel(false));
+      document.addEventListener('click', (e) => {
+        const t = e.target as Node;
+        if (panel?.classList.contains('open') && !wrap?.contains(t) && !panel.contains(t)) setPanel(false);
+      });
+    }
+
+    const burger = document.getElementById('burger');
+    const mobile = document.getElementById('mobile-nav');
+    const setMobile = (open: boolean) => {
+      mobile?.classList.toggle('showing', open);
+      mobile?.setAttribute('aria-hidden', String(!open));
+      burger?.setAttribute('aria-expanded', String(open));
+      burger?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    if (burger && burger.dataset.bound !== '1') {
+      burger.dataset.bound = '1';
+      burger.addEventListener('click', () => setMobile(!mobile?.classList.contains('showing')));
+      mobile?.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) setMobile(false);
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (mobile?.classList.contains('showing')) { setMobile(false); burger?.focus(); }
+        else if (panel?.classList.contains('open')) { setPanel(false); trigger?.focus(); }
+      }
+    });
+  };
+
+  bind();
+  document.addEventListener('astro:page-load', bind);
+</script>

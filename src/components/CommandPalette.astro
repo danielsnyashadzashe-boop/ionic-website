@@ -1,0 +1,207 @@
+---
+import { getCollection } from 'astro:content';
+import { projects } from '@/data/projects';
+
+/**
+ * Command palette.
+ *
+ * The header shows a ⌘K affordance, so it has to do something — a dead
+ * control is worse than no control. This indexes everything the site knows
+ * about at build time and filters it client-side. No network, no framework.
+ */
+
+const products = await getCollection('products');
+const studies = await getCollection('caseStudies');
+const posts = await getCollection('insights', ({ data }) => !data.draft);
+
+type Item = { t: string; s: string; h: string; g: string };
+
+const items: Item[] = [
+  { t: 'Home', s: 'Overview', h: '/', g: 'Pages' },
+  { t: 'Case studies', s: 'All engagements', h: '/case-studies/', g: 'Pages' },
+  { t: 'Insights', s: 'Writing', h: '/insights/', g: 'Pages' },
+  { t: 'Contact', s: 'Start a conversation', h: '/contact/', g: 'Pages' },
+  { t: 'Privacy', s: 'POPIA · PIPEDA', h: '/privacy/', g: 'Pages' },
+  ...products.map((p) => ({ t: p.data.name, s: p.data.kicker, h: `/${p.data.slug}/`, g: 'Platforms' })),
+  ...studies.map((s) => ({ t: s.data.client, s: s.data.engagement, h: `/case-studies/${s.id}/`, g: 'Engagements' })),
+  ...posts.map((p) => ({ t: p.data.title, s: `${p.data.readingMinutes} min read`, h: `/insights/${p.id}/`, g: 'Insights' })),
+  ...projects
+    .filter((p) => !p.study)
+    .map((p) => ({ t: p.client, s: p.deliverable, h: '/#work', g: 'Engagements' })),
+];
+---
+
+<div
+  id="cmdk"
+  class="fixed inset-0 z-[150] hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search"
+>
+  <div id="cmdk-scrim" class="absolute inset-0 bg-base/70 backdrop-blur-sm"></div>
+
+  <div class="relative mx-auto mt-[12vh] w-[min(94vw,38rem)] px-2">
+    <div class="surface surface-2 overflow-hidden !rounded-xl shadow-2xl">
+      <div class="flex items-center gap-3 border-b border-line px-4">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="shrink-0 text-fg-4" aria-hidden="true">
+          <circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.4" />
+          <path d="m11 11 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+        </svg>
+        <input
+          id="cmdk-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Search platforms, engagements, writing…"
+          class="h-12 w-full bg-transparent text-[0.9375rem] text-fg outline-none placeholder:text-fg-4"
+          aria-label="Search"
+          aria-controls="cmdk-list"
+        />
+        <kbd class="shrink-0 rounded border border-line-strong bg-panel px-1.5 py-0.5 font-mono text-[0.625rem] text-fg-4">esc</kbd>
+      </div>
+
+      <ul id="cmdk-list" class="max-h-[52vh] overflow-y-auto p-1.5" role="listbox">
+        {
+          items.map((it, i) => (
+            <li
+              class="cmdk-item"
+              data-hay={`${it.t} ${it.s} ${it.g}`.toLowerCase()}
+              data-href={it.h}
+              data-i={i}
+              role="option"
+              aria-selected="false"
+            >
+              <a
+                href={it.h}
+                class="flex items-center justify-between gap-4 rounded-lg px-3 py-2.5 transition-colors"
+                tabindex="-1"
+              >
+                <span class="min-w-0">
+                  <span class="block truncate text-[0.875rem] text-fg">{it.t}</span>
+                  <span class="block truncate text-xs text-fg-4">{it.s}</span>
+                </span>
+                <span class="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-fg-4">{it.g}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p id="cmdk-empty" class="hidden px-4 py-6 text-center text-sm text-fg-4">No matches.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  #cmdk.open { display: block; }
+  #cmdk.open #cmdk-scrim { animation: veil 0.18s linear both; }
+  #cmdk.open > div:last-child { animation: lift 0.24s var(--ease-out-soft) both; }
+
+  .cmdk-item[hidden] { display: none; }
+  .cmdk-item.active > a { background: var(--panel); }
+  .cmdk-item.active > a span:first-child > span:first-child { color: var(--primary); }
+
+  @media (prefers-reduced-motion: reduce) {
+    #cmdk.open #cmdk-scrim,
+    #cmdk.open > div:last-child { animation: none; }
+  }
+</style>
+
+<script>
+  const bind = () => {
+    const root = document.getElementById('cmdk');
+    const input = document.getElementById('cmdk-input') as HTMLInputElement | null;
+    const list = document.getElementById('cmdk-list');
+    const empty = document.getElementById('cmdk-empty');
+    if (!root || !input || !list) return;
+    if (root.dataset.bound === '1') return;
+    root.dataset.bound = '1';
+
+    const items = Array.from(list.querySelectorAll<HTMLLIElement>('.cmdk-item'));
+    let active = 0;
+
+    const visible = () => items.filter((it) => !it.hidden);
+
+    const paint = () => {
+      const vis = visible();
+      if (active >= vis.length) active = Math.max(0, vis.length - 1);
+      items.forEach((it) => {
+        it.classList.remove('active');
+        it.setAttribute('aria-selected', 'false');
+      });
+      const cur = vis[active];
+      if (cur) {
+        cur.classList.add('active');
+        cur.setAttribute('aria-selected', 'true');
+        cur.scrollIntoView({ block: 'nearest' });
+      }
+      empty?.classList.toggle('hidden', vis.length > 0);
+    };
+
+    const filter = () => {
+      // Every query token must appear somewhere in the haystack. Cheap, and
+      // it behaves sensibly for "old mutual" or "grc fraud".
+      const q = input.value.trim().toLowerCase();
+      const tokens = q ? q.split(/\s+/) : [];
+      items.forEach((it) => {
+        const hay = it.dataset.hay ?? '';
+        it.hidden = tokens.length > 0 && !tokens.every((t) => hay.includes(t));
+      });
+      active = 0;
+      paint();
+    };
+
+    const open = () => {
+      root.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      input.value = '';
+      filter();
+      input.focus();
+    };
+
+    const close = () => {
+      root.classList.remove('open');
+      document.body.style.overflow = '';
+      document.getElementById('cmd-open')?.focus();
+    };
+
+    document.getElementById('cmd-open')?.addEventListener('click', open);
+    document.getElementById('cmdk-scrim')?.addEventListener('click', close);
+    input.addEventListener('input', filter);
+
+    input.addEventListener('keydown', (e) => {
+      const vis = visible();
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        active = Math.min(active + 1, vis.length - 1);
+        paint();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        active = Math.max(active - 1, 0);
+        paint();
+      } else if (e.key === 'Enter') {
+        const href = vis[active]?.dataset.href;
+        if (href) window.location.href = href;
+      }
+    });
+
+    if (document.documentElement.dataset.cmdkKeys !== '1') {
+      document.documentElement.dataset.cmdkKeys = '1';
+      window.addEventListener('keydown', (e) => {
+        const el = document.getElementById('cmdk');
+        const isOpen = el?.classList.contains('open');
+        if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          isOpen ? close() : open();
+        } else if (e.key === 'Escape' && isOpen) {
+          close();
+        }
+      });
+    }
+
+    paint();
+  };
+
+  bind();
+  document.addEventListener('astro:page-load', bind);
+</script>

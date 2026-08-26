@@ -1,0 +1,22 @@
+---
+interface Crumb { label: string; href?: string }
+interface Props { trail: Crumb[] }
+const { trail } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="veil">
+  <ol class="-mx-1 -my-2 flex flex-wrap items-center gap-1 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">
+    {
+      trail.map((c, i) => (
+        <li class="flex items-center gap-1">
+          {c.href ? (
+            <a href={c.href} class="inline-block px-1.5 py-2.5 transition-colors hover:text-primary">{c.label}</a>
+          ) : (
+            <span class="px-1 py-2 text-fg-2">{c.label}</span>
+          )}
+          {i < trail.length - 1 && <span aria-hidden="true" class="text-line-strong">/</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

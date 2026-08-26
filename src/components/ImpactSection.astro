@@ -1,0 +1,219 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHead from './SectionHead.astro';
+import Gauge from './charts/Gauge.astro';
+import BarsH from './charts/BarsH.astro';
+import BarsV from './charts/BarsV.astro';
+import Donut from './charts/Donut.astro';
+import Trend from './charts/Trend.astro';
+import { projects, disciplines } from '@/data/projects';
+
+/**
+ * Impact dashboard.
+ *
+ * Every series is derived from the content collections or from a figure the
+ * site publishes — nothing is invented to make a panel look busier.
+ *
+ * These were React/Recharts islands until they were caught rendering blank.
+ * Astro server-renders Recharts at a hardcoded 320x200 because there is no DOM
+ * to measure, so the pre-hydration markup was a wrongly-sized empty chart; and
+ * on a throttled connection the ~400KB of React + Recharts never arrived at
+ * all, leaving the panels permanently empty. All of this data is known at build
+ * time, so it is now static SVG: instant, works with JS disabled, and
+ * impossible to leave blank.
+ */
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+const studies = await getCollection('caseStudies');
+
+const gauges = [
+  { label: 'Faster processing', value: 85, display: '85%', tone: 'd2' },
+  { label: 'Cost reduction', value: 60, display: '60%', tone: 'd3' },
+  { label: 'Accuracy', value: 99, display: '99%+', tone: 'd4' },
+];
+
+const capability = products.map((p) => ({
+  label: p.data.name,
+  value: p.data.capabilities.length,
+  tone: p.data.tone,
+}));
+
+/** Engagements per platform, counted straight off the project ledger. */
+const toneFor = new Map(products.map((p) => [p.data.name, p.data.tone]));
+const loadCounts = new Map<string, number>();
+for (const pr of projects) loadCounts.set(pr.platform, (loadCounts.get(pr.platform) ?? 0) + 1);
+const platformLoad = [...loadCounts.entries()]
+  .map(([platform, value]) => ({
+    label: platform === 'Process Genesis' ? 'Genesis' : platform,
+    value,
+    tone: toneFor.get(platform) ?? 'd5',
+  }))
+  .sort((a, b) => b.value - a.value);
+
+/**
+ * Discipline spread. One hue at varying intensity — cycling six would imply a
+ * categorical grouping that does not exist, and would repeat after six rows.
+ */
+const disciplineData = disciplines
+  .map((label) => ({ label, value: projects.filter((p) => p.discipline === label).length }))
+  .sort((a, b) => b.value - a.value);
+
+const stageOrder = [
+  { stage: 'In discussion', tone: 'd6' },
+  { stage: 'Pilot', tone: 'd4' },
+  { stage: 'Partner', tone: 'd1' },
+  { stage: 'Live', tone: 'd2' },
+] as const;
+
+const stageCounts = stageOrder
+  .map(({ stage, tone }) => ({
+    label: stage,
+    tone,
+    value: projects.filter((p) => p.status === stage).length,
+  }))
+  .filter((d) => d.value > 0);
+
+let running = 0;
+const pipeline = stageCounts.map((d) => {
+  running += d.value;
+  return { label: d.label, value: running };
+});
+
+const totalEngagements = projects.length;
+const sectors = [...new Set(studies.map((s) => s.data.sector))].sort();
+---
+
+<section id="impact" class="seam relative scroll-mt-16 overflow-hidden">
+  <div class="halo -left-56 -top-24 h-[26rem] w-[26rem]"></div>
+
+  <div class="shell relative pt-20 md:pt-24">
+    <div class="flex flex-wrap items-end justify-between gap-8">
+      <SectionHead
+        n="03"
+        marker="Impact"
+        title="What the work"
+        titleAccent="actually moves."
+        lede="Reported outcomes from enterprise deployments, alongside the live shape of the portfolio."
+      />
+      <p class="chip rise" style="--step:3">
+        <span class="pulse"></span>
+        Derived from content, not hardcoded
+      </p>
+    </div>
+  </div>
+
+  <div class="shell relative pb-20 pt-12 md:pb-24">
+    <div class="grid gap-3 lg:grid-cols-12">
+      <!-- Reported outcomes -->
+      <article class="surface rise min-w-0 p-6 lg:col-span-7">
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h3 class="text-[0.9375rem] font-medium text-fg">Reported outcomes</h3>
+          <span class="mono-label">As reported by clients</span>
+        </div>
+        <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {gauges.map((g) => <Gauge {...g} />)}
+        </div>
+      </article>
+
+      <!-- Portfolio -->
+      <article class="surface rise min-w-0 p-6 lg:col-span-5" style="--step:1">
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h3 class="text-[0.9375rem] font-medium text-fg">Engagement portfolio</h3>
+          <span class="mono-label">Live</span>
+        </div>
+        <div class="mt-4">
+          <Donut slices={stageCounts} centreValue={String(totalEngagements)} centreLabel="ENGAGEMENTS" />
+        </div>
+        <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-line pt-4">
+          {
+            stageCounts.map((d) => (
+              <li class="flex items-center justify-between gap-3 text-xs">
+                <span class="flex items-center gap-2 text-fg-3">
+                  <span class="h-1.5 w-1.5 shrink-0 rounded-full" style={`background: var(--${d.tone})`} />
+                  {d.label}
+                </span>
+                <span class="figure text-xs">{d.value}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+
+      <!-- Capability depth -->
+      <article class="surface rise flex min-w-0 flex-col p-6 lg:col-span-4" style="--step:2">
+        <h3 class="text-[0.9375rem] font-medium text-fg">Capability depth</h3>
+        <p class="mt-1.5 text-xs leading-relaxed text-fg-4">Modules per platform.</p>
+        <div class="mt-6 flex flex-1 flex-col justify-center">
+          <BarsH items={capability} labelWidth="7.5rem" />
+        </div>
+      </article>
+
+      <!-- Platform load -->
+      <article class="surface rise min-w-0 p-6 lg:col-span-4" style="--step:3">
+        <h3 class="text-[0.9375rem] font-medium text-fg">Where work sits</h3>
+        <p class="mt-1.5 text-xs leading-relaxed text-fg-4">Engagements running on each platform.</p>
+        <div class="mt-6">
+          <BarsV items={platformLoad} ticks={3} />
+        </div>
+      </article>
+
+      <!-- Pipeline -->
+      <article class="surface rise min-w-0 p-6 lg:col-span-4" style="--step:4">
+        <h3 class="text-[0.9375rem] font-medium text-fg">Pipeline shape</h3>
+        <p class="mt-1.5 text-xs leading-relaxed text-fg-4">Cumulative, first contact to production.</p>
+        <div class="mt-6">
+          <Trend points={pipeline} />
+        </div>
+      </article>
+
+      <!-- Disciplines -->
+      <article class="surface rise flex min-w-0 flex-col p-6 lg:col-span-7" style="--step:5">
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h3 class="text-[0.9375rem] font-medium text-fg">Delivery disciplines</h3>
+          <span class="mono-label">{disciplines.length} tracked</span>
+        </div>
+        <div class="mt-6 flex flex-1 flex-col justify-center">
+          <BarsH items={disciplineData} labelWidth="11rem" />
+        </div>
+      </article>
+
+      <!-- Consolidation + methodology -->
+      <article class="surface rise flex min-w-0 flex-col p-6 lg:col-span-5" style="--step:6">
+        <h3 class="text-[0.9375rem] font-medium text-fg">Tools to procure</h3>
+        <p class="mt-1.5 text-xs leading-relaxed text-fg-4">
+          The stated basis for a 60–70% lower total cost of ownership.
+        </p>
+        <div class="mt-6">
+          <BarsV
+            items={[
+              { label: 'Conventional', value: 6, muted: true },
+              { label: 'Process Genesis', value: 1, tone: 'd2' },
+            ]}
+            max={7}
+            ticks={3}
+            height={150}
+          />
+        </div>
+
+        <div class="mt-6 border-t border-line pt-5">
+          <p class="mono-label">Methodology</p>
+          <p class="mt-2.5 text-xs leading-relaxed text-fg-3">
+            The 85 / 60 / 99%+ figures are reported by clients from their own deployments, not a
+            benchmark we ran. We would rather say so than imply a controlled study.
+          </p>
+          <a
+            href="/contact/"
+            class="link-u mt-3 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-primary"
+          >
+            Ask how each was measured →
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <div class="rise mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-6" style="--step:7">
+      <span class="mono-label mr-1">Sectors delivered in</span>
+      {sectors.map((s) => <span class="chip">{s}</span>)}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,113 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import { site, contact, localityLine } from '@/data/site';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: `Contact ${site.name}`,
+    url: new URL('/contact/', site.domain).href,
+    about: {
+      '@type': 'Organization',
+      name: site.name,
+      url: site.domain,
+      email: contact.email,
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'sales',
+        email: contact.email,
+        areaServed: ['ZA', 'CA', 'AU'],
+        availableLanguage: 'English',
+      },
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site.domain + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Contact', item: new URL('/contact/', site.domain).href },
+    ],
+  },
+];
+
+const steps = [
+  {
+    title: 'We reply within a day',
+    body: 'A real person reads every enquiry and responds within one business day — usually with a few questions to understand your situation properly.',
+  },
+  {
+    title: 'We listen first',
+    body: "A short discovery conversation about your people, processes and constraints. We're technology-agnostic — we recommend what fits, not what we sell.",
+  },
+  {
+    title: 'You get a clear proposal',
+    body: "A concrete recommendation with scope, outcomes and costs — whether that's consulting, one of our platforms, or both.",
+  },
+];
+---
+
+<PageLayout
+  title={`Contact ${site.name} — Digital Transformation Consultancy | South Africa & Canada`}
+  description="Talk to Ionic about digital transformation, process automation, GRC or expense management. Operating across South Africa and Canada — we reply to every enquiry within one business day."
+  schema={schema}
+>
+  <section class="relative overflow-hidden">
+
+    <div class="shell relative pb-10 pt-14">
+      <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Contact' }]} />
+    </div>
+  </section>
+
+  <ContactSection
+    source="Contact page"
+    returnPath="/contact/"
+    showInvestor
+    lede="Whether you have a transformation challenge, want a demo of one of our platforms, or want to explore how AI-enabled technology could modernise your operations — tell us a little about it and we'll come back to you within one business day."
+  />
+
+  <!-- ══ WHAT HAPPENS NEXT ═════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-24 md:py-32">
+      <p class="marker rise">What happens next</p>
+      <h2 class="t-section rise mt-4 font-display" style="--step:1">From enquiry to engagement</h2>
+      <div class="rule mt-7 w-24" style="--step:2"></div>
+
+      <ol class="mt-16 grid gap-px overflow-hidden  border border-line bg-line-strong md:grid-cols-3">
+        {
+          steps.map((s, i) => (
+            <li class="rise group relative bg-base p-8 transition-colors duration-500 hover:bg-raised md:p-10" style={`--step:${i}`}>
+              <span class="figure block text-xs text-primary">0{i + 1}</span>
+              <h3 class="mt-6 font-display text-xl leading-snug text-fg">{s.title}</h3>
+              <p class="mt-4 text-sm leading-relaxed text-fg-3">{s.body}</p>
+              <span class="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-primary transition-transform duration-700 ease-out group-hover:scale-x-100" />
+            </li>
+          ))
+        }
+      </ol>
+
+      <!-- Honest about what we don't publish -->
+      <div class="rise mt-16 grid gap-8 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <p class="marker">Email</p>
+          <a href={`mailto:${contact.email}`} class="link-u mt-2 block font-mono text-sm">{contact.email}</a>
+        </div>
+        <div>
+          <p class="marker">Locations</p>
+          <p class="mt-2 text-sm text-fg-3">{localityLine}</p>
+        </div>
+        <div>
+          <p class="marker">Response time</p>
+          <p class="mt-2 text-sm text-fg-3">One business day</p>
+        </div>
+        <div>
+          <p class="marker">Language</p>
+          <p class="mt-2 text-sm text-fg-3">English</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>

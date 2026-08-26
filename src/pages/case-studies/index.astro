@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '@/layouts/PageLayout.astro';
+import CaseStudyCard from '@/components/CaseStudyCard.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import { site } from '@/data/site';
+
+const studies = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order);
+
+const stages = ['Production', 'Pilot', 'Partner', 'Prospect'] as const;
+const counts = stages
+  .map((stage) => ({ stage, n: studies.filter((s) => s.data.stage === stage).length }))
+  .filter((c) => c.n > 0);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Case studies',
+  url: new URL('/case-studies/', site.domain).href,
+  hasPart: studies.map((s) => ({
+    '@type': 'Article',
+    headline: s.data.title,
+    about: s.data.client,
+    url: new URL(`/case-studies/${s.id}/`, site.domain).href,
+  })),
+};
+---
+
+<PageLayout
+  title={`Case studies — enterprise transformation engagements | ${site.name}`}
+  description="How Ionic delivered transformation for Old Mutual, Fidelity, Bidvest, 3Sixty Health, National Video Vision and Split Time — engagement scope, platforms deployed and outcomes."
+  schema={schema}
+>
+  <section class="relative overflow-hidden">
+
+    <div class="shell relative pb-16 pt-14 md:pb-20">
+      <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Case studies' }]} />
+
+      <h1 class="t-title mt-12 font-display" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:80ms">
+        Case studies
+      </h1>
+
+      <div class="rule mt-8 w-28" style="animation-delay:260ms"></div>
+
+      <p class="t-lede measure mt-8 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:320ms">
+        Every engagement below is live or has completed. Each one names the client, the scope, the
+        platforms deployed and what the client said about the result.
+      </p>
+
+      <dl class="mt-12 flex flex-wrap gap-x-10 gap-y-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:440ms">
+        {
+          counts.map((c) => (
+            <div class="flex items-baseline gap-2.5">
+              <dd class="figure text-2xl text-fg">{c.n}</dd>
+              <dt class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-fg-4">{c.stage}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="border-t border-line">
+    <div class="shell py-20 md:py-24">
+      <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {studies.map((s, i) => <CaseStudyCard study={s} index={i % 3} />)}
+      </div>
+
+      <p class="mt-14 max-w-2xl font-mono text-[0.6875rem] leading-relaxed text-fg-4">
+        Client quotations are attributed at organisation level. Named-individual attribution and
+        detailed outcome data are available under NDA on request.
+      </p>
+    </div>
+  </section>
+
+  <ContactSection
+    source="Case studies page"
+    returnPath="/case-studies/"
+    title="Discuss a similar engagement"
+    lede="Tell us what you're trying to change and we'll tell you honestly whether we've done it before — we reply within one business day."
+  />
+</PageLayout>

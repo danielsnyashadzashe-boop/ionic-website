@@ -1,0 +1,158 @@
+---
+/**
+ * Orchestration lattice.
+ *
+ * The reference used a wireframe globe, which says "we are global" and
+ * nothing else. This says what the platform actually does: nodes (agents,
+ * regions, systems) on concentric rings, with routes drawn between them and
+ * traffic running along those routes.
+ *
+ * Pure SVG + CSS. No canvas, no WebGL, no animation library — it is
+ * decoration, and decoration should not cost a runtime. Everything stops
+ * under prefers-reduced-motion.
+ */
+
+// Deterministic layout: rings of nodes at fixed angles, so the composition
+// is designed rather than random-per-build.
+const rings = [
+  { r: 62, nodes: [20, 95, 168, 250, 320], tone: 'd2' },
+  { r: 108, nodes: [8, 62, 130, 200, 268, 330], tone: 'd1' },
+  { r: 152, nodes: [40, 105, 175, 240, 300], tone: 'd3' },
+];
+
+const C = 180;
+const pt = (r: number, deg: number) => {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return { x: C + r * Math.cos(a), y: C + r * Math.sin(a) };
+};
+
+// Routes: a handful of arcs between rings, chosen to cross the composition.
+const routes = [
+  [pt(62, 20), pt(152, 105)],
+  [pt(108, 62), pt(62, 250)],
+  [pt(152, 240), pt(108, 330)],
+  [pt(62, 168), pt(152, 300)],
+  [pt(108, 200), pt(62, 95)],
+];
+---
+
+<div class="relative aspect-square w-full max-w-[520px]">
+  <!-- Depth: a soft field behind, so the lattice sits in space rather than on a flat panel -->
+  <div class="halo left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2"></div>
+
+  <svg viewBox="0 0 360 360" class="relative h-full w-full overflow-visible" role="img" aria-label="Orchestration lattice: nodes and routes across regions">
+    <defs>
+      <linearGradient id="route-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="var(--d2)" stop-opacity="0.55" />
+        <stop offset="100%" stop-color="var(--d1)" stop-opacity="0.12" />
+      </linearGradient>
+    </defs>
+
+    <!-- Rings -->
+    {
+      rings.map((ring, i) => (
+        <circle
+          class="lat-ring"
+          cx={C}
+          cy={C}
+          r={ring.r}
+          fill="none"
+          stroke="var(--fg)"
+          stroke-opacity={0.14 - i * 0.03}
+          stroke-width="1"
+          style={`--i:${i}`}
+        />
+      ))
+    }
+
+    <!-- Meridians, faint -->
+    {
+      [0, 60, 120].map((deg) => (
+        <line
+          x1={pt(152, deg).x}
+          y1={pt(152, deg).y}
+          x2={pt(152, deg + 180).x}
+          y2={pt(152, deg + 180).y}
+          stroke="var(--fg)"
+          stroke-opacity="0.045"
+          stroke-width="1"
+        />
+      ))
+    }
+
+    <!-- Routes: drawn in, then traffic runs along them -->
+    {
+      routes.map(([a, b], i) => {
+        const mx = (a.x + b.x) / 2 + (C - (a.x + b.x) / 2) * 0.82;
+        const my = (a.y + b.y) / 2 + (C - (a.y + b.y) / 2) * 0.82;
+        const d = `M ${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`;
+        return (
+          <>
+            <path class="lat-route" d={d} fill="none" stroke="url(#route-grad)" stroke-width="1.1" style={`--i:${i}`} />
+            <circle class="lat-packet" r="2" fill="var(--d2)" style={`--i:${i}`}>
+              <animateMotion dur={`${5 + i * 0.8}s`} repeatCount="indefinite" path={d} begin={`${i * 0.9}s`} />
+            </circle>
+          </>
+        );
+      })
+    }
+
+    <!-- Nodes -->
+    {
+      rings.map((ring, ri) =>
+        ring.nodes.map((deg, ni) => {
+          const p = pt(ring.r, deg);
+          return (
+            <g class="lat-node" style={`--i:${ri * 6 + ni}`}>
+              <circle cx={p.x} cy={p.y} r="7" fill={`var(--${ring.tone})`} opacity="0.10" />
+              <circle cx={p.x} cy={p.y} r="2.4" fill={`var(--${ring.tone})`} />
+            </g>
+          );
+        }),
+      )
+    }
+
+    <!-- Core -->
+    <circle class="lat-core" cx={C} cy={C} r="17" fill="none" stroke="var(--primary)" stroke-opacity="0.4" stroke-width="1" />
+    <circle cx={C} cy={C} r="4.5" fill="var(--primary)" />
+  </svg>
+</div>
+
+<style>
+  .lat-ring {
+    transform-origin: 180px 180px;
+    animation: ring-in 1.1s var(--ease-out-soft) both;
+    animation-delay: calc(0.15s + var(--i) * 0.12s);
+  }
+  @keyframes ring-in {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .lat-route {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: dash 1.4s var(--ease-out-soft) both;
+    animation-delay: calc(0.5s + var(--i) * 0.12s);
+  }
+
+  .lat-node {
+    opacity: 0;
+    animation: veil 0.5s var(--ease-out-soft) both;
+    animation-delay: calc(0.75s + var(--i) * 0.045s);
+  }
+
+  .lat-packet { opacity: 0.9; }
+
+  .lat-core {
+    transform-origin: 180px 180px;
+    animation: orbit 26s linear infinite;
+    stroke-dasharray: 5 7;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lat-ring, .lat-route, .lat-node { animation: none; opacity: 1; stroke-dashoffset: 0; transform: none; }
+    .lat-core { animation: none; }
+    .lat-packet { display: none; }
+  }
+</style>

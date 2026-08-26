@@ -1,0 +1,80 @@
+---
+/**
+ * Vertical bar chart, drawn at build time.
+ * A hairline grid sits behind the bars so the eye can read values without
+ * needing a tooltip — which matters when there is no JS involved at all.
+ */
+interface Item {
+  label: string;
+  value: number;
+  tone?: string;
+  /** Renders muted, for the "before" side of a comparison. */
+  muted?: boolean;
+}
+
+interface Props {
+  items: Item[];
+  max?: number;
+  height?: number;
+  /** Number of horizontal grid lines, ticks included. */
+  ticks?: number;
+}
+
+const { items, max, height = 176, ticks = 4 } = Astro.props;
+const top = max ?? Math.max(...items.map((i) => i.value));
+const lines = Array.from({ length: ticks + 1 }, (_, i) => Math.round((top / ticks) * i));
+---
+
+<div class="relative" style={`height:${height}px`}>
+  <!-- Grid + axis values -->
+  <div class="absolute inset-0 flex flex-col-reverse justify-between">
+    {
+      lines.map((v) => (
+        <div class="relative flex items-center gap-2">
+          <span class="w-5 shrink-0 text-right font-mono text-[0.5625rem] tabular-nums text-fg-4">{v}</span>
+          <span class="h-px flex-1 bg-line" />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Bars -->
+  <div class="absolute inset-0 flex items-end gap-3 pl-7">
+    {
+      items.map((it, i) => {
+        const pct = top > 0 ? (it.value / top) * 100 : 0;
+        return (
+          <div class="flex h-full min-w-0 flex-1 flex-col justify-end">
+            <span
+              class="bar w-full origin-bottom rounded-t-[2px]"
+              style={`height:${pct}%; background: ${it.muted ? 'var(--fg-4)' : `var(--${it.tone ?? 'd2'})`}; --i:${i}`}
+              title={`${it.label}: ${it.value}`}
+            />
+          </div>
+        );
+      })
+    }
+  </div>
+</div>
+
+<!-- Category labels, outside the plot so long names can wrap -->
+<div class="mt-2 flex gap-3 pl-7">
+  {
+    items.map((it) => (
+      <span class="min-w-0 flex-1 text-center font-mono text-[0.5625rem] uppercase leading-tight tracking-[0.05em] text-fg-4">
+        {it.label}
+      </span>
+    ))
+  }
+</div>
+
+<style>
+  .bar {
+    animation: draw-y 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 80ms);
+  }
+  @supports (animation-timeline: view()) {
+    .bar { animation-timeline: view(); animation-range: entry 0% entry 48%; animation-delay: 0s; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bar { animation: none; } }
+</style>

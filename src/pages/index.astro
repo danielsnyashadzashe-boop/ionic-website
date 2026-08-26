@@ -1,0 +1,282 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '@/layouts/PageLayout.astro';
+import BootSequence from '@/components/BootSequence.astro';
+import HeroVisual from '@/components/HeroVisual.astro';
+import LogoMarquee from '@/components/LogoMarquee.astro';
+import Figure from '@/components/Figure.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import CaseStudyCard from '@/components/CaseStudyCard.astro';
+import ImpactSection from '@/components/ImpactSection.astro';
+import ProjectsSection from '@/components/ProjectsSection.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import { site, contact, expertise, metrics, localityLine } from '@/data/site';
+import { projectStats } from '@/data/projects';
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+const flagship = products.find((p) => p.data.flagship);
+const rest = products.filter((p) => !p.data.flagship);
+
+const studies = (await getCollection('caseStudies'))
+  .filter((s) => s.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.name,
+  alternateName: site.legalName,
+  url: site.domain,
+  email: contact.email,
+  description: site.description,
+  slogan: site.slogan,
+  areaServed: ['South Africa', 'Canada', 'Australia'],
+  knowsAbout: [...expertise],
+  makesOffer: products.map((p) => ({
+    '@type': 'Offer',
+    itemOffered: { '@type': 'Service', name: p.data.name, description: p.data.summary },
+  })),
+};
+
+/** Readouts floating over the lattice. Each is a fact the site publishes. */
+const readouts = [
+  { label: 'Engagements', value: String(projectStats.total), sub: 'across 6 sectors', tone: 'd1', pos: 'left-0 top-[4%]' },
+  { label: 'In production', value: String(projectStats.live), sub: 'live today', tone: 'd2', pos: 'right-0 top-[20%]' },
+  { label: 'Platforms', value: '4', sub: 'proprietary', tone: 'd3', pos: 'left-[2%] bottom-[18%]' },
+  { label: 'Regions', value: '5', sub: 'delivery', tone: 'd4', pos: 'right-[4%] bottom-[6%]' },
+];
+
+const principles = [
+  {
+    n: '01',
+    head: 'Discovery before software',
+    body: 'We map how work actually moves, not how the documentation says it does. Automating a process you have misunderstood produces a faster wrong answer.',
+  },
+  {
+    n: '02',
+    head: 'Consulting and product, together',
+    body: 'Strategy, change management and our own SaaS portfolio in one engagement. Consulting establishes what you need; products supply it only where they genuinely fit.',
+  },
+  {
+    n: '03',
+    head: 'Technology-agnostic, provably',
+    body: 'Clients evaluate our platforms inside live consulting engagements. That puts the honest answer in front of both parties continuously.',
+  },
+];
+
+const method = [
+  { step: 'Discover', body: 'Process mining against reality. Bottlenecks quantified before anything is configured.' },
+  { step: 'Design', body: 'Scope, outcomes and costs. We recommend what fits, not what we sell.' },
+  { step: 'Deploy', body: 'Pilot first, scoped so being wrong is survivable. Expansion follows the result.' },
+  { step: 'Operate', body: 'Through production and beyond. Transformation nobody adopts is not transformation.' },
+];
+---
+
+<PageLayout
+  title="Ionic — AI-Powered Digital & Business Transformation Consultancy"
+  description="Ionic combines strategic consulting with proprietary AI-enabled SaaS platforms — Process Genesis, ExpenseFlow, Ionic ERP and Ionic GRC — to help enterprises like Old Mutual, Fidelity and Bidvest modernise operations end-to-end."
+  schema={schema}
+>
+  <BootSequence />
+
+  <!-- ══════════ 00 · HERO ══════════ -->
+  <section class="relative overflow-hidden">
+    <div class="blueprint pointer-events-none absolute inset-0"></div>
+    <div class="halo -left-32 -top-24 h-[34rem] w-[34rem]"></div>
+
+    <div class="shell relative grid items-center gap-14 pb-16 pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-20">
+      <div>
+        <p class="chip veil">
+          <span class="pulse"></span>
+          Software engineering orchestration
+        </p>
+
+        <h1 class="t-hero mt-7">
+          <span class="block overflow-hidden">
+            <span class="rise block" style="--step:0">Transformation,</span>
+          </span>
+          <span class="block overflow-hidden">
+            <span class="rise block text-primary" style="--step:1.6">instrumented.</span>
+          </span>
+        </h1>
+
+        <p class="t-lede rise measure mt-6 text-fg-3" style="--step:3">
+          Ionic pairs strategic consulting with proprietary AI-enabled platforms to deliver
+          enterprise transformation end-to-end — from first workshop to production and beyond.
+        </p>
+
+        <div class="rise mt-8 flex flex-wrap items-center gap-2.5" style="--step:4">
+          <a href="/contact/" class="btn">
+            <span>Start a conversation</span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="#work" class="btn-ghost">See the work</a>
+        </div>
+
+        <dl class="rise mt-10 grid max-w-lg grid-cols-3 gap-px overflow-hidden rounded-lg border border-line bg-line" style="--step:5">
+          {
+            metrics.map((m, i) => (
+              <div class="bg-raised px-4 py-3.5">
+                <dd class="figure text-[1.375rem] leading-none">
+                  {m.value}
+                  <span class="text-[0.75em]" style={`color: var(--${['d2', 'd3', 'd4'][i]})`}>
+                    {m.unit}
+                  </span>
+                </dd>
+                <dt class="mt-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-fg-4">{m.label}</dt>
+              </div>
+            ))
+          }
+        </dl>
+
+        <p class="rise mt-3 font-mono text-[0.625rem] text-fg-4" style="--step:6">
+          As reported by clients · {localityLine}
+        </p>
+      </div>
+
+      <div class="lift relative mx-auto w-full max-w-[520px]" style="--step:2">
+        <HeroVisual />
+
+        {
+          readouts.map((r, i) => (
+            <div class={`readout lift absolute ${r.pos} px-3 py-2`} style={`--step:${4 + i}`}>
+              <div class="flex items-baseline gap-2">
+                <span class="h-1.5 w-1.5 rounded-full" style={`background: var(--${r.tone})`} />
+                <span class="figure text-[1.0625rem] leading-none">{r.value}</span>
+              </div>
+              <p class="mt-1 font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-fg-4">{r.label}</p>
+              <p class="font-mono text-[0.5625rem] text-fg-4">{r.sub}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════ CLIENT / SYSTEM MARQUEE ══════════ -->
+  <LogoMarquee />
+
+
+  <!-- ══════════ 01 · PRINCIPLES ══════════ -->
+  <section id="about" class="seam scroll-mt-16">
+    <div class="shell py-20 md:py-24">
+      <SectionHead n="01" marker="Approach" title="We become an extension of" titleAccent="your business." />
+
+      <div class="mt-12 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
+        <Figure
+          photo="deliveryTeam"
+          class="lift"
+          sizes="(min-width: 1024px) 38rem, 100vw"
+          ratio="4 / 3"
+        />
+
+        <div class="grid gap-3 sm:grid-cols-2 lg:content-start">
+          {
+            principles.map((p, i) => (
+              <article class="surface card-i rise p-6" style={`--step:${i}`}>
+                <span class="figure text-[0.6875rem] text-primary">{p.n}</span>
+                <h3 class="mt-5 text-[1.0625rem] font-medium tracking-[-0.02em]">{p.head}</h3>
+                <p class="mt-3 text-[0.875rem] leading-relaxed text-fg-3">{p.body}</p>
+              </article>
+            ))
+          }
+
+          <article class="surface rise flex flex-col justify-center bg-panel p-6" style="--step:3">
+            <p class="mono-label">Expertise</p>
+            <ul class="mt-4 flex flex-wrap gap-1.5">
+              {expertise.map((e) => <li class="chip">{e}</li>)}
+            </ul>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 02 · PLATFORMS ══════════ -->
+  <section id="platforms" class="seam scroll-mt-16">
+    <div class="shell py-20 md:py-24">
+      <div class="flex flex-wrap items-end justify-between gap-8">
+        <SectionHead
+          n="02"
+          marker="Platforms"
+          title="Four proprietary products,"
+          titleAccent="built for enterprise."
+          lede="Each solves a problem we kept meeting in consulting engagements. Each is deployed."
+        />
+        <a href="/case-studies/" class="link-u rise font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3" style="--step:3">
+          See them in the field →
+        </a>
+      </div>
+
+      <div class="mt-12 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+        {flagship && <ProductCard product={flagship} index={0} wide />}
+        {rest.map((p, i) => <ProductCard product={p} index={i + 1} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 03 · IMPACT ══════════ -->
+  <ImpactSection />
+
+  <!-- ══════════ 04 · WORK ══════════ -->
+  <ProjectsSection />
+
+  <!-- ══════════ 05 · METHOD ══════════ -->
+  <section class="seam">
+    <div class="shell py-20 md:py-24">
+      <div class="flex flex-wrap items-end justify-between gap-8">
+        <SectionHead n="05" marker="Method" title="Four steps," titleAccent="in this order." />
+        <div class="rise w-full max-w-md lg:max-w-lg" style="--step:2">
+          <Figure photo="programmeDelivery" sizes="(min-width: 1024px) 32rem, 100vw" ratio="21 / 9" />
+        </div>
+      </div>
+
+      <ol class="mt-12 grid gap-3 md:grid-cols-4">
+        {
+          method.map((m, i) => (
+            <li class="surface card-i rise relative overflow-hidden p-6" style={`--step:${i}`}>
+              <span
+                class="absolute left-0 top-0 h-px w-full origin-left"
+                style={`background: linear-gradient(90deg, var(--primary), transparent); animation: draw-x 0.9s var(--ease-mech) ${i * 0.12}s both`}
+                aria-hidden="true"
+              />
+              <div class="flex items-baseline justify-between">
+                <span class="figure text-[0.6875rem] text-primary">{String(i + 1).padStart(2, '0')}</span>
+                <span class="mono-label">{i === method.length - 1 ? 'Ongoing' : `Step ${i + 1}`}</span>
+              </div>
+              <h3 class="mt-5 text-[1.0625rem] font-medium tracking-[-0.02em]">{m.step}</h3>
+              <p class="mt-2.5 text-[0.875rem] leading-relaxed text-fg-3">{m.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════ 06 · CASE STUDIES ══════════ -->
+  <section class="seam">
+    <div class="shell py-20 md:py-24">
+      <div class="flex flex-wrap items-end justify-between gap-8">
+        <SectionHead n="06" marker="Engagements" title="Trusted where" titleAccent="it counts." />
+        <a href="/case-studies/" class="link-u rise font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3" style="--step:3">
+          All {projectStats.total} engagements →
+        </a>
+      </div>
+
+      <div class="mt-12 grid gap-3 md:grid-cols-3">
+        {studies.map((s, i) => <CaseStudyCard study={s} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 07 · CONTACT ══════════ -->
+  <ContactSection
+    source="Homepage"
+    returnPath="/"
+    showInvestor
+    lede="Whether you have a transformation challenge or want to see how AI-enabled technology could modernise your operations, tell us about it — we reply within one business day."
+  />
+</PageLayout>

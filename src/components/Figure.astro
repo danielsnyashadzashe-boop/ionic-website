@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import { photos, type PhotoKey } from '@/data/photos';
+
+/**
+ * Captioned photograph.
+ *
+ * Runs through `astro:assets`, so the build emits responsive AVIF/WebP from
+ * the 2560px master and the browser picks a size from `sizes`. Nothing here
+ * ships a multi-megabyte original.
+ *
+ * The frame is treated as a surface like any other panel — same border, same
+ * radius, same lit edge — so a photograph sits in the design rather than being
+ * pasted on top of it. A tint scrim keeps stock photography from fighting the
+ * palette, and every caption carries an "Illustrative" marker because these
+ * are not photographs of Ionic staff or client sites.
+ */
+
+interface Props {
+  photo: PhotoKey;
+  /** Rendered width hint for srcset selection. */
+  sizes?: string;
+  /** Aspect ratio of the frame. Portrait sources get a portrait default. */
+  ratio?: string;
+  /** Show the caption. Off for purely decorative placements. */
+  showCaption?: boolean;
+  /** Load eagerly — use only for an above-the-fold image. */
+  eager?: boolean;
+  class?: string;
+}
+
+const {
+  photo,
+  sizes = '(min-width: 1024px) 40rem, 100vw',
+  ratio,
+  showCaption = true,
+  eager = false,
+  class: className = '',
+} = Astro.props;
+
+const p = photos[photo];
+const isPortrait = p.src.height > p.src.width;
+const frameRatio = ratio ?? (isPortrait ? '3 / 4' : '16 / 10');
+---
+
+<figure class={`group ${className}`}>
+  <div
+    class="surface relative overflow-hidden"
+    style={`aspect-ratio: ${frameRatio}`}
+  >
+    <Image
+      src={p.src}
+      alt={p.alt}
+      sizes={sizes}
+      widths={[480, 800, 1200, 1800]}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+    />
+
+    {/* Scrim: sinks stock photography toward the palette so it does not sit
+        on the page as a bright rectangle. */}
+    <span class="pointer-events-none absolute inset-0 bg-base/35 mix-blend-multiply" aria-hidden="true"></span>
+    <span
+      class="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/70 via-transparent to-transparent"
+      aria-hidden="true"></span>
+    <span class="pointer-events-none absolute inset-0 ring-1 ring-inset ring-line" aria-hidden="true"></span>
+  </div>
+
+  {
+    showCaption && (
+      <figcaption class="mt-3 flex items-start gap-3">
+        <span class="mt-[3px] h-3 w-px shrink-0 bg-primary" aria-hidden="true" />
+        <span class="min-w-0">
+          <span class="block text-[0.8125rem] leading-relaxed text-fg-3">{p.caption}</span>
+          {p.illustrative && (
+            <span class="mt-1 block font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-fg-4">
+              Illustrative
+            </span>
+          )}
+        </span>
+      </figcaption>
+    )
+  }
+</figure>

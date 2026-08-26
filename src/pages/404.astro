@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { site, contact } from '@/data/site';
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<PageLayout title={`Page not found | ${site.name}`} description="That page doesn't exist." noindex>
+  <section class="relative flex min-h-[78vh] items-center overflow-hidden">
+
+    <div class="shell relative py-24">
+      <p class="figure veil text-primary" style="font-size:clamp(4rem,14vw,10rem);line-height:0.85">
+        404
+      </p>
+
+      <h1 class="t-section mt-8 font-display" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:140ms">
+        This page doesn't exist
+      </h1>
+
+      <div class="rule mt-8 w-24" style="animation-delay:280ms"></div>
+
+      <p class="t-lede measure mt-8 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:340ms">
+        The link may be out of date, or the page may have moved. Here's where most people are
+        heading.
+      </p>
+
+      <div class="mt-14 grid gap-px overflow-hidden  border border-line bg-line-strong sm:grid-cols-2 lg:grid-cols-4">
+        {
+          products.map((p, i) => (
+            <a
+              href={`/${p.data.slug}/`}
+              style={`--tone: var(--${p.data.tone})`}
+              class="rise group bg-base p-6 transition-colors duration-500 hover:bg-raised"
+              style={`--step:${i}`}
+            >
+              <span class="block h-1 w-6 bg-primary transition-all duration-500 group-hover:w-10" />
+              <span class="mt-5 block font-display text-lg text-fg">{p.data.name}</span>
+              <span class="mt-1.5 block text-xs leading-relaxed text-fg-3">{p.data.kicker}</span>
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="mt-12 flex flex-wrap items-center gap-6">
+        <a href="/" class="btn"><span>Back to home</span></a>
+        <a href="/case-studies/" class="link-u text-sm">Case studies</a>
+        <a href="/insights/" class="link-u text-sm">Insights</a>
+        <a href={`mailto:${contact.email}`} class="link-u font-mono text-xs">{contact.email}</a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

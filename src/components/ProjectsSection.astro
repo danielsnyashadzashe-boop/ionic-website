@@ -1,0 +1,189 @@
+---
+import SectionHead from './SectionHead.astro';
+import { projects, disciplines, projectStats } from '@/data/projects';
+
+/**
+ * Engagement ledger. Filtering is vanilla JS on data attributes — no
+ * framework, and it degrades to the full list if the script never runs.
+ */
+
+const statusTone: Record<string, string> = {
+  Live: 'var(--ok)',
+  Pilot: 'var(--d4)',
+  Partner: 'var(--d1)',
+  'In discussion': 'var(--fg-4)',
+};
+---
+
+<section id="work" class="seam relative scroll-mt-16">
+  <div class="shell pt-20 md:pt-24">
+    <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
+      <SectionHead n="04" marker="Work" title="Delivered work," titleAccent="not a pitch deck." />
+
+      <dl class="rise flex flex-wrap gap-x-8 gap-y-4" style="--step:3">
+        {
+          [
+            { v: projectStats.total, l: 'Engagements' },
+            { v: projectStats.live, l: 'In production' },
+            { v: disciplines.length, l: 'Disciplines' },
+            { v: projectStats.clients, l: 'Clients' },
+          ].map((s) => (
+            <div>
+              <dd class="figure text-[1.75rem] leading-none">{s.v}</dd>
+              <dt class="mt-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-fg-4">{s.l}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="shell mt-10">
+    <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by discipline">
+      <button type="button" class="fchip is-on" data-filter="all" aria-pressed="true">All work</button>
+      {
+        disciplines.map((d) => (
+          <button type="button" class="fchip" data-filter={d} aria-pressed="false">
+            {d}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Ledger -->
+  <div class="shell mt-6 pb-20 md:pb-24">
+    <div class="surface overflow-hidden">
+      <!-- Column header -->
+      <div
+        class="hidden items-center gap-x-5 border-b border-line px-5 py-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-fg-4 md:grid"
+        style="grid-template-columns: 2rem minmax(0,13rem) minmax(0,1fr) 8.5rem 6.5rem 5rem"
+      >
+        <span>#</span><span>Client</span><span>Deliverable</span><span>Platform</span><span>Status</span>
+        <span class="text-right">Scale</span>
+      </div>
+
+      <ul id="ledger">
+        {
+          projects.map((p, i) => {
+            const Tag = p.study ? 'a' : 'div';
+            return (
+              <li class="prow border-b border-line last:border-b-0" data-discipline={p.discipline} style={`--step:${i % 8}`}>
+                <Tag
+                  {...(p.study ? { href: `/case-studies/${p.study}/` } : {})}
+                  class="group grid grid-cols-1 items-center gap-x-5 gap-y-2 px-5 py-4 transition-colors duration-300 hover:bg-panel md:grid-cols-[2rem_minmax(0,13rem)_minmax(0,1fr)_8.5rem_6.5rem_5rem]"
+                >
+                  <span class="figure hidden text-[0.625rem] text-fg-4 md:block">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+
+                  <span class="flex min-w-0 items-start gap-2.5">
+                    <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={`background: var(--${p.tone})`} />
+                    <span class="text-[0.9375rem] font-medium leading-tight text-fg">{p.client}</span>
+                  </span>
+
+                  <span class="text-[0.8125rem] leading-snug text-fg-3">{p.deliverable}</span>
+
+                  <span class="font-mono text-[0.625rem] uppercase tracking-[0.08em] text-fg-4">{p.platform}</span>
+
+                  <span
+                    class="flex items-center gap-1.5 font-mono text-[0.625rem] uppercase tracking-[0.08em]"
+                    style={`color: ${statusTone[p.status]}`}
+                  >
+                    <span class="h-1 w-1 rounded-full" style={`background: ${statusTone[p.status]}`} />
+                    {p.status}
+                  </span>
+
+                  <span class="text-right">
+                    {p.metric ? (
+                      <span class="figure text-[0.875rem] leading-none">{p.metric.value}</span>
+                    ) : (
+                      <span
+                        class="inline-block text-fg-4 transition-transform duration-300 group-hover:translate-x-1"
+                        aria-hidden="true"
+                      >
+                        {p.study ? '→' : '·'}
+                      </span>
+                    )}
+                  </span>
+                </Tag>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+
+    <p id="fempty" class="mt-6 hidden font-mono text-xs uppercase tracking-widest text-fg-4">
+      No engagements in that discipline.
+    </p>
+  </div>
+</section>
+
+<style>
+  .prow {
+    animation: veil 0.45s var(--ease-out-soft) both;
+    animation-delay: calc(var(--step) * 45ms);
+  }
+  @supports (animation-timeline: view()) {
+    .prow { animation-timeline: view(); animation-range: entry 0% entry 38%; animation-delay: 0s; }
+  }
+  .prow.hidden-row { display: none; }
+
+  .fchip {
+    cursor: pointer;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.5rem 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    background: color-mix(in oklch, var(--raised) 60%, transparent);
+    transition: background-color 0.25s var(--ease-out-soft), color 0.25s, border-color 0.25s, transform 0.25s var(--ease-spring);
+  }
+  .fchip:hover { border-color: color-mix(in oklch, var(--primary) 45%, var(--line-strong)); color: var(--fg); transform: translateY(-1px); }
+  .fchip.is-on { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  /* Equal specificity means source order decides, so the active chip needs
+     its own hover rule or it reads as unresponsive. */
+  .fchip.is-on:hover { background: color-mix(in oklch, var(--primary) 84%, var(--fg)); color: var(--on-primary); }
+
+  @media (prefers-reduced-motion: reduce) { .prow { animation: none; } }
+</style>
+
+<script>
+  const bind = () => {
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.fchip'));
+    const rows = Array.from(document.querySelectorAll<HTMLLIElement>('.prow'));
+    const empty = document.getElementById('fempty');
+    if (!chips.length || !rows.length) return;
+
+    const apply = (want: string) => {
+      let shown = 0;
+      rows.forEach((row) => {
+        const match = want === 'all' || row.dataset.discipline === want;
+        row.classList.toggle('hidden-row', !match);
+        if (match) shown++;
+      });
+      empty?.classList.toggle('hidden', shown > 0);
+    };
+
+    chips.forEach((chip) => {
+      if (chip.dataset.bound === '1') return;
+      chip.dataset.bound = '1';
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => {
+          const on = c === chip;
+          c.classList.toggle('is-on', on);
+          c.setAttribute('aria-pressed', String(on));
+        });
+        apply(chip.dataset.filter ?? 'all');
+      });
+    });
+  };
+
+  bind();
+  document.addEventListener('astro:page-load', bind);
+</script>
