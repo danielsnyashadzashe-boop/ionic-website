@@ -15,7 +15,7 @@ import programmeDelivery from '@/assets/photos/programme-delivery.jpg';
  * want it to mean. `caption` is the editorial line shown under the image.
  *
  * `illustrative: true` on every entry is deliberate and load-bearing. These
- * are stock photographs — they are not Ionic staff, not client premises, and
+ * are stock photographs. They are not Ionic staff, not client premises, and
  * not any named engagement. Captioning them as though they were would be
  * fabricating evidence on a page clients read, so `Figure.astro` renders a
  * quiet "Illustrative" marker and nothing here claims otherwise.
@@ -32,14 +32,14 @@ export const photos = {
     src: nightEngineering,
     alt: 'An engineer wearing headphones works at a desk in a darkened office, facing a monitor of source code, with further code and terminal output projected on the wall behind.',
     caption:
-      'Integration work is where transformation budgets quietly go — the seams between tools, owned by nobody.',
+      'Integration work is where transformation budgets quietly go: the seams between tools, owned by nobody.',
     illustrative: true,
   },
   analyticsBriefing: {
     src: analyticsBriefing,
     alt: 'Two colleagues present to a seated group in a brick-walled meeting room, gesturing at a wall display showing bar charts, a pie chart and a projections dashboard.',
     caption:
-      'Discovery produces a number, not just a map — and a number is something you can check afterwards.',
+      'Discovery produces a number, not just a map, and a number is something you can check afterwards.',
     illustrative: true,
   },
   codeReview: {
@@ -53,7 +53,7 @@ export const photos = {
     src: aiInterface,
     alt: 'A robotic hand and a human hand reach toward each other, fingertips almost touching, against a dark interface of data labels and charts.',
     caption:
-      'AI at the core, not bolted on — discovery, decisions and analytics reading the same event stream.',
+      'AI at the core, not bolted on: discovery, decisions and analytics reading the same event stream.',
     illustrative: true,
   },
   modelMonitoring: {
@@ -67,7 +67,7 @@ export const photos = {
     src: deliveryTeam,
     alt: 'A software team works across several desks in a brick-walled office, two colleagues reviewing code on a monitor together while others work at their own screens.',
     caption:
-      'We work inside your teams, not alongside them — which is the only way the honest answer stays in front of both parties.',
+      'We work inside your teams, not alongside them, which is the only way the honest answer stays in front of both parties.',
     illustrative: true,
   },
   programmeDelivery: {

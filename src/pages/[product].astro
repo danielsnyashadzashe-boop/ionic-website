@@ -11,7 +11,7 @@ import { site, metrics } from '@/data/site';
 
 /**
  * One template for every product. Adding a fifth platform is a Markdown
- * file — no new page, no duplicated markup. This is the single biggest
+ * file. No new page, no duplicated markup. This is the single biggest
  * structural gain over the previous site, where each product page was a
  * near-identical hand-maintained copy.
  */
@@ -23,7 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }));
 };
 
-/** Props arriving from getStaticPaths — declared so the entry stays typed. */
+/** Props arriving from getStaticPaths, declared so the entry stays typed. */
 interface Props {
   product: CollectionEntry<'products'>;
 }
@@ -103,7 +103,7 @@ const schema = [
           </div>
         </div>
 
-        <!-- Capability index — a table of contents that doubles as ornament -->
+        <!-- Capability index: a table of contents that doubles as ornament -->
         <aside class="rise lg:pt-14" style="--step:2">
           {
             d.photo && (
@@ -229,6 +229,6 @@ const schema = [
     source={`${d.name} page`}
     returnPath={`/${d.slug}/`}
     title={`See ${d.name} in action`}
-    lede={`Tell us how your operations run today and we'll show you what ${d.name} changes — we reply within one business day.`}
+    lede={`Tell us how your operations run today and we'll show you what ${d.name} changes. We reply within one business day.`}
   />
 </PageLayout>

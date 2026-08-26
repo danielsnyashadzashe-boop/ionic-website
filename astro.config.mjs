@@ -10,7 +10,7 @@ export default defineConfig({
   site: 'https://www.ionicinnovate.com',
 
   // The live site serves directory URLs (/contact/, /ionic-erp/). These two
-  // settings preserve them exactly — changing either would 404 every
+  // settings preserve them exactly. Changing either would 404 every
   // indexed URL and throw away the site's existing search ranking.
   trailingSlash: 'always',
   build: {

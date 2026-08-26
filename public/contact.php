@@ -16,7 +16,7 @@
 declare(strict_types=1);
 
 /**
- * FIX 1 — Never let PHP notices into the response body.
+ * FIX 1: Never let PHP notices into the response body.
  *
  * With display_errors on (the default on plenty of shared hosts), a mail()
  * warning was printed before the JSON, so the client's res.json() threw and
@@ -72,11 +72,11 @@ if (trim((string)($_POST['website'] ?? '')) !== '') {
 }
 
 /**
- * FIX 2 — The time trap silently discarded genuine enquiries.
+ * FIX 2: The time trap silently discarded genuine enquiries.
  *
  * form_ts is stamped by the browser from Date.now(). The old check was
  * `(time() - $ts) < MIN_FILL_SECS`, which is also true when the delta is
- * NEGATIVE — i.e. whenever the visitor's clock ran fast. Anyone with a clock
+ * NEGATIVE, i.e. whenever the visitor's clock ran fast. Anyone with a clock
  * a few minutes ahead (extremely common on consumer devices) got a "message
  * sent" confirmation and no email was ever delivered. Reproduced against a
  * clock two hours out, so this was not theoretical.
@@ -115,7 +115,7 @@ if ($name === '' || $email === '' || $message === '') {
 }
 
 if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-    respond(false, 'That email address doesn’t look right — please check it.');
+    respond(false, 'That email address doesn’t look right. Please check it.');
 }
 
 // --- Send ---------------------------------------------------------------
@@ -127,7 +127,7 @@ $body = "New contact form enquiry\n"
     . str_repeat('-', 40) . "\n"
     . "Name:    {$name}\n"
     . "Email:   {$email}\n"
-    . "Company: " . ($company !== '' ? $company : '—') . "\n"
+    . "Company: " . ($company !== '' ? $company : '(not given)') . "\n"
     . "Page:    " . ($source !== '' ? $source : 'Unknown') . "\n"
     . "Sent:    " . gmdate('Y-m-d H:i:s') . " UTC\n"
     . "IP:      " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n"
@@ -135,7 +135,7 @@ $body = "New contact form enquiry\n"
     . $message . "\n";
 
 /**
- * FIX 3 — Encode the display name in Reply-To.
+ * FIX 3: Encode the display name in Reply-To.
  *
  * CR/LF was already stripped, so header injection was not possible, but a
  * name containing < or > (or a non-ASCII character) produced a malformed

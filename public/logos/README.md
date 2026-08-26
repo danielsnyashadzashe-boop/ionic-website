@@ -19,7 +19,7 @@ No other change is needed.
 ## Why these are not already here
 
 The previous site shipped no client logo assets, and drawing an approximation
-of another company's mark produces a fake logo — worse than an honest
+of another company's mark produces a fake logo, worse than an honest
 typographic tile, and a trademark problem. The monogram fallback is deliberate
 and ships safely until real, licensed assets are supplied.
 

@@ -3,7 +3,7 @@
  *
  * `file` points at `public/logos/<file>` and is optional. Where a real logo
  * asset exists it is used; where one does not, the tile falls back to a
- * monogram. That fallback is deliberate — drawing an approximation of another
+ * monogram. That fallback is deliberate. Drawing an approximation of another
  * company's mark produces a fake logo, which is worse than an honest
  * typographic tile and is a trademark problem besides.
  *
@@ -20,7 +20,7 @@ export interface Brand {
   mono: string;
   /** Which data hue tints the fallback tile. */
   tone: 'd1' | 'd2' | 'd3' | 'd4' | 'd5' | 'd6';
-  /** 'client' — delivered for. 'system' — integrated with. */
+  /** 'client': delivered for. 'system': integrated with. */
   kind: 'client' | 'system';
 }
 
@@ -47,8 +47,8 @@ export const brands: Brand[] = [
  * Rows for the marquee.
  *
  * Every row carries the FULL list, each starting at a different index. Slicing
- * the list into thirds gave rows of 4–5 tiles, which is narrower than a screen
- * — so the set had to be repeated to fill, and the same brand then appeared
+ * the list into thirds gave rows of 4-5 tiles, which is narrower than a screen,
+ * so the set had to be repeated to fill, and the same brand then appeared
  * two or three times at once. Rotating the whole list instead gives each row
  * ~2.7k px of unique tiles: wide enough to loop seamlessly, with no brand
  * visibly duplicated within a row.

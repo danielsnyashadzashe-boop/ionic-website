@@ -44,7 +44,7 @@ const favicon =
             : window.matchMedia('(prefers-color-scheme: light)').matches;
           document.documentElement.classList.toggle('light', light);
         } catch {
-          /* storage blocked — fall through to the dark default */
+          /* storage blocked: fall through to the dark default */
         }
       })();
     </script>
@@ -68,7 +68,7 @@ const favicon =
     <meta name="twitter:image" content={ogImage} />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={`${site.name} — Insights`} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} Insights`} href="/rss.xml" />
 
     {schemaList.map((s) => <script type="application/ld+json" is:inline set:html={JSON.stringify(s)} />)}
 

@@ -27,7 +27,7 @@ highlights:
 
 ## The engagement
 
-Race timing is a deceptively hard systems problem. Load is not steady — it
+Race timing is a deceptively hard systems problem. Load is not steady. It
 arrives in spikes around registration windows and event days, when a failure is
 maximally visible and cannot be rescheduled. Correctness matters absolutely,
 because a timing error is a disputed result.
@@ -38,7 +38,7 @@ across seasons, not just accurate on the day.
 
 ## What was built
 
-A custom platform rather than a configuration of an existing product — the right
+A custom platform rather than a configuration of an existing product, the right
 call when the domain requirements are this specific. It now underpins race
 timing at a scale of more than 800,000 registrations.
 
@@ -55,6 +55,6 @@ process problems repeat, and a product is the efficient answer to a repeating
 problem.
 
 Some problems do not repeat. Athlete monitoring with sport-specific coaching
-logic is one. The client's assessment — technical excellence plus understanding
-of the sports industry — is a description of consulting work, and it is a fair
+logic is one. The client's assessment, technical excellence plus understanding
+of the sports industry, is a description of consulting work, and it is a fair
 account of what this engagement was.

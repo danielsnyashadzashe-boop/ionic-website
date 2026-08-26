@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
  * redirect to a JSON response. None of these may be renamed.
  *
  * It is also a real <form> with a real action, so it still works with
- * JavaScript disabled — the handler redirects back with ?contact=sent.
+ * JavaScript disabled. The handler redirects back with ?contact=sent.
  */
 
 type FieldErrors = Partial<Record<'name' | 'email' | 'message', string>>;
@@ -47,7 +47,7 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
   useEffect(() => {
     const flag = new URLSearchParams(window.location.search).get('contact');
     if (flag === 'sent') {
-      setStatus({ kind: 'sent', message: `Thanks — we'll reply within one business day.` });
+      setStatus({ kind: 'sent', message: `Thanks, we'll reply within one business day.` });
     } else if (flag === 'error') {
       setStatus({ kind: 'error', message: `We couldn't send your message. Please email ${email}.` });
     }
@@ -97,7 +97,7 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
       if (parsed?.ok) {
         form.reset();
         if (tsRef.current) tsRef.current.value = String(Math.floor(Date.now() / 1000));
-        setStatus({ kind: 'sent', message: `Thanks — we'll reply within one business day.` });
+        setStatus({ kind: 'sent', message: `Thanks, we'll reply within one business day.` });
       } else {
         setStatus({
           kind: 'error',
@@ -113,7 +113,7 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
 
   return (
     <form ref={formRef} action={action} method="post" onSubmit={onSubmit} noValidate className="space-y-5">
-      {/* Handler contract — do not rename */}
+      {/* Handler contract: do not rename */}
       <input type="hidden" name="source" value={source} />
       <input type="hidden" name="return" value={returnPath} />
       <input ref={tsRef} type="hidden" name="form_ts" defaultValue="" />

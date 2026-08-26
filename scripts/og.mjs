@@ -1,5 +1,5 @@
 /**
- * Generates public/og-default.png — the social link-preview card.
+ * Generates public/og-default.png, the social link-preview card.
  *
  * The previous site had no og:image at all, so every share on LinkedIn,
  * Slack or WhatsApp rendered as bare text. Run `npm run og` after changing
@@ -7,7 +7,7 @@
  *
  * Rendered from SVG via sharp. Type is set in a heavy system grotesque
  * rather than Syne, because librsvg resolves fonts from the OS and not from
- * the project — a webfont would silently fall back on whichever machine
+ * the project, and a webfont would silently fall back on whichever machine
  * happens to run the build.
  */
 import sharp from 'sharp';
@@ -19,10 +19,8 @@ const W = 1200;
 const H = 630;
 
 // sRGB approximations of the oklch tokens. librsvg predates oklch(), so the
-// values are duplicated here rather than referenced — keep them in step with
+// values are duplicated here rather than referenced. Keep them in step with
 // the palette block in global.css.
-// sRGB approximations of the oklch tokens. librsvg predates oklch(), so the
-// values are duplicated here — keep them in step with global.css.
 const C = {
   base: '#14181F',
   raised: '#1D222B',
@@ -102,4 +100,4 @@ const file = join(out, 'og-default.png');
 await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(file);
 
 const meta = await sharp(file).metadata();
-console.log(`og-default.png written — ${meta.width}x${meta.height}, ${meta.size} bytes`);
+console.log(`og-default.png written: ${meta.width}x${meta.height}, ${meta.size} bytes`);

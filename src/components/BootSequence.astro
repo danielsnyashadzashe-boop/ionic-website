@@ -2,7 +2,7 @@
 /**
  * Launch sequence.
  *
- * The reference (anime.js) doesn't open with spectacle — it opens with
+ * The reference (anime.js) doesn't open with spectacle. It opens with
  * precision: a lot of small elements resolving into order on a tight,
  * staggered clock. That is the idea borrowed here, not the visuals.
  *
@@ -65,7 +65,7 @@ const log = [
 <style>
   #boot.running { display: block; }
 
-  /* Cells resolve in a pseudo-random order rather than a sweep — a sweep
+  /* Cells resolve in a pseudo-random order rather than a sweep. A sweep
      reads as a loading bar, a scatter reads as a system coming up. */
   .boot-cell {
     opacity: 0.08;
@@ -122,7 +122,7 @@ const log = [
       if (sessionStorage.getItem(KEY) === '1') return;
       sessionStorage.setItem(KEY, '1');
     } catch {
-      return; // storage blocked — do not risk showing it on every page
+      return; // storage blocked, do not risk showing it on every page
     }
 
     boot.classList.add('running');

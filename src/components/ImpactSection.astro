@@ -12,7 +12,7 @@ import { projects, disciplines } from '@/data/projects';
  * Impact dashboard.
  *
  * Every series is derived from the content collections or from a figure the
- * site publishes — nothing is invented to make a panel look busier.
+ * site publishes. Nothing is invented to make a panel look busier.
  *
  * These were React/Recharts islands until they were caught rendering blank.
  * Astro server-renders Recharts at a hardcoded 320x200 because there is no DOM
@@ -51,7 +51,7 @@ const platformLoad = [...loadCounts.entries()]
   .sort((a, b) => b.value - a.value);
 
 /**
- * Discipline spread. One hue at varying intensity — cycling six would imply a
+ * Discipline spread. One hue at varying intensity. Cycling six would imply a
  * categorical grouping that does not exist, and would repeat after six rows.
  */
 const disciplineData = disciplines
@@ -181,7 +181,7 @@ const sectors = [...new Set(studies.map((s) => s.data.sector))].sort();
       <article class="surface rise flex min-w-0 flex-col p-6 lg:col-span-5" style="--step:6">
         <h3 class="text-[0.9375rem] font-medium text-fg">Tools to procure</h3>
         <p class="mt-1.5 text-xs leading-relaxed text-fg-4">
-          The stated basis for a 60–70% lower total cost of ownership.
+          The stated basis for a 60-70% lower total cost of ownership.
         </p>
         <div class="mt-6">
           <BarsV

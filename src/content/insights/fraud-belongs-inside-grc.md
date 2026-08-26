@@ -24,7 +24,7 @@ A control framework encodes what should be true. A fraud engine observes what is
 actually happening. Held separately, each sees half of the same problem.
 
 Consider a control that exists on paper and is being routinely bypassed in
-practice. To the compliance system this is a control gap — a documentation and
+practice. To the compliance system this is a control gap: a documentation and
 remediation issue, scheduled for the next review cycle. To the fraud engine it
 is an anomalous pattern of unknown significance, because the engine does not
 know the control was supposed to prevent it.
@@ -39,7 +39,7 @@ There is a second, more technical reason to combine them.
 
 Anomaly detection depends entirely on a model of expected behaviour. Deploy
 detection without that model and you get alerts on behaviour that is unusual but
-correct — a legitimate seasonal spike, a new supplier, a policy that changed last
+correct: a legitimate seasonal spike, a new supplier, a policy that changed last
 quarter. The predictable result is alert fatigue, and alert fatigue does not
 degrade a monitoring system gracefully. It disables it, while leaving the
 dashboard green.

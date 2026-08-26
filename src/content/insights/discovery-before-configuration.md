@@ -21,7 +21,7 @@ It is still the wrong order, and the reason is not methodological purity.
 
 Every organisation of size has process documentation. It is usually accurate
 about what should happen and quietly silent about what does. The gap is not
-negligence — it is what accumulates when a process meets four years of
+negligence. It is what accumulates when a process meets four years of
 exceptions, staff changes and systems that were replaced without the workflow
 being revisited.
 
@@ -37,8 +37,8 @@ happens to processes over time.
 The more valuable output of discovery is not the map. It is the number.
 
 Discovery quantifies where cycle time is actually lost. That produces a specific
-claim — this step consumes this much time, automating it is worth this much —
-which can be checked afterwards. A business case built without it rests on a
+claim (this step consumes this much time, automating it is worth this much)
+that can be checked afterwards. A business case built without it rests on a
 percentage borrowed from a vendor's other customers.
 
 This matters for a reason that is easy to miss: it changes what happens when the
@@ -64,6 +64,6 @@ discovery preceding configuration and expansion contingent on the result. It
 became a five-year agreement across all business units.
 
 We do not think the pilot succeeded because discovery is a superior methodology.
-It succeeded because the pilot was scoped so that being wrong was survivable —
+It succeeded because the pilot was scoped so that being wrong was survivable,
 and discovery is what tells you, early and cheaply, which parts you were wrong
 about.

@@ -17,15 +17,15 @@ const fmt = (d: Date) =>
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Blog',
-  name: `${site.name} — Insights`,
+  name: `${site.name} Insights`,
   url: new URL('/insights/', site.domain).href,
   publisher: { '@type': 'Organization', name: site.name, url: site.domain },
 };
 ---
 
 <PageLayout
-  title={`Insights — process automation, GRC and transformation | ${site.name}`}
-  description="Practical writing on enterprise process automation, governance and risk, and why transformation programmes succeed or fail — from the team delivering them."
+  title={`Insights: process automation, GRC and transformation | ${site.name}`}
+  description="Practical writing on enterprise process automation, governance and risk, and why transformation programmes succeed or fail, from the team delivering them."
   schema={schema}
 >
   <section class="relative overflow-hidden">
@@ -40,7 +40,7 @@ const schema = {
       <div class="rule mt-8 w-28" style="animation-delay:260ms"></div>
 
       <p class="t-lede measure mt-8 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:320ms">
-        What we've learned delivering transformation programmes — written for the people who have to
+        What we've learned delivering transformation programmes, written for the people who have to
         make them work, not for search engines.
       </p>
 
@@ -62,7 +62,7 @@ const schema = {
     <div class="shell py-16 md:py-20">
       {
         posts.length === 0 ? (
-          <p class="text-fg-3">Nothing published yet — the first pieces are on their way.</p>
+          <p class="text-fg-3">Nothing published yet. The first pieces are on their way.</p>
         ) : (
           <ul class="space-y-0">
             {posts.map((post, i) => (

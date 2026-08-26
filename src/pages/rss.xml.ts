@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
   );
 
   return rss({
-    title: `${site.name} — Insights`,
+    title: `${site.name} Insights`,
     description:
       'Practical writing on enterprise process automation, governance and risk, and why transformation programmes succeed or fail.',
     site: context.site ?? site.domain,

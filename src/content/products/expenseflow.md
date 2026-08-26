@@ -8,9 +8,9 @@ kicker: AI-powered expense management
 summary: AI-powered expense management and reimbursement
 lede: >-
   Stop chasing receipts and spreadsheets. ExpenseFlow automates the entire
-  expense journey — from the photo of a receipt to an approved, reconciled
-  reimbursement — with AI doing the reading, checking and routing.
-seoTitle: ExpenseFlow — AI-Powered Expense Management Software
+  expense journey, from the photo of a receipt to an approved, reconciled
+  reimbursement, with AI doing the reading, checking and routing.
+seoTitle: "ExpenseFlow: AI-Powered Expense Management Software"
 seoDescription: >-
   ExpenseFlow automates expense management and reimbursement with AI receipt
   extraction, automated approvals, multi-currency support and real-time
@@ -23,14 +23,14 @@ capabilities:
   - name: AI receipt extraction
     detail: >-
       Snap a photo and ExpenseFlow reads the merchant, amount, date, tax and
-      category automatically — no manual capture, no retyping.
+      category automatically: no manual capture, no retyping.
   - name: Automated approvals
     detail: >-
       Policy-aware routing sends each claim to the right approver, flags
       out-of-policy spend and escalates what's stuck.
   - name: Multi-currency support
     detail: >-
-      Built for teams operating across borders — claims, conversions and
+      Built for teams operating across borders: claims, conversions and
       reimbursements in the currencies your business actually uses.
   - name: Real-time tracking
     detail: >-
@@ -53,7 +53,7 @@ traction:
 ## The problem is the paperwork, not the payment
 
 Expense management is rarely broken at the point of reimbursement. It breaks in
-the fortnight beforehand — a shoebox of receipts, a spreadsheet that gets
+the fortnight beforehand: a shoebox of receipts, a spreadsheet that gets
 emailed around, an approver who is travelling, a currency conversion someone
 did by hand at the wrong rate.
 
@@ -64,7 +64,7 @@ itself. What used to be a form becomes a confirmation.
 ## Built for businesses working across borders
 
 Multi-currency support is not a feature bolted on for larger customers. It is
-the reason the platform exists in the shape it does — the same business that
+the reason the platform exists in the shape it does: the same business that
 runs a South African payroll may be reimbursing a contractor in Canadian
 dollars against an invoice raised in euros.
 

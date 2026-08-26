@@ -10,7 +10,7 @@ stage: Production
 order: 1
 featured: true
 summary: >-
-  A single pilot became a five-year engagement spanning every business unit —
+  A single pilot became a five-year engagement spanning every business unit:
   Process Genesis deployment alongside digital transformation services.
 quote: >-
   Working with Ionic on our digital transformation journey has been
@@ -34,7 +34,7 @@ that the documentation described reality. Multiple business units, each with its
 own operating history, each convinced its processes were the exception.
 
 The work began as a pilot rather than a programme. That was deliberate on both
-sides — a discovery exercise against one bounded set of processes, with the
+sides: a discovery exercise against one bounded set of processes, with the
 explicit understanding that expansion would depend on the result.
 
 ## What changed
@@ -50,7 +50,7 @@ transformation services across all business units.
 ## Why it scaled
 
 The characteristic Old Mutual singled out was not the automation itself but the
-ability to understand complex business units — which is the harder half of the
+ability to understand complex business units, which is the harder half of the
 problem. Automating a process you have misunderstood produces a faster wrong
 answer.
 

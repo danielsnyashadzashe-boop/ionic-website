@@ -53,6 +53,6 @@ A 50-person business is a genuine test of whether a platform works without a
 dedicated implementation team. Enterprise software frequently succeeds at scale
 precisely because scale funds the specialists who make it work.
 
-Deploying cleanly at this size is what makes the reseller route viable — and
+Deploying cleanly at this size is what makes the reseller route viable, and
 that route is now the basis of two committed Canadian accounting-firm
 partnerships.

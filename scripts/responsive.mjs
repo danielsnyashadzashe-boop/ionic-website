@@ -109,7 +109,7 @@ const audit = () => {
   }
 
   // Tap targets. WCAG 2.5.5 exempts links that sit inline within a sentence,
-  // and sr-only elements are not pointer targets at all — flagging either
+  // and sr-only elements are not pointer targets at all, and flagging either
   // just trains you to ignore the report.
   for (const el of document.querySelectorAll('a, button, input, textarea, select, [role="button"]')) {
     const cs = getComputedStyle(el);
@@ -174,7 +174,7 @@ if (seen.size === 0) {
   const byKind = {};
   for (const rec of seen.values()) (byKind[rec.kind] ??= []).push(rec);
   for (const [kind, recs] of Object.entries(byKind)) {
-    console.log(`\n${kind.toUpperCase()} — ${recs.length} distinct`);
+    console.log(`\n${kind.toUpperCase()}: ${recs.length} distinct`);
     for (const r of recs.slice(0, 25)) {
       console.log(`  ${r.detail}`);
       console.log(`    widths: ${r.widths.join(', ')} | pages: ${[...r.pages].slice(0, 3).join(', ')}${r.pages.size > 3 ? ` +${r.pages.size - 3}` : ''}`);

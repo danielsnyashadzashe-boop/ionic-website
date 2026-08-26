@@ -5,7 +5,7 @@
 /* ── Typefaces ─────────────────────────────────────────────────────────
    Geist and Geist Mono. One family, two voices: the sans carries UI and
    headlines at tight tracking, the mono carries every label, figure and
-   telemetry readout. A single family keeps an instrument panel coherent —
+   telemetry readout. A single family keeps an instrument panel coherent;
    mixing a display face into dense data is where the reference screenshots
    started to feel noisy. */
 @import "@fontsource-variable/geist";
@@ -14,11 +14,11 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ══════════════════════════════════════════════════════════════════════
-   TOKENS — instrument panel
+   TOKENS: instrument panel
 
    The failure mode in the rejected reference is flatness: mid-blue panels
    on a mid-blue ground, every surface at the same depth, so nothing reads
-   as foreground. The fix is not a different hue, it is DEPTH — a very dark
+   as foreground. The fix is not a different hue, it is DEPTH: a very dark
    base, surfaces that step up in measured increments, hairlines that catch
    light on their top edge, and colour used only where it carries meaning.
 
@@ -61,7 +61,7 @@
   --fg-3: oklch(0.62 0.014 258);
   --fg-4: oklch(0.47 0.014 258);
 
-  /* Primary — a cool signal cyan. Reads as instrumentation, not corporate. */
+  /* Primary: a cool signal cyan. Reads as instrumentation, not corporate. */
   --primary: oklch(0.80 0.145 196);
   --primary-deep: oklch(0.62 0.135 200);
   --primary-wash: oklch(0.80 0.145 196 / 0.12);
@@ -87,7 +87,7 @@
 
 /* ── Light ───────────────────────────────────────────────────────────── */
 .light {
-  /* The dark ramp steps UP from the ground. Light cannot do that — white is
+  /* The dark ramp steps UP from the ground. Light cannot do that: white is
      the ceiling, so `panel` and `float` both pinned to pure white and every
      hover state that filled with `panel` became invisible on a white card.
      Here the page is a light grey, cards are the white that lifts off it, and
@@ -427,7 +427,7 @@
     transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-out-soft);
   }
   .btn > * { position: relative; z-index: 1; }
-  /* Light sweeps across on hover — one pass, not a loop. */
+  /* Light sweeps across on hover: one pass, not a loop. */
   .btn::after {
     content: "";
     position: absolute;

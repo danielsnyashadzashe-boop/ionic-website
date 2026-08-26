@@ -10,9 +10,9 @@ lede: >-
   The only platform that delivers the entire digital transformation journey in a
   single, integrated solution. Built from the ground up with AI at its core,
   Process Genesis combines capabilities that typically require five or six
-  separate tools — eliminating vendor complexity and reducing total cost of
-  ownership by 60–70%.
-seoTitle: Process Genesis — Enterprise Process Automation Platform
+  separate tools, eliminating vendor complexity and reducing total cost of
+  ownership by 60-70%.
+seoTitle: "Process Genesis: Enterprise Process Automation Platform"
 seoDescription: >-
   Process Genesis is Ionic's flagship AI-powered process automation platform:
   process discovery, intelligent document processing, no-code workflows,
@@ -30,11 +30,11 @@ capabilities:
   - name: Intelligent document processing
     detail: >-
       AI extraction, classification and validation of invoices, contracts and
-      claims — including unstructured data that rule-based tools can't handle.
+      claims, including unstructured data that rule-based tools can't handle.
   - name: Workflow engine
     detail: >-
       No-code/low-code workflow builder with approval routing, escalations, SLAs
-      and exception handling — business users build without waiting on IT.
+      and exception handling. Business users build without waiting on IT.
   - name: AI decision engine
     detail: >-
       Machine learning models that automate decisions, flag anomalies, predict
@@ -79,8 +79,8 @@ analytics layer reports on. Document extraction writes into processes rather
 than into an export folder. There is no integration layer between the
 components because there are no seams to integrate.
 
-That architecture is where the 60–70% reduction in total cost of ownership
-comes from — not from being cheaper per seat, but from removing five
+That architecture is where the 60-70% reduction in total cost of ownership
+comes from: not from being cheaper per seat, but from removing five
 procurement cycles, five security reviews and five sets of integration work.
 
 ## What deployment actually looks like

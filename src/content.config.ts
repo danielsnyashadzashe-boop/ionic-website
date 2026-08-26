@@ -57,7 +57,7 @@ const products = defineCollection({
 });
 
 /**
- * Case studies. Seeded from the six one-line testimonials on the old site —
+ * Case studies. Seeded from the six one-line testimonials on the old site,
  * each of which was carrying a real engagement it had no room to describe.
  */
 const caseStudies = defineCollection({

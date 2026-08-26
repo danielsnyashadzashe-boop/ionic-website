@@ -9,8 +9,8 @@ import { photos, type PhotoKey } from '@/data/photos';
  * the 2560px master and the browser picks a size from `sizes`. Nothing here
  * ships a multi-megabyte original.
  *
- * The frame is treated as a surface like any other panel — same border, same
- * radius, same lit edge — so a photograph sits in the design rather than being
+ * The frame is treated as a surface like any other panel, with the same border,
+ * radius and lit edge, so a photograph sits in the design rather than being
  * pasted on top of it. A tint scrim keeps stock photography from fighting the
  * palette, and every caption carries an "Illustrative" marker because these
  * are not photographs of Ionic staff or client sites.
@@ -24,7 +24,7 @@ interface Props {
   ratio?: string;
   /** Show the caption. Off for purely decorative placements. */
   showCaption?: boolean;
-  /** Load eagerly — use only for an above-the-fold image. */
+  /** Load eagerly. Use only for an above-the-fold image. */
   eager?: boolean;
   class?: string;
 }

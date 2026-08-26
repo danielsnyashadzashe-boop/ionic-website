@@ -2,7 +2,7 @@
 import { brandRows } from '@/data/brands';
 
 /**
- * Logo marquee — three offset rows of tiles sliding horizontally behind an
+ * Logo marquee: three offset rows of tiles sliding horizontally behind an
  * edge fade.
  *
  * Details that make it read as designed rather than as a loop:
@@ -30,7 +30,7 @@ const {
 /**
  * A -50% loop is only seamless if one *set* is already wider than the viewport,
  * or the wrap point lands on screen as a gap. Each row carries the full brand
- * list (rotated to a different start), which is ~2.7k px — wide enough on any
+ * list (rotated to a different start), which is ~2.7k px, wide enough on any
  * display, with no brand repeating within a row.
  */
 const rows = [
@@ -56,7 +56,7 @@ const rows = [
       rows.map((row) => (
         <div class="mq" style={`--dur:${row.dur}s; --offset:${row.offset}`}>
           <div class:list={['mq-track', row.reverse && 'rev']}>
-            {/* Duplicated exactly once — the -50% translate depends on it. */}
+            {/* Duplicated exactly once. The -50% translate depends on it. */}
             {[0, 1].map((copy) => (
               <ul class="mq-set flex shrink-0 items-center gap-2.5" aria-hidden={copy === 1}>
                 {row.items.map((b, k) => (
@@ -189,7 +189,7 @@ const rows = [
 
   @media (prefers-reduced-motion: reduce) {
     .mq-track { animation: none; }
-    /* Still reachable — it becomes a plain scrollable strip. */
+    /* Still reachable: it becomes a plain scrollable strip. */
     .mq { overflow-x: auto; transform: none; }
     .mq-track .mq-set[aria-hidden='true'] { display: none; }
   }

@@ -1,7 +1,7 @@
 ---
 title: Transformation programmes fail on integration, not capability
 description: >-
-  The tools almost always work. What breaks is the space between them — and that
+  The tools almost always work. What breaks is the space between them, and that
   space is where most of the budget quietly goes.
 published: 2026-07-14
 author: Ionic
@@ -17,7 +17,7 @@ the fields.
 
 In our experience that diagnosis is nearly always wrong. The individual tools
 work. Vendors are selling mature software and it does roughly what the demo
-showed. What fails is the space between the tools — and because no single vendor
+showed. What fails is the space between the tools, and because no single vendor
 owns that space, no single vendor is accountable for it.
 
 ## The arithmetic of seams
@@ -39,7 +39,7 @@ correctly, that their side is behaving as specified.
 
 The pattern we see is consistent. Integration work is estimated as a line item
 and consumed as a programme. The money comes from the part of the budget that
-was allocated to change management — because that is the only line flexible
+was allocated to change management, because that is the only line flexible
 enough to raid.
 
 This is the quiet failure mode. The technology gets delivered. The adoption
@@ -54,7 +54,7 @@ acquisition:
 
 **Does discovery write into the workflow engine, or export to it?** An export is
 a seam wearing a product's badge. If the mapping produced by discovery has to be
-re-entered — even semi-automatically — the components were built separately.
+re-entered, even semi-automatically, the components were built separately.
 
 **Which single component owns the event stream?** In a genuinely integrated
 platform, analytics and the decision layer read the same events the workflow

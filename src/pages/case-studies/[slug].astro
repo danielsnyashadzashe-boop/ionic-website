@@ -62,7 +62,7 @@ const facts = [
 ---
 
 <PageLayout
-  title={`${d.client} — ${d.engagement} | ${site.name}`}
+  title={`${d.client}: ${d.engagement} | ${site.name}`}
   description={d.summary}
   schema={schema}
 >
@@ -118,7 +118,7 @@ const facts = [
       d.highlights.length > 0 && (
         <div class="border-t border-line">
           <div class="shell">
-            {/* Highlight values are not all numeric — "All business units" is a
+            {/* Highlight values are not all numeric. "All business units" is a
                 phrase. Sizing them like hero figures made the strip unreadable,
                 so short values get display treatment and long ones stay small. */}
             <dl class="grid grid-cols-1 gap-px bg-line-strong sm:grid-cols-3">
@@ -194,9 +194,9 @@ const facts = [
   </article>
 
   <ContactSection
-    source={`Case study — ${d.client}`}
+    source={`Case study: ${d.client}`}
     returnPath={`/case-studies/${study.id}/`}
     title="Discuss a similar engagement"
-    lede="If this resembles a problem you're carrying, tell us about it — we reply within one business day."
+    lede="If this resembles a problem you're carrying, tell us about it. We reply within one business day."
   />
 </PageLayout>

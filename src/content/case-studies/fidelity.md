@@ -34,8 +34,8 @@ it cannot run a separate programme for each without the cost of coordination
 exceeding the benefit.
 
 What they were selecting for, on their own account, was a partner who could hold
-both halves — the strategic consulting to sequence the work and the technology
-to execute it — rather than a vendor who would supply the second and subcontract
+both halves, the strategic consulting to sequence the work and the technology
+to execute it, rather than a vendor who would supply the second and subcontract
 the first.
 
 ## The shape of the work
@@ -50,7 +50,7 @@ and the product portfolio supplies it where there is a genuine fit.
 
 The claim to be technology-agnostic is easy to make and mostly unfalsifiable
 from the outside. The observable version is what happens when a client evaluates
-one of your own products and the honest answer is that a module does not fit —
+one of your own products and the honest answer is that a module does not fit:
 whether the recommendation changes.
 
 Running the ERP evaluation inside a live consulting engagement puts that

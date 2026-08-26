@@ -5,13 +5,13 @@ order: 4
 flagship: false
 tone: d6
 kicker: Governance, risk & compliance in one
-summary: Governance, risk and compliance — with fraud detection built in
+summary: Governance, risk and compliance, with fraud detection built in
 lede: >-
   Most organisations run governance, risk, compliance and fraud detection in
   separate tools that don't talk to each other. Ionic GRC is the only end-to-end,
-  all-in-one platform that combines them — so risks surface before they become
+  all-in-one platform that combines them, so risks surface before they become
   losses, and every action leaves an audit trail.
-seoTitle: Ionic GRC — Governance, Risk & Compliance Platform with Fraud Detection
+seoTitle: "Ionic GRC: Governance, Risk & Compliance Platform with Fraud Detection"
 seoDescription: >-
   Ionic GRC is the only end-to-end, all-in-one governance, risk and compliance
   platform with integrated fraud detection and prevention. Deployed at 3Sixty
@@ -22,7 +22,7 @@ homeProof: 3Sixty Health deployment; Momentum in discussions
 capabilities:
   - name: Fraud detection & prevention
     detail: >-
-      Proactive monitoring of fraud, waste and abuse — AI models flag anomalous
+      Proactive monitoring of fraud, waste and abuse: AI models flag anomalous
       patterns so losses are detected and mitigated before they compound.
   - name: Compliance management
     detail: >-
@@ -34,7 +34,7 @@ capabilities:
       clear ownership and treatment plans.
   - name: Audit trail & reporting
     detail: >-
-      Every decision and change recorded and reportable — full traceability for
+      Every decision and change recorded and reportable: full traceability for
       auditors, regulators and boards.
 traction:
   heading: Proving itself where fraud costs most
@@ -68,5 +68,5 @@ then reconstruct a year of evidence in six weeks, from email threads and
 memory.
 
 Mapping controls to obligations continuously means the evidence accumulates as
-work happens. The audit trail is not a report you generate — it is a byproduct
+work happens. The audit trail is not a report you generate. It is a byproduct
 of the platform being used, which is what makes it credible to a regulator.

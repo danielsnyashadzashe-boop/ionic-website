@@ -31,7 +31,7 @@ highlights:
 Tendering is a process where the cost of disorder is unusually legible.
 Submissions have deadlines that do not move, compliance requirements that vary
 by client, and an approval chain that has to be evidenced afterwards. When it
-goes wrong, the failure is not a slow process — it is a bid that did not go in.
+goes wrong, the failure is not a slow process. It is a bid that did not go in.
 
 Bidvest scoped the work to two divisions, Execuflora and TopTurf, with
 group-wide introduction explicitly conditional on the result rather than assumed
@@ -50,7 +50,7 @@ programme could be judged on outcomes within a sensible timeframe.
 ## The outcome
 
 Bidvest's own assessment is that the deployment exceeded expectations and has
-positioned the group for expansion — the condition the original scope set.
+positioned the group for expansion, the condition the original scope set.
 
 Their stated reasons are worth separating: a technology-agnostic approach and a
 deep understanding of their processes. Neither is a product feature. Both are

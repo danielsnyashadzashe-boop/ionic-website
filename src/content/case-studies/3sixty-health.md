@@ -29,7 +29,7 @@ highlights:
 ## The engagement
 
 Healthcare administration is one of the few sectors where fraud, waste and abuse
-are treated as a single category — because operationally they are hard to
+are treated as a single category, because operationally they are hard to
 separate. A claim that should not have been paid may be deliberate fraud, a
 duplicate submitted in error, or a service delivered outside policy. The
 financial effect is identical; only the response differs.
@@ -51,7 +51,7 @@ and trains its users to ignore alerts.
 ## Why proactive is the operative word
 
 The distinction 3Sixty Health drew was between detecting losses and mitigating
-them — which is a question of timing rather than capability.
+them, which is a question of timing rather than capability.
 
 Retrospective analysis tells you what a loss cost. Monitoring that surfaces
 anomalous patterns as they emerge gives you the option to prevent the next one.

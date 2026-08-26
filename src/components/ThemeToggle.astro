@@ -1,7 +1,7 @@
 ---
 /**
  * Theme switch. Dark is the default, so the class toggled is `.light`.
- * Plain JS — a theme control that needs a framework to boot before it
+ * Plain JS. A theme control that needs a framework to boot before it
  * responds is a theme control that flashes.
  */
 ---
@@ -27,7 +27,7 @@
     transition: opacity 0.35s var(--ease-out-soft), transform 0.45s var(--ease-spring);
   }
 
-  /* Dark is the default, so show the sun — the state you can switch to. */
+  /* Dark is the default, so show the sun, the state you can switch to. */
   .t-sun { opacity: 1; transform: rotate(0) scale(1); }
   .t-moon { opacity: 0; transform: rotate(-80deg) scale(0.5); }
 
@@ -53,7 +53,7 @@
       try {
         localStorage.setItem(KEY, nowLight ? 'light' : 'dark');
       } catch {
-        /* private mode — the choice just will not persist */
+        /* private mode: the choice just will not persist */
       }
     });
   };
