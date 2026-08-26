@@ -29,20 +29,23 @@ const favicon =
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={favicon} />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14181F" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F7F9" />
+    {/* Single value, not a prefers-color-scheme pair. The page no longer
+        follows the OS, so a media-matched theme-color would paint the mobile
+        browser chrome light over a dark page. ThemeToggle rewrites it. */}
+    <meta name="theme-color" content="#14181F" />
     <meta name="generator" content={Astro.generator} />
 
     {/* Theme resolved before first paint. Dark is the default, so the class
-        applied is `.light`. */}
+        applied is `.light`, and only a stored choice can apply it. The OS
+        preference is deliberately not consulted: a visitor on a light desktop
+        should still land on the dark design. */}
     <script is:inline>
       (() => {
         try {
-          const saved = localStorage.getItem('ionic-theme');
-          const light = saved
-            ? saved === 'light'
-            : window.matchMedia('(prefers-color-scheme: light)').matches;
-          document.documentElement.classList.toggle('light', light);
+          document.documentElement.classList.toggle(
+            'light',
+            localStorage.getItem('ionic-theme') === 'light',
+          );
         } catch {
           /* storage blocked: fall through to the dark default */
         }
@@ -92,15 +95,14 @@ const favicon =
 
     <script is:inline>
       /* ClientRouter swaps the document element on navigation, which drops the
-         `light` class. Reapply it during the swap, before paint, or every
-         client-side navigation silently reverts to the OS preference. */
+         `light` class. Reapply it during the swap, before paint, or a visitor
+         who chose light silently snaps back to dark on every navigation. */
       document.addEventListener('astro:after-swap', () => {
         try {
-          const saved = localStorage.getItem('ionic-theme');
-          const light = saved
-            ? saved === 'light'
-            : window.matchMedia('(prefers-color-scheme: light)').matches;
-          document.documentElement.classList.toggle('light', light);
+          document.documentElement.classList.toggle(
+            'light',
+            localStorage.getItem('ionic-theme') === 'light',
+          );
         } catch {
           /* no-op */
         }

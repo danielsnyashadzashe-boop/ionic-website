@@ -101,6 +101,12 @@ before first paint by an inline script, reapplied on `astro:after-swap`, and
 persisted in `localStorage`. Both matter: losing either means a flash or a
 silent revert on navigation.
 
+`prefers-color-scheme` is deliberately not consulted. Only a stored choice
+applies `.light`, so a visitor on a light desktop still lands on the dark
+design. `theme-color` therefore ships a single dark value rather than a
+media-matched pair, and the toggle rewrites it; a media pair would paint the
+mobile browser chrome light over a dark page.
+
 The light theme is **not** the dark ramp inverted. Dark steps up from the
 ground; light cannot, because white is the ceiling. Pinning both `panel` and
 `float` to pure white made every hover that filled with `panel` invisible on a
