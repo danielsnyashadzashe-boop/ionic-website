@@ -41,12 +41,72 @@ const {
 const p = photos[photo];
 const isPortrait = p.src.height > p.src.width;
 const frameRatio = ratio ?? (isPortrait ? '3 / 4' : '16 / 10');
+
+/**
+ * The traced outline is an SVG polygon rather than a border, because a
+ * clipped element cannot paint a border along the edges the clip removed.
+ * Drawing it in the frame's own aspect ratio keeps the notch square-ish
+ * instead of sheared, and `vector-effect` keeps the stroke a constant
+ * hairline whatever the rendered size.
+ */
+/**
+ * Notch geometry, derived from the frame's ratio and handed to both the CSS
+ * clip and the SVG so the two paths cannot drift apart.
+ *
+ * Both axes are sized off the WIDTH. Sizing the vertical off the height
+ * instead made the notch a different shape on every ratio: a 21/9 banner got
+ * a shallow sliver and a 3/4 portrait got a deep bite, and neither read as
+ * the same device. Anchoring to width keeps the cut a constant 2.4:1
+ * whatever the frame.
+ */
+const NOTCH_W = 0.13;
+const NOTCH_ASPECT = 0.42;
+
+const [rw, rh] = frameRatio.split('/').map((n) => Number(n.trim()) || 1);
+const VW = rw * 100;
+const VH = rh * 100;
+const nx = VW * NOTCH_W;
+const ny = nx * NOTCH_ASPECT;
+/** Same two lengths as percentages, for the clip-path. */
+const nxPct = NOTCH_W * 100;
+const nyPct = (ny / VH) * 100;
+const outline = [
+  [0, 0],
+  [VW - nx, 0],
+  [VW - nx, ny],
+  [VW, ny],
+  [VW, VH],
+  [nx, VH],
+  [nx, VH - ny],
+  [0, VH - ny],
+]
+  .map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`)
+  .join(' ');
+
+/**
+ * Placed by hand, not generated. Four squares at irregular intervals with
+ * mismatched sizes and two treatments; a loop with even spacing is the
+ * version that looks machine-made.
+ *
+ * All four keep clear of the top-right and bottom-left corners, because that
+ * is where the notch is cut. A square sitting in the cut read as a rendering
+ * glitch rather than decoration.
+ */
+const specks = [
+  { class: 'speck', style: 'width:.85rem;height:.85rem;top:-.4rem;left:17%;animation-delay:-1.2s' },
+  { class: 'speck speck-mute', style: 'width:.55rem;height:.55rem;top:38%;right:-.3rem;animation-delay:-3.4s' },
+  { class: 'speck speck-ring', style: 'width:1.35rem;height:1.35rem;bottom:-.5rem;right:24%;animation-delay:-5.1s' },
+  { class: 'speck', style: 'width:.5rem;height:.5rem;top:12%;left:-.28rem;animation-delay:-2.3s' },
+];
 ---
 
 <figure class={`group ${className}`}>
+  {/* Positioning context for the outline and squares. It has to be the frame
+      alone, not the whole figure, or they stretch across the caption too. */}
+  <div class="relative" style={`aspect-ratio: ${frameRatio}`}>
   <div
-    class="surface relative overflow-hidden"
-    style={`aspect-ratio: ${frameRatio}`}
+    class="notch surface absolute inset-0 overflow-hidden"
+    style={`--nx: ${nxPct}%; --ny: ${nyPct.toFixed(3)}%`}
   >
     <Image
       src={p.src}
@@ -64,7 +124,26 @@ const frameRatio = ratio ?? (isPortrait ? '3 / 4' : '16 / 10');
     <span
       class="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/70 via-transparent to-transparent"
       aria-hidden="true"></span>
-    <span class="pointer-events-none absolute inset-0 ring-1 ring-inset ring-line" aria-hidden="true"></span>
+  </div>
+
+  {/* Outline and squares sit outside the clipped frame, so they are siblings
+      of it rather than children. Anything inside would be cut away. */}
+  <svg
+    class="notch-line"
+    viewBox={`0 0 ${VW} ${VH}`}
+    preserveAspectRatio="none"
+    fill="none"
+    aria-hidden="true"
+  >
+    <polygon
+      points={outline}
+      stroke="currentColor"
+      stroke-width="1.5"
+      vector-effect="non-scaling-stroke"
+    />
+  </svg>
+
+  {specks.map((s) => <span class={s.class} style={s.style} aria-hidden="true" />)}
   </div>
 
   {

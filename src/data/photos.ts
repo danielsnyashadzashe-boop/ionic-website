@@ -74,7 +74,7 @@ export const photos = {
     src: programmeDelivery,
     alt: 'A curved pedestrian bridge leading toward modern architecture at sunrise, overlaid with the words “Project Management” and a fine circular diagram.',
     caption:
-      'Pilot first, scoped so being wrong is survivable. Expansion follows the result, not the contract.',
+      'Delivery is a sequence, not a launch. Each step exists to make the next one cheaper to get wrong.',
     illustrative: true,
   },
 } satisfies Record<string, Photo>;

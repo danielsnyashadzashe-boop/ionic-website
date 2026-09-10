@@ -84,7 +84,10 @@ const method = [
   <!-- ══════════ 00 · HERO ══════════ -->
   <section class="relative overflow-hidden">
     <div class="blueprint pointer-events-none absolute inset-0"></div>
-    <div class="halo -left-32 -top-24 h-[34rem] w-[34rem]"></div>
+    {/* Two washes, not one: a single blob centred behind the headline reads as
+        a glow effect, while an opposed pair reads as depth in the ground. */}
+    <div class="aurora -left-40 -top-32 h-[38rem] w-[38rem]"></div>
+    <div class="aurora -bottom-48 -right-32 h-[30rem] w-[30rem]" style="animation-delay:-9s"></div>
 
     <div class="shell relative grid items-center gap-14 pb-16 pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-20">
       <div>
@@ -97,8 +100,13 @@ const method = [
           <span class="block overflow-hidden">
             <span class="rise block" style="--step:0">Transformation,</span>
           </span>
+          {/* The slash has to sit inside the second line. The two line
+              wrappers are block-level, so an inline-block sibling after them
+              wrapped onto a third line at hero size. */}
           <span class="block overflow-hidden">
-            <span class="rise block text-primary" style="--step:1.6">instrumented.</span>
+            <span class="rise block" style="--step:1.6">
+              <span class="grad-text">instrumented.</span><span class="slash" aria-hidden="true">/</span>
+            </span>
           </span>
         </h1>
 
@@ -162,10 +170,10 @@ const method = [
 
   <!-- ══════════ 01 · PRINCIPLES ══════════ -->
   <section id="about" class="seam scroll-mt-16">
-    <div class="shell py-20 md:py-24">
+    <div class="shell py-28 md:py-36">
       <SectionHead n="01" marker="Approach" title="We become an extension of" titleAccent="your business." />
 
-      <div class="mt-12 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
+      <div class="mt-16 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
         <Figure
           photo="deliveryTeam"
           class="lift"
@@ -197,7 +205,7 @@ const method = [
 
   <!-- ══════════ 02 · PLATFORMS ══════════ -->
   <section id="platforms" class="seam scroll-mt-16">
-    <div class="shell py-20 md:py-24">
+    <div class="shell py-28 md:py-36">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead
           n="02"
@@ -211,7 +219,7 @@ const method = [
         </a>
       </div>
 
-      <div class="mt-12 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+      <div class="mt-16 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         {flagship && <ProductCard product={flagship} index={0} wide />}
         {rest.map((p, i) => <ProductCard product={p} index={i + 1} />)}
       </div>
@@ -226,7 +234,7 @@ const method = [
 
   <!-- ══════════ 05 · METHOD ══════════ -->
   <section class="seam">
-    <div class="shell py-20 md:py-24">
+    <div class="shell py-28 md:py-36">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead n="05" marker="Method" title="Four steps," titleAccent="in this order." />
         <div class="rise w-full max-w-md lg:max-w-lg" style="--step:2">
@@ -234,23 +242,67 @@ const method = [
         </div>
       </div>
 
-      <ol class="mt-12 grid gap-3 md:grid-cols-4">
+      {/* Steps read as a row of stations rather than four equal cards. The
+          descriptions alternate above and below the line so consecutive
+          blocks of text never sit shoulder to shoulder, which is what made
+          the card version hard to scan. Below `md` it collapses to a plain
+          list, because a horizontal track on a phone is just a squeeze. */}
+      {/* Every step shares one five-row track (text · riser · circle · riser ·
+          text) and the circle is always row 3, so all four circles sit on a
+          single baseline while only the labels alternate. Ordering them with
+          flex instead staggered the circles, which lost the through-line that
+          makes the row read as a sequence. Below `md` it collapses to circle
+          then text, because a horizontal track on a phone is just a squeeze. */}
+      <ol
+        class="mt-20 grid gap-x-4 gap-y-12 md:grid-cols-4 md:gap-y-0 md:[grid-template-rows:minmax(0,1fr)_2.5rem_auto_2.5rem_minmax(0,1fr)]"
+      >
         {
-          method.map((m, i) => (
-            <li class="surface card-i rise relative overflow-hidden p-6" style={`--step:${i}`}>
-              <span
-                class="absolute left-0 top-0 h-px w-full origin-left"
-                style={`background: linear-gradient(90deg, var(--primary), transparent); animation: draw-x 0.9s var(--ease-mech) ${i * 0.12}s both`}
-                aria-hidden="true"
-              />
-              <div class="flex items-baseline justify-between">
-                <span class="figure text-[0.6875rem] text-primary">{String(i + 1).padStart(2, '0')}</span>
-                <span class="mono-label">{i === method.length - 1 ? 'Ongoing' : `Step ${i + 1}`}</span>
-              </div>
-              <h3 class="mt-5 text-[1.0625rem] font-medium tracking-[-0.02em]">{m.step}</h3>
-              <p class="mt-2.5 text-[0.875rem] leading-relaxed text-fg-3">{m.body}</p>
-            </li>
-          ))
+          method.map((m, i) => {
+            const above = i % 2 === 0;
+            return (
+              <li
+                class="step rise grid justify-items-center gap-y-5 md:row-span-5 md:grid-rows-subgrid md:gap-y-0"
+                style={`--step:${i}`}
+              >
+                <p
+                  class:list={[
+                    'order-2 max-w-[15rem] text-center text-[0.875rem] leading-relaxed text-fg-3 md:order-none',
+                    above ? 'md:row-start-1 md:self-end' : 'md:row-start-5 md:self-start',
+                  ]}
+                >
+                  {m.body}
+                </p>
+
+                {/* Riser: the chevron points at the label, the dots run to the
+                    circle, so the pair always reads text-ward. */}
+                <span
+                  class:list={[
+                    'hidden flex-col items-center md:flex',
+                    above ? 'md:row-start-2 md:flex-col-reverse' : 'md:row-start-4',
+                  ]}
+                  aria-hidden="true"
+                >
+                  <span class="step-riser my-1.5 h-7 w-px"></span>
+                  <svg width="26" height="14" viewBox="0 0 26 14" fill="none" class="text-primary">
+                    <path
+                      d={above ? 'M2 12 L13 2 L24 12' : 'M2 2 L13 12 L24 2'}
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+
+                <div class="step-dot order-1 w-32 md:order-none md:row-start-3 md:w-full md:max-w-[9.5rem]">
+                  <span class="figure text-[1.75rem] leading-none text-fg-2">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 class="mt-1 text-[0.9375rem] font-medium tracking-[-0.01em]">{m.step}</h3>
+                </div>
+              </li>
+            );
+          })
         }
       </ol>
     </div>
@@ -258,7 +310,7 @@ const method = [
 
   <!-- ══════════ 06 · CASE STUDIES ══════════ -->
   <section class="seam">
-    <div class="shell py-20 md:py-24">
+    <div class="shell py-28 md:py-36">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead n="06" marker="Engagements" title="Trusted where" titleAccent="it counts." />
         <a href="/case-studies/" class="link-u rise font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3" style="--step:3">
@@ -266,7 +318,7 @@ const method = [
         </a>
       </div>
 
-      <div class="mt-12 grid gap-3 md:grid-cols-3">
+      <div class="mt-16 grid gap-3 md:grid-cols-3">
         {studies.map((s, i) => <CaseStudyCard study={s} index={i} />)}
       </div>
     </div>

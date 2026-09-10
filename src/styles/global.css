@@ -44,10 +44,14 @@
 
 /* ── Dark (default) ──────────────────────────────────────────────────── */
 :root {
-  --base: oklch(0.166 0.014 258);
-  --raised: oklch(0.202 0.016 258);
-  --panel: oklch(0.238 0.017 258);
-  --float: oklch(0.279 0.019 258);
+  /* Ground carries more blue than it used to (chroma 0.014 -> 0.024, hue
+     258 -> 236). The reference ground is a deep teal-navy, not a neutral
+     charcoal. The four steps are unchanged: saturating the ground without
+     keeping the ramp is exactly how the rejected reference went flat. */
+  --base: oklch(0.168 0.024 236);
+  --raised: oklch(0.204 0.026 236);
+  --panel: oklch(0.240 0.028 236);
+  --float: oklch(0.281 0.030 236);
 
   --line: oklch(1 0 0 / 0.07);
   --line-strong: oklch(1 0 0 / 0.14);
@@ -61,10 +65,19 @@
   --fg-3: oklch(0.62 0.014 258);
   --fg-4: oklch(0.47 0.014 258);
 
-  /* Primary: a cool signal cyan. Reads as instrumentation, not corporate. */
-  --primary: oklch(0.80 0.145 196);
-  --primary-deep: oklch(0.62 0.135 200);
-  --primary-wash: oklch(0.80 0.145 196 / 0.12);
+  /* Primary moved from cyan (196) to azure (224): the reference reads blue,
+     and this keeps our cyan as the bright tip of the ramp instead of
+     discarding it. */
+  --primary: oklch(0.765 0.145 224);
+  --primary-deep: oklch(0.60 0.145 236);
+  --primary-wash: oklch(0.765 0.145 224 / 0.12);
+
+  /* The gradient ramp. Indigo -> azure -> cyan, three stops so a large fill
+     has somewhere to travel; two-stop blue gradients band visibly across a
+     hero-sized area. Every gradient on the site is built from these. */
+  --grad-a: oklch(0.545 0.175 268);
+  --grad-b: oklch(0.700 0.155 232);
+  --grad-c: oklch(0.855 0.130 198);
 
   /* Data hues. Matched perceived weight so a legend reads as one set. */
   --d1: oklch(0.78 0.14 220);
@@ -78,8 +91,8 @@
   --warn: oklch(0.83 0.135 92);
   --crit: oklch(0.72 0.16 28);
 
-  --on-primary: oklch(0.16 0.014 258);
-  --glow: 0 0 0 1px oklch(0.80 0.145 196 / 0.22), 0 0 32px -6px oklch(0.80 0.145 196 / 0.30);
+  --on-primary: oklch(0.16 0.024 236);
+  --glow: 0 0 0 1px oklch(0.765 0.145 224 / 0.22), 0 0 32px -6px oklch(0.765 0.145 224 / 0.30);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
 
   --grid-line: oklch(1 0 0 / 0.035);
@@ -107,9 +120,15 @@
   --fg-3: oklch(0.54 0.014 258);
   --fg-4: oklch(0.66 0.012 258);
 
-  --primary: oklch(0.52 0.135 214);
-  --primary-deep: oklch(0.42 0.13 216);
-  --primary-wash: oklch(0.52 0.135 214 / 0.10);
+  --primary: oklch(0.505 0.155 244);
+  --primary-deep: oklch(0.405 0.150 252);
+  --primary-wash: oklch(0.505 0.155 244 / 0.10);
+
+  /* Same ramp, pulled down in lightness. On a white ground the dark-theme
+     stops wash out to pastel, so the gradient has to be darker, not inverted. */
+  --grad-a: oklch(0.430 0.185 272);
+  --grad-b: oklch(0.520 0.160 238);
+  --grad-c: oklch(0.630 0.135 202);
 
   --d1: oklch(0.52 0.16 258);
   --d2: oklch(0.52 0.135 214);
@@ -123,7 +142,7 @@
   --crit: oklch(0.53 0.19 28);
 
   --on-primary: oklch(0.99 0 0);
-  --glow: 0 0 0 1px oklch(0.52 0.135 214 / 0.18), 0 10px 30px -18px oklch(0.52 0.135 214 / 0.40);
+  --glow: 0 0 0 1px oklch(0.505 0.155 244 / 0.18), 0 10px 30px -18px oklch(0.505 0.155 244 / 0.40);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 12px 30px -22px var(--edge-shade);
 
   --grid-line: oklch(0.20 0.02 258 / 0.05);
@@ -281,6 +300,10 @@
 @keyframes orbit     { to { transform: rotate(360deg); } }
 @keyframes breathe   { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.8; } }
 @keyframes dash      { to { stroke-dashoffset: 0; } }
+/* Loose squares breathe a few pixels. Deliberately slow and small: the
+   moment decoration moves far enough to notice, it stops reading as decor. */
+@keyframes drift     { from { transform: none; } to { transform: translate3d(0.4rem, -0.5rem, 0); } }
+@keyframes wander    { from { transform: none; } to { transform: translate3d(4%, -6%, 0) scale(1.12); } }
 
 @layer components {
   .rise, .veil, .lift, .slide-x {
@@ -534,6 +557,137 @@
     border: 1px solid var(--ok);
     animation: breathe 2.4s ease-in-out infinite;
   }
+
+  /* ── Notch motif ───────────────────────────────────────────────────
+     The reference frames are rectangles with a step cut out of two
+     opposite corners, a hairline tracing the same shape offset from it,
+     and a few loose squares scattered across the boundary. It is the one
+     device that makes that page recognisable, so it is worth building
+     properly rather than approximating.
+
+     The cut is a clip-path. The outline is a separate SVG polygon, because
+     a clipped element cannot show a border along the edges the clip
+     removed. The squares are hand-placed, not randomised: evenly scattered
+     decoration is precisely what reads as machine-made. */
+  /* Notch size is proportional, not a fixed rem, because the traced outline
+     is an SVG in viewBox units. Fixed rem here and percentages there meant
+     the two paths diverged instead of running parallel, which read as a
+     mistake rather than a device. Figure.astro overrides --nx/--ny inline
+     with values derived from the frame's own ratio; these are the fallback
+     for any other use. */
+  .notch {
+    --nx: 13%;
+    --ny: 7%;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--nx)) 0,
+      calc(100% - var(--nx)) var(--ny),
+      100% var(--ny),
+      100% 100%,
+      var(--nx) 100%,
+      var(--nx) calc(100% - var(--ny)),
+      0 calc(100% - var(--ny))
+    );
+  }
+  /* The tracing outline. Offset up and right so it reads as a second plane
+     rather than a border that failed to line up. Kept tight: past about
+     half a rem it stops being a frame and becomes a stray rectangle. */
+  .notch-line {
+    position: absolute;
+    inset: 0;
+    translate: 0.45rem -0.45rem;
+    overflow: visible;
+    pointer-events: none;
+    color: var(--primary);
+    opacity: 0.7;
+    transition: opacity 0.5s var(--ease-out-soft), translate 0.5s var(--ease-out-soft);
+  }
+  .group:hover .notch-line { opacity: 1; translate: 0.75rem -0.75rem; }
+
+  /* Loose squares. Sizes and offsets are set per instance in the markup. */
+  .speck {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    background: var(--primary);
+    animation: drift 7s var(--ease-out-soft) infinite alternate;
+  }
+  .speck-mute { background: var(--fg-4); opacity: 0.5; }
+  .speck-ring { background: none; border: 1.5px solid var(--primary); }
+
+  /* ── Gradient surfaces ─────────────────────────────────────────────
+     Every gradient on the site runs the same three stops, so a heading, a
+     rule and a button read as one system rather than three blues. */
+  /* Two stops, not three. The full ramp across a few words travels cyan to
+     indigo and reads as a rainbow; cyan to azure reads as one blue catching
+     light, which is the effect actually wanted. The third stop is kept for
+     large fills (.aurora, .grad-rule) where there is room for it. */
+  .grad-text {
+    background: linear-gradient(100deg, var(--grad-c), var(--grad-b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* A descender clipped to a gradient loses its tail without this. */
+    padding-block: 0.06em;
+  }
+
+  .grad-rule {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-b), var(--grad-c), transparent);
+    opacity: 0.6;
+  }
+
+  /* Soft off-screen wash. Bigger and lazier than `.halo`, and it carries the
+     full ramp, which is what stops a large blue area banding. */
+  .aurora {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.24;
+    background: conic-gradient(from 200deg, var(--grad-a), var(--grad-b), var(--grad-c), var(--grad-a));
+    pointer-events: none;
+    animation: wander 26s ease-in-out infinite alternate;
+  }
+  .light .aurora { opacity: 0.16; }
+
+  /* Trailing slash after a section title, lifted from the reference. Cheap,
+     distinctive, and it gives a heading somewhere to end. */
+  .slash {
+    display: inline-block;
+    /* Astro collapses the template whitespace before this element, so the
+       space has to come from the margin. */
+    margin-left: 0.22em;
+    font-weight: 400;
+    color: var(--primary);
+    translate: 0 0.02em;
+  }
+
+  /* ── Stepped process row ───────────────────────────────────────────── */
+  .step-dot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 26%, var(--float), var(--raised));
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--depth);
+    transition: border-color 0.45s var(--ease-out-soft), box-shadow 0.45s var(--ease-out-soft);
+  }
+  .step:hover .step-dot,
+  .step:focus-within .step-dot {
+    border-color: color-mix(in oklch, var(--primary) 55%, var(--line-strong));
+    box-shadow: var(--glow), var(--depth);
+  }
+
+  /* Dotted riser from the label down to the circle. */
+  .step-riser {
+    background-image: radial-gradient(circle, var(--primary) 1.4px, transparent 1.6px);
+    background-size: 100% 0.55rem;
+    background-repeat: repeat-y;
+    opacity: 0.75;
+  }
 }
 
 @layer utilities {
@@ -616,6 +770,10 @@
     transition-duration: 0.01ms !important;
     animation-delay: 0ms !important;
   }
+
+  /* These loop on `alternate`, so the blanket rule above would freeze them at
+     the far end of the travel rather than at rest. */
+  .speck, .aurora { animation: none !important; transform: none !important; }
 
   .rise, .veil, .lift, .slide-x {
     opacity: 1 !important;

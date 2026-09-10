@@ -48,7 +48,7 @@ const schema = {
         platforms deployed and what the client said about the result.
       </p>
 
-      <dl class="mt-12 flex flex-wrap gap-x-10 gap-y-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:440ms">
+      <dl class="mt-16 flex flex-wrap gap-x-10 gap-y-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:440ms">
         {
           counts.map((c) => (
             <div class="flex items-baseline gap-2.5">
@@ -62,7 +62,7 @@ const schema = {
   </section>
 
   <section class="border-t border-line">
-    <div class="shell py-20 md:py-24">
+    <div class="shell py-28 md:py-36">
       <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {studies.map((s, i) => <CaseStudyCard study={s} index={i % 3} />)}
       </div>

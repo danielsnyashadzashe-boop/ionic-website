@@ -25,7 +25,8 @@ const { n, marker, title, titleAccent, lede, class: className = '' } = Astro.pro
 
   <h2 class="t-section rise mt-5 max-w-3xl" style="--step:1">
     {title}
-    {titleAccent && <> <span class="text-primary">{titleAccent}</span></>}
+    {titleAccent && <> <span class="grad-text">{titleAccent}</span></>}
+    <span class="slash" aria-hidden="true">/</span>
   </h2>
 
   {lede && <p class="t-lede rise measure mt-5 text-fg-3" style="--step:2">{lede}</p>}
