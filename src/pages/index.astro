@@ -204,7 +204,10 @@ const method = [
   </section>
 
   <!-- ══════════ 02 · PLATFORMS ══════════ -->
-  <section id="platforms" class="seam scroll-mt-16">
+  {/* First inverted band. The reference alternates pale and dark sections,
+      and that rhythm is most of what makes it feel spacious; a single ground
+      down the whole page cannot produce it. */}
+  <section id="platforms" class="band-alt seam scroll-mt-16">
     <div class="shell py-28 md:py-36">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead
@@ -219,8 +222,11 @@ const method = [
         </a>
       </div>
 
-      <div class="mt-16 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-        {flagship && <ProductCard product={flagship} index={0} wide />}
+      {/* Two up, not four. Four products across a 4-column grid with the
+          flagship spanning two left a single orphan on the second row, and
+          the cards were too narrow for the image to carry anything. */}
+      <div class="mt-16 grid gap-5 md:grid-cols-2">
+        {flagship && <ProductCard product={flagship} index={0} />}
         {rest.map((p, i) => <ProductCard product={p} index={i + 1} />)}
       </div>
     </div>
@@ -233,7 +239,7 @@ const method = [
   <ProjectsSection />
 
   <!-- ══════════ 05 · METHOD ══════════ -->
-  <section class="seam">
+  <section class="band-alt seam">
     <div class="shell py-28 md:py-36">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead n="05" marker="Method" title="Four steps," titleAccent="in this order." />

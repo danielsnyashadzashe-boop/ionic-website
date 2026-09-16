@@ -148,6 +148,81 @@
   --grid-line: oklch(0.20 0.02 258 / 0.05);
 }
 
+/* ── Inverted band ─────────────────────────────────────────────────────
+   The reference alternates pale sections against dark ones, and that
+   rhythm is most of what makes it feel spacious. A single ground for the
+   whole page cannot do it.
+
+   `.band-alt` re-declares the ground and foreground tokens, so any section
+   carrying it renders as the opposite ground in whichever theme is active:
+   pale inside the dark theme, dark inside the light one. Components are
+   untouched, because every one of them already reads these tokens rather
+   than hard-coded colours. */
+.band-alt {
+  --base: oklch(0.966 0.006 236);
+  --raised: oklch(1 0 0);
+  --panel: oklch(0.942 0.008 236);
+  --float: oklch(0.912 0.010 236);
+
+  --line: oklch(0.20 0.02 236 / 0.10);
+  --line-strong: oklch(0.20 0.02 236 / 0.20);
+  --edge-lit: oklch(1 0 0 / 0.9);
+  --edge-shade: oklch(0.20 0.03 236 / 0.14);
+
+  --fg: oklch(0.20 0.018 236);
+  --fg-2: oklch(0.40 0.016 236);
+  --fg-3: oklch(0.52 0.014 236);
+  --fg-4: oklch(0.64 0.012 236);
+
+  --primary: oklch(0.505 0.155 244);
+  --primary-deep: oklch(0.405 0.150 252);
+  --primary-wash: oklch(0.505 0.155 244 / 0.10);
+
+  --grad-a: oklch(0.430 0.185 272);
+  --grad-b: oklch(0.520 0.160 238);
+  --grad-c: oklch(0.630 0.135 202);
+
+  --on-primary: oklch(0.99 0 0);
+  --glow: 0 0 0 1px oklch(0.505 0.155 244 / 0.18), 0 10px 30px -18px oklch(0.505 0.155 244 / 0.40);
+  --depth: 0 1px 0 0 var(--edge-lit) inset, 0 12px 30px -22px var(--edge-shade);
+  --grid-line: oklch(0.20 0.02 236 / 0.05);
+
+  background: var(--base);
+  color: var(--fg);
+}
+
+/* In the light theme the same class has to go the other way, or a "band"
+   would be invisible against an already-pale page. */
+.light .band-alt {
+  --base: oklch(0.168 0.024 236);
+  --raised: oklch(0.204 0.026 236);
+  --panel: oklch(0.240 0.028 236);
+  --float: oklch(0.281 0.030 236);
+
+  --line: oklch(1 0 0 / 0.07);
+  --line-strong: oklch(1 0 0 / 0.14);
+  --edge-lit: oklch(1 0 0 / 0.10);
+  --edge-shade: oklch(0 0 0 / 0.35);
+
+  --fg: oklch(0.975 0.004 236);
+  --fg-2: oklch(0.79 0.012 236);
+  --fg-3: oklch(0.64 0.014 236);
+  --fg-4: oklch(0.50 0.014 236);
+
+  --primary: oklch(0.765 0.145 224);
+  --primary-deep: oklch(0.60 0.145 236);
+  --primary-wash: oklch(0.765 0.145 224 / 0.12);
+
+  --grad-a: oklch(0.545 0.175 268);
+  --grad-b: oklch(0.700 0.155 232);
+  --grad-c: oklch(0.855 0.130 198);
+
+  --on-primary: oklch(0.16 0.024 236);
+  --glow: 0 0 0 1px oklch(0.765 0.145 224 / 0.22), 0 0 32px -6px oklch(0.765 0.145 224 / 0.30);
+  --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
+  --grid-line: oklch(1 0 0 / 0.035);
+}
+
 @theme inline {
   --color-base: var(--base);
   --color-raised: var(--raised);
@@ -450,6 +525,16 @@
     transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-out-soft);
   }
   .btn > * { position: relative; z-index: 1; }
+
+  /* Card variant. The card itself is the link, so this is a <span> that only
+     looks like a button; it must not carry its own hover lift or it would
+     fight the card's. */
+  .btn-card {
+    padding: 0.55rem 1rem;
+    font-size: 0.8125rem;
+    box-shadow: 0 0 0 1px color-mix(in oklch, var(--primary) 45%, transparent);
+  }
+  .btn-card:hover { transform: none; }
   /* Light sweeps across on hover: one pass, not a loop. */
   .btn::after {
     content: "";
