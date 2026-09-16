@@ -53,7 +53,7 @@ src/
 │   └── PageLayout.astro   BaseLayout + header + footer
 ├── components/
 │   ├── ui/                shadcn primitives
-│   ├── charts/            Recharts islands for the impact section
+│   ├── charts/            Static SVG, rendered at build time
 │   ├── ContactForm.tsx    React island: validation and error states
 │   ├── ThemeToggle.astro  Light/dark switch, vanilla JS
 │   ├── ProjectsSection.astro  Filterable engagement index
@@ -113,10 +113,62 @@ ground; light cannot, because white is the ceiling. Pinning both `panel` and
 white card. Light now puts the page at a soft grey, cards at white, and
 hover/recessed fills step *down* into tint.
 
-**Colour:** one primary (signal cyan) plus six data hues at matched perceived
+**Colour:** one primary (azure) plus six data hues at matched perceived
 weight. Products, chart series, status dots and the ledger all draw from the
 same `--d1..--d6` set, so a legend in the dashboard matches a product dot in
 the nav.
+
+The ground carries real blue (chroma `0.024`, hue `236`) rather than being a
+near-neutral charcoal, and primary sits at hue `224`. Note what did *not*
+change: the four-step elevation ramp. Saturating the ground while flattening
+the ramp is exactly the failure described above, so the ramp is the part to
+leave alone when the palette shifts again.
+
+**Gradients** run one three-stop ramp, `--grad-a` (indigo) → `--grad-b`
+(azure) → `--grad-c` (cyan). Everything gradient-filled derives from it, so a
+heading, a rule and a background wash read as one system rather than three
+unrelated blues.
+
+`.grad-text` deliberately uses only the first two stops. The full ramp across
+three or four words travels cyan to indigo and reads as a rainbow; cyan to
+azure reads as one blue catching light. The third stop is for large fills
+(`.aurora`, `.grad-rule`) where there is room for the travel.
+
+### The notch motif
+
+Frames are rectangles with a step cut out of two opposite corners, a hairline
+tracing the same shape offset from it, and a few loose squares scattered
+across the boundary. `Figure.astro` plus `.notch` / `.notch-line` / `.speck`.
+
+Three things have to hold, and each was got wrong first:
+
+**The clip and the outline must share one geometry.** The cut is a
+`clip-path`; the outline is an SVG `<polygon>`, because a clipped element
+cannot paint a border along the edges the clip removed. The first version used
+fixed rem in CSS and percentages in the SVG, so the two paths diverged (68×32px
+against 102×68px) and read as a bug rather than a device. `Figure.astro` now
+derives both from the frame's ratio and hands the same numbers to each.
+
+**Both axes are sized off the width.** Sizing the vertical off the height gave
+a 21/9 banner a shallow sliver and a 3/4 portrait a deep bite. Anchoring both
+to width holds the cut at a constant 2.4:1 on every ratio.
+
+**Decoration scales with the frame, not the viewport.** The same component
+renders at 1400px on an insight cover and 112px as an index thumbnail, and
+rem-sized squares that suit the first completely swamp the second. The frame
+is a query container, and `@container` drops decoration in tiers:
+
+| Frame width | Notch | Outline | Squares |
+| --- | --- | --- | --- |
+| under 18rem | yes | no | no |
+| 18–30rem | yes | yes, tighter offset | no |
+| over 30rem | yes | yes | yes |
+
+The notch itself is proportional, so it survives every tier.
+
+The squares are placed by hand, not looped, and all four keep clear of the
+notched corners. Evenly-spaced decoration is what reads as machine-made, and
+a square sitting inside the cut looks like a rendering glitch.
 
 ### Motion
 
@@ -141,25 +193,30 @@ and opacity so it stays on the compositor.
 light with a trailing follow, so it reads as weight rather than a hard cursor.
 Fine pointers only.
 
-Everything stops under `prefers-reduced-motion: reduce`.
+**Ambient drift**: the loose squares on a frame breathe a few pixels
+(`drift`), and the background washes wander slowly (`wander`). Both are
+deliberately small and slow. The moment decoration moves far enough to notice,
+it stops reading as decoration.
+
+Everything stops under `prefers-reduced-motion: reduce`. `drift` and `wander`
+are named there explicitly: they loop on `alternate`, so the blanket
+`animation-duration: 0.01ms` rule would otherwise freeze them at the far end
+of their travel rather than at rest.
 
 ### JavaScript budget
 
-React is loaded **only** by the contact form and the charts, both via
-`client:visible`, so it arrives when the reader scrolls to them and never on
-first paint.
+React is loaded **only** by the contact form, via `client:visible`, so it
+arrives when the reader scrolls to it and never on first paint. The charts
+stopped being React when Recharts was removed; see **Charts** below.
 
 Measured over the wire on a cold homepage load, before scrolling:
 
 | | Size |
 |---|---|
-| CSS | ~83 KB (one file, both themes, whole design system) |
+| CSS | ~94 KB (one file, both themes, whole design system) |
 | JS on first paint | ~16 KB (view-transition router only) |
-| React + form + 7 charts | on intersection, never on first paint |
-
-The boot sequence, header, mega menu, theme switch, ledger filter and command
-palette are all vanilla JS inside Astro components. React is reserved for the
-contact form and the charts, where it earns its place.
+| React + contact form | on intersection, never on first paint |
+| 7 charts | 0 KB, static SVG in the HTML |
 
 The header (sticky bar, dropdown, mobile panel, scroll progress), the theme
 toggle and the project filter are all deliberately vanilla JS inside Astro

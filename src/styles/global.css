@@ -589,6 +589,17 @@
       0 calc(100% - var(--ny))
     );
   }
+  /* The frame is a query container so the decoration can respond to the
+     frame's own width rather than the viewport's. The same figure renders at
+     1140px in the method banner and 160px as an insights thumbnail, and
+     rem-sized squares that look right on the first completely swamp the
+     second. Below 18rem the frame keeps its notch (proportional, so it
+     scales) and drops the rest. */
+  .notch-frame {
+    container-type: inline-size;
+    container-name: notchframe;
+  }
+
   /* The tracing outline. Offset up and right so it reads as a second plane
      rather than a border that failed to line up. Kept tight: past about
      half a rem it stops being a frame and becomes a stray rectangle. */
@@ -614,6 +625,17 @@
   }
   .speck-mute { background: var(--fg-4); opacity: 0.5; }
   .speck-ring { background: none; border: 1.5px solid var(--primary); }
+
+  /* Too small to carry decoration. */
+  @container notchframe (max-width: 18rem) {
+    .notch-line, .speck { display: none; }
+  }
+  /* Mid-size frames get the outline but no squares, and a tighter offset. */
+  @container notchframe (min-width: 18rem) and (max-width: 30rem) {
+    .speck { display: none; }
+    .notch-line { translate: 0.3rem -0.3rem; }
+    .group:hover .notch-line { translate: 0.5rem -0.5rem; }
+  }
 
   /* ── Gradient surfaces ─────────────────────────────────────────────
      Every gradient on the site runs the same three stops, so a heading, a

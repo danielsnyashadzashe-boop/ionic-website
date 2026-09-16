@@ -101,9 +101,10 @@ const specks = [
 ---
 
 <figure class={`group ${className}`}>
-  {/* Positioning context for the outline and squares. It has to be the frame
-      alone, not the whole figure, or they stretch across the caption too. */}
-  <div class="relative" style={`aspect-ratio: ${frameRatio}`}>
+  {/* Positioning context for the outline and squares, and the query container
+      the decoration sizes itself against. It has to be the frame alone, not
+      the whole figure, or they stretch across the caption too. */}
+  <div class="notch-frame relative" style={`aspect-ratio: ${frameRatio}`}>
   <div
     class="notch surface absolute inset-0 overflow-hidden"
     style={`--nx: ${nxPct}%; --ny: ${nyPct.toFixed(3)}%`}
