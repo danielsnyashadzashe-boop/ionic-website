@@ -48,10 +48,10 @@
      neutral charcoal. Hue tracks the brand blue (231) so the ground and the
      accent belong to each other. The four steps are unchanged: saturating a
      ground without keeping the ramp is how the earlier attempt went flat. */
-  --base: #04191f;
-  --raised: #08222c;
-  --panel: #0c2b38;
-  --float: #113445;
+  --base: #0b2334;
+  --raised: #102b3f;
+  --panel: #15334a;
+  --float: #1b3c55;
 
   --line: oklch(1 0 0 / 0.045);
   --line-strong: oklch(1 0 0 / 0.095);
@@ -61,9 +61,9 @@
   --edge-shade: oklch(0 0 0 / 0.35);
 
   --fg: oklch(0.975 0.004 231);
-  --fg-2: oklch(0.82 0.012 231);
-  --fg-3: oklch(0.71 0.014 231);
-  --fg-4: oklch(0.67 0.014 231);
+  --fg-2: oklch(0.87 0.012 231);
+  --fg-3: oklch(0.79 0.014 231);
+  --fg-4: oklch(0.72 0.014 231);
 
   /* Near-monochrome, deliberately.
    *
@@ -106,7 +106,7 @@
   --warn: oklch(0.83 0.135 92);
   --crit: oklch(0.72 0.16 28);
 
-  --on-primary: #06202a;
+  --on-primary: #071b28;
   --glow: 0 0 0 1px color-mix(in oklch, #cdd7da 18%, transparent),
           0 0 28px -8px color-mix(in oklch, #cdd7da 22%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
@@ -216,10 +216,10 @@
 /* In the light theme the same class has to go the other way, or a "band"
    would be invisible against an already-pale page. */
 .light .band-alt {
-  --base: #04191f;
-  --raised: #08222c;
-  --panel: #0c2b38;
-  --float: #113445;
+  --base: #0b2334;
+  --raised: #102b3f;
+  --panel: #15334a;
+  --float: #1b3c55;
 
   --line: oklch(1 0 0 / 0.045);
   --line-strong: oklch(1 0 0 / 0.095);
@@ -227,9 +227,9 @@
   --edge-shade: oklch(0 0 0 / 0.35);
 
   --fg: oklch(0.975 0.004 231);
-  --fg-2: oklch(0.82 0.012 231);
-  --fg-3: oklch(0.71 0.014 231);
-  --fg-4: oklch(0.67 0.014 231);
+  --fg-2: oklch(0.87 0.012 231);
+  --fg-3: oklch(0.79 0.014 231);
+  --fg-4: oklch(0.72 0.014 231);
 
   --primary: #cdd7da;
   --primary-deep: #a8b6bb;
@@ -247,7 +247,7 @@
   --grad-b: #dce5e8;
   --grad-c: #9fafb4;
 
-  --on-primary: #06202a;
+  --on-primary: #071b28;
   --glow: 0 0 0 1px color-mix(in oklch, #cdd7da 18%, transparent),
           0 0 28px -8px color-mix(in oklch, #cdd7da 22%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
