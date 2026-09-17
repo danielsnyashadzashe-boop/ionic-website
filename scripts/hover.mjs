@@ -48,12 +48,36 @@ const HELPERS = () => {
     });
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   };
-  window.__parse = (str) => {
-    const m = str.match(/rgba?\(([^)]+)\)/);
-    if (!m) return null;
-    const parts = m[1].split(/[,\s/]+/).filter(Boolean).map(Number);
-    return { rgb: parts.slice(0, 3), a: parts.length > 3 ? parts[3] : 1 };
-  };
+  /**
+   * Resolve ANY colour the browser will accept, not just `rgb()`.
+   *
+   * This used to regex for `rgba?(...)` and return null otherwise. Once the
+   * palette started using `color-mix()`, Chromium began reporting computed
+   * values as `oklab(...)`, the regex missed, and the audit reported three
+   * perfectly readable buttons as 1.00:1. A checker that invents failures
+   * gets ignored, which is worse than not running it.
+   *
+   * Painting onto a 1x1 canvas hands the conversion to the browser, so every
+   * present and future colour syntax resolves correctly.
+   */
+  window.__parse = (() => {
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 1;
+    const ctx = cv.getContext('2d', { willReadFrequently: true });
+    return (str) => {
+      if (!str) return null;
+      if (str === 'transparent') return { rgb: [0, 0, 0], a: 0 };
+      ctx.clearRect(0, 0, 1, 1);
+      // An unparseable value leaves fillStyle untouched, so seed a sentinel
+      // and treat "unchanged" as a parse failure rather than a real colour.
+      ctx.fillStyle = '#010203';
+      ctx.fillStyle = str;
+      if (ctx.fillStyle === '#010203' && !/^#010203$/i.test(str.trim())) return null;
+      ctx.fillRect(0, 0, 1, 1);
+      const d = ctx.getImageData(0, 0, 1, 1).data;
+      return { rgb: [d[0], d[1], d[2]], a: d[3] / 255 };
+    };
+  })();
   window.__over = (fg, bg) => fg.rgb.map((c, i) => c * fg.a + bg[i] * (1 - fg.a));
   /** Walk ancestors compositing backgrounds until opaque. */
   window.__bgOf = (el) => {

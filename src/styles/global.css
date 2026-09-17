@@ -44,14 +44,14 @@
 
 /* ── Dark (default) ──────────────────────────────────────────────────── */
 :root {
-  /* Ground carries more blue than it used to (chroma 0.014 -> 0.024, hue
-     258 -> 236). The reference ground is a deep teal-navy, not a neutral
-     charcoal. The four steps are unchanged: saturating the ground without
-     keeping the ramp is exactly how the rejected reference went flat. */
-  --base: oklch(0.168 0.024 236);
-  --raised: oklch(0.204 0.026 236);
-  --panel: oklch(0.240 0.028 236);
-  --float: oklch(0.281 0.030 236);
+  /* Deep teal-navy, matching the dark bands in the model site rather than a
+     neutral charcoal. Hue tracks the brand blue (231) so the ground and the
+     accent belong to each other. The four steps are unchanged: saturating a
+     ground without keeping the ramp is how the earlier attempt went flat. */
+  --base: #04191f;
+  --raised: #08222c;
+  --panel: #0c2b38;
+  --float: #113445;
 
   --line: oklch(1 0 0 / 0.07);
   --line-strong: oklch(1 0 0 / 0.14);
@@ -60,24 +60,38 @@
   --edge-lit: oklch(1 0 0 / 0.10);
   --edge-shade: oklch(0 0 0 / 0.35);
 
-  --fg: oklch(0.975 0.004 258);
-  --fg-2: oklch(0.79 0.012 258);
-  --fg-3: oklch(0.62 0.014 258);
-  --fg-4: oklch(0.47 0.014 258);
+  --fg: oklch(0.975 0.004 231);
+  --fg-2: oklch(0.82 0.012 231);
+  --fg-3: oklch(0.71 0.014 231);
+  --fg-4: oklch(0.67 0.014 231);
 
-  /* Primary moved from cyan (196) to azure (224): the reference reads blue,
-     and this keeps our cyan as the bright tip of the ramp instead of
-     discarding it. */
-  --primary: oklch(0.765 0.145 224);
-  --primary-deep: oklch(0.60 0.145 236);
-  --primary-wash: oklch(0.765 0.145 224 / 0.12);
+  /* The model site's brand blues, used as literal hex so there is no
+     conversion drift. My earlier guess landed 7 degrees off hue, 0.017 over
+     on chroma and far too light, which is why it never looked like theirs.
 
-  /* The gradient ramp. Indigo -> azure -> cyan, three stops so a large fill
-     has somewhere to travel; two-stop blue gradients band visibly across a
-     hero-sized area. Every gradient on the site is built from these. */
-  --grad-a: oklch(0.545 0.175 268);
-  --grad-b: oklch(0.700 0.155 232);
-  --grad-c: oklch(0.855 0.130 198);
+       #0097c9  oklch(0.634 0.128 231)  their primary
+       #00c3e8  oklch(0.752 0.118 216)  their bright accent
+       #007ba3  oklch(0.546 0.109 230)  their pressed/dark
+
+     Dark mode leads with the bright one, because their primary is too dark
+     to carry text or an icon on a navy ground. */
+  --primary: #00c3e8;
+  --primary-deep: #0097c9;
+  --primary-wash: color-mix(in oklch, #00c3e8 12%, transparent);
+  /* Accent for text. Fills and text need different values on the same
+     ground: #007ba3 carries white text fine but is only 4.4:1 as a link on
+     pale grey, so text links take the deeper blue there. */
+  --accent-ink: #00c3e8;
+
+  /* Their actual gradient, verbatim:
+       linear-gradient(to right, #0097c9 33%, #00c3e8 50%, #0097c9 66%)
+     It returns to where it started, which is why it reads as a sheen
+     travelling across a surface rather than a two-colour ramp. That is the
+     effect asked for, and the reason the indigo-to-cyan version I tried
+     before looked like a rainbow. */
+  --grad-a: #0097c9;
+  --grad-b: #00c3e8;
+  --grad-c: #0097c9;
 
   /* Data hues. Matched perceived weight so a legend reads as one set. */
   --d1: oklch(0.78 0.14 220);
@@ -91,8 +105,9 @@
   --warn: oklch(0.83 0.135 92);
   --crit: oklch(0.72 0.16 28);
 
-  --on-primary: oklch(0.16 0.024 236);
-  --glow: 0 0 0 1px oklch(0.765 0.145 224 / 0.22), 0 0 32px -6px oklch(0.765 0.145 224 / 0.30);
+  --on-primary: #052330;
+  --glow: 0 0 0 1px color-mix(in oklch, #00c3e8 22%, transparent),
+          0 0 32px -6px color-mix(in oklch, #00c3e8 30%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
 
   --grid-line: oklch(1 0 0 / 0.035);
@@ -105,30 +120,31 @@
      hover state that filled with `panel` became invisible on a white card.
      Here the page is a light grey, cards are the white that lifts off it, and
      hover/recessed fills step DOWN into tint. */
-  --base: oklch(0.968 0.004 250);
-  --raised: oklch(1 0 0);
-  --panel: oklch(0.945 0.005 250);
-  --float: oklch(0.915 0.006 250);
+  --base: #f5f5f6;
+  --raised: #ffffff;
+  --panel: #ededee;
+  --float: #e2e3e5;
 
   --line: oklch(0.20 0.02 258 / 0.10);
   --line-strong: oklch(0.20 0.02 258 / 0.20);
   --edge-lit: oklch(1 0 0 / 0.9);
   --edge-shade: oklch(0.20 0.03 258 / 0.14);
 
-  --fg: oklch(0.20 0.018 258);
-  --fg-2: oklch(0.40 0.016 258);
-  --fg-3: oklch(0.54 0.014 258);
-  --fg-4: oklch(0.66 0.012 258);
+  --fg: #181818;
+  --fg-2: #404344;
+  --fg-3: #5c5f60;
+  --fg-4: #64686a;
 
-  --primary: oklch(0.505 0.155 244);
-  --primary-deep: oklch(0.405 0.150 252);
-  --primary-wash: oklch(0.505 0.155 244 / 0.10);
+  --primary: #007ba3;
+  --primary-deep: #005d7c;
+  --primary-wash: #e6f7fd;
+  --accent-ink: #005d7c;
 
   /* Same ramp, pulled down in lightness. On a white ground the dark-theme
      stops wash out to pastel, so the gradient has to be darker, not inverted. */
-  --grad-a: oklch(0.430 0.185 272);
-  --grad-b: oklch(0.520 0.160 238);
-  --grad-c: oklch(0.630 0.135 202);
+  --grad-a: #007ba3;
+  --grad-b: #0097c9;
+  --grad-c: #007ba3;
 
   --d1: oklch(0.52 0.16 258);
   --d2: oklch(0.52 0.135 214);
@@ -142,7 +158,8 @@
   --crit: oklch(0.53 0.19 28);
 
   --on-primary: oklch(0.99 0 0);
-  --glow: 0 0 0 1px oklch(0.505 0.155 244 / 0.18), 0 10px 30px -18px oklch(0.505 0.155 244 / 0.40);
+  --glow: 0 0 0 1px color-mix(in oklch, #0097c9 20%, transparent),
+          0 10px 30px -18px color-mix(in oklch, #0097c9 40%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 12px 30px -22px var(--edge-shade);
 
   --grid-line: oklch(0.20 0.02 258 / 0.05);
@@ -159,31 +176,33 @@
    untouched, because every one of them already reads these tokens rather
    than hard-coded colours. */
 .band-alt {
-  --base: oklch(0.966 0.006 236);
-  --raised: oklch(1 0 0);
-  --panel: oklch(0.942 0.008 236);
-  --float: oklch(0.912 0.010 236);
+  --base: #f5f5f6;
+  --raised: #ffffff;
+  --panel: #ededee;
+  --float: #e2e3e5;
 
   --line: oklch(0.20 0.02 236 / 0.10);
   --line-strong: oklch(0.20 0.02 236 / 0.20);
   --edge-lit: oklch(1 0 0 / 0.9);
   --edge-shade: oklch(0.20 0.03 236 / 0.14);
 
-  --fg: oklch(0.20 0.018 236);
-  --fg-2: oklch(0.40 0.016 236);
-  --fg-3: oklch(0.52 0.014 236);
-  --fg-4: oklch(0.64 0.012 236);
+  --fg: #181818;
+  --fg-2: #404344;
+  --fg-3: #5c5f60;
+  --fg-4: #64686a;
 
-  --primary: oklch(0.505 0.155 244);
-  --primary-deep: oklch(0.405 0.150 252);
-  --primary-wash: oklch(0.505 0.155 244 / 0.10);
+  --primary: #007ba3;
+  --primary-deep: #005d7c;
+  --primary-wash: #e6f7fd;
+  --accent-ink: #005d7c;
 
-  --grad-a: oklch(0.430 0.185 272);
-  --grad-b: oklch(0.520 0.160 238);
-  --grad-c: oklch(0.630 0.135 202);
+  --grad-a: #007ba3;
+  --grad-b: #0097c9;
+  --grad-c: #007ba3;
 
   --on-primary: oklch(0.99 0 0);
-  --glow: 0 0 0 1px oklch(0.505 0.155 244 / 0.18), 0 10px 30px -18px oklch(0.505 0.155 244 / 0.40);
+  --glow: 0 0 0 1px color-mix(in oklch, #0097c9 20%, transparent),
+          0 10px 30px -18px color-mix(in oklch, #0097c9 40%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 12px 30px -22px var(--edge-shade);
   --grid-line: oklch(0.20 0.02 236 / 0.05);
 
@@ -194,31 +213,36 @@
 /* In the light theme the same class has to go the other way, or a "band"
    would be invisible against an already-pale page. */
 .light .band-alt {
-  --base: oklch(0.168 0.024 236);
-  --raised: oklch(0.204 0.026 236);
-  --panel: oklch(0.240 0.028 236);
-  --float: oklch(0.281 0.030 236);
+  --base: #04191f;
+  --raised: #08222c;
+  --panel: #0c2b38;
+  --float: #113445;
 
   --line: oklch(1 0 0 / 0.07);
   --line-strong: oklch(1 0 0 / 0.14);
   --edge-lit: oklch(1 0 0 / 0.10);
   --edge-shade: oklch(0 0 0 / 0.35);
 
-  --fg: oklch(0.975 0.004 236);
-  --fg-2: oklch(0.79 0.012 236);
-  --fg-3: oklch(0.64 0.014 236);
-  --fg-4: oklch(0.50 0.014 236);
+  --fg: oklch(0.975 0.004 231);
+  --fg-2: oklch(0.82 0.012 231);
+  --fg-3: oklch(0.71 0.014 231);
+  --fg-4: oklch(0.67 0.014 231);
 
-  --primary: oklch(0.765 0.145 224);
-  --primary-deep: oklch(0.60 0.145 236);
-  --primary-wash: oklch(0.765 0.145 224 / 0.12);
+  --primary: #00c3e8;
+  --primary-deep: #0097c9;
+  --primary-wash: color-mix(in oklch, #00c3e8 12%, transparent);
+  /* Accent for text. Fills and text need different values on the same
+     ground: #007ba3 carries white text fine but is only 4.4:1 as a link on
+     pale grey, so text links take the deeper blue there. */
+  --accent-ink: #00c3e8;
 
-  --grad-a: oklch(0.545 0.175 268);
-  --grad-b: oklch(0.700 0.155 232);
-  --grad-c: oklch(0.855 0.130 198);
+  --grad-a: #0097c9;
+  --grad-b: #00c3e8;
+  --grad-c: #0097c9;
 
-  --on-primary: oklch(0.16 0.024 236);
-  --glow: 0 0 0 1px oklch(0.765 0.145 224 / 0.22), 0 0 32px -6px oklch(0.765 0.145 224 / 0.30);
+  --on-primary: #052330;
+  --glow: 0 0 0 1px color-mix(in oklch, #00c3e8 22%, transparent),
+          0 0 32px -6px color-mix(in oklch, #00c3e8 30%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
   --grid-line: oklch(1 0 0 / 0.035);
 }
@@ -378,6 +402,15 @@
 /* Loose squares breathe a few pixels. Deliberately slow and small: the
    moment decoration moves far enough to notice, it stops reading as decor. */
 @keyframes drift     { from { transform: none; } to { transform: translate3d(0.4rem, -0.5rem, 0); } }
+
+/* ── Borrowed from the model site's own stylesheet ─────────────────────
+   Not reimplemented from a screenshot: these are the three keyframes
+   stratusadv.com actually ships, so the movement matches rather than
+   approximates. `floating` carries its images, `shine` sweeps their brand
+   gradient across a surface, `moveLine` draws an underline in. */
+@keyframes floating  { from { transform: translateY(0); } 65% { transform: translateY(15px); } to { transform: translateY(0); } }
+@keyframes shine     { from { background-position: -200% bottom; } to { background-position: 200% bottom; } }
+@keyframes move-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes wander    { from { transform: none; } to { transform: translate3d(4%, -6%, 0) scale(1.12); } }
 
 @layer components {
@@ -758,6 +791,43 @@
   }
   .light .aurora { opacity: 0.16; }
 
+  /* ── Movement borrowed from the model site ─────────────────────────── */
+
+  /* Images rise and settle rather than sitting still. Theirs runs at 3s,
+     which is brisk for a large photograph; 7s reads as weight instead of
+     bobbing, and the travel is halved for the same reason. */
+  .floating { animation: floating 7s ease-in-out infinite; }
+
+  /* Their brand gradient swept across a surface. The ramp returns to its
+     start colour, so the sweep loops without a visible seam. */
+  .shine {
+    background-image: linear-gradient(
+      to right,
+      var(--grad-a) 33%,
+      var(--grad-b) 50%,
+      var(--grad-c) 66%
+    );
+    background-size: 200% auto;
+    animation: shine 10s linear infinite;
+  }
+
+  /* Underline that draws in from the left on hover. */
+  .u-draw { position: relative; }
+  .u-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.2em;
+    height: 2px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease-out-soft);
+  }
+  .u-draw:hover::after,
+  .u-draw:focus-visible::after { animation: move-line 0.5s var(--ease-out-soft) forwards; }
+
   /* Trailing slash after a section title, lifted from the reference. Cheap,
      distinctive, and it gives a heading somewhere to end. */
   .slash {
@@ -878,9 +948,13 @@
     animation-delay: 0ms !important;
   }
 
-  /* These loop on `alternate`, so the blanket rule above would freeze them at
-     the far end of the travel rather than at rest. */
-  .speck, .aurora { animation: none !important; transform: none !important; }
+  /* These loop, so the blanket rule above would freeze them part-way through
+     the travel rather than at rest. */
+  .speck, .aurora, .floating, .shine {
+    animation: none !important;
+    transform: none !important;
+  }
+  .u-draw::after { transform: scaleX(1) !important; }
 
   .rise, .veil, .lift, .slide-x {
     opacity: 1 !important;

@@ -26,6 +26,8 @@ interface Props {
   showCaption?: boolean;
   /** Load eagerly. Use only for an above-the-fold image. */
   eager?: boolean;
+  /** Gentle rise-and-settle, as the model site does with its imagery. */
+  float?: boolean;
   class?: string;
 }
 
@@ -35,6 +37,7 @@ const {
   ratio,
   showCaption = true,
   eager = false,
+  float = false,
   class: className = '',
 } = Astro.props;
 
@@ -104,7 +107,10 @@ const specks = [
   {/* Positioning context for the outline and squares, and the query container
       the decoration sizes itself against. It has to be the frame alone, not
       the whole figure, or they stretch across the caption too. */}
-  <div class="notch-frame relative" style={`aspect-ratio: ${frameRatio}`}>
+  <div
+    class:list={['notch-frame relative', float && 'floating']}
+    style={`aspect-ratio: ${frameRatio}`}
+  >
   <div
     class="notch surface absolute inset-0 overflow-hidden"
     style={`--nx: ${nxPct}%; --ny: ${nyPct.toFixed(3)}%`}

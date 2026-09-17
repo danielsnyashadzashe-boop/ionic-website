@@ -10,7 +10,7 @@ const { trail } = Astro.props;
       trail.map((c, i) => (
         <li class="flex items-center gap-1">
           {c.href ? (
-            <a href={c.href} class="inline-block px-1.5 py-2.5 transition-colors hover:text-primary">{c.label}</a>
+            <a href={c.href} class="inline-block px-1.5 py-2.5 transition-colors hover:text-[var(--accent-ink)]">{c.label}</a>
           ) : (
             <span class="px-1 py-2 text-fg-2">{c.label}</span>
           )}
