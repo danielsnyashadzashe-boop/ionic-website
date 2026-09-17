@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import { getCollection } from 'astro:content';
+import { nav } from '@/data/site';
 
 const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
 const studies = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
@@ -9,11 +10,18 @@ const studies = (await getCollection('caseStudies')).sort((a, b) => a.data.order
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
 
-const links = [
-  { label: 'Work', href: '/#work' },
-  { label: 'Case studies', href: '/case-studies/' },
-  { label: 'Insights', href: '/insights/' },
-];
+/**
+ * Header links come from site.ts, not a list of their own.
+ *
+ * This component used to hardcode its own array, so nav.primary and the
+ * header had quietly drifted apart: the header showed "Work", site.ts said
+ * "About", and adding the Process Compass to site.ts put it in the footer
+ * only. The tool shipped effectively unreachable.
+ *
+ * Platforms is excluded here because it is not a plain link; it opens the
+ * mega menu rendered below and has its own markup.
+ */
+const links = nav.primary.filter((l) => !('children' in l && l.children));
 ---
 
 <header class="sticky top-0 z-50">

@@ -48,13 +48,22 @@ export const expertise = [
 /** Logos shown in the "in production at" band. */
 export const marquee = ['Old Mutual', 'Fidelity', 'Bidvest', '3Sixty Health'] as const;
 
+/**
+ * Navigation. This is the only source: Header.astro reads `primary` and
+ * Footer.astro reads `footer`. The header used to keep its own array, which
+ * drifted out of step and meant a new page could be added here and still be
+ * unreachable from the nav.
+ *
+ * `children: true` marks the entry that opens the mega menu rather than
+ * being a plain link; the header skips it and renders that markup itself.
+ */
 export const nav = {
   primary: [
     { label: 'Platforms', href: '/#platforms', children: true },
+    { label: 'Work', href: '/#work' },
     { label: 'Case studies', href: '/case-studies/' },
     { label: 'Insights', href: '/insights/' },
     { label: 'Compass', href: '/compass/' },
-    { label: 'About', href: '/#about' },
   ],
   footer: [
     { label: 'About', href: '/#about' },
