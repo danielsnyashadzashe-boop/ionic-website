@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import PageLayout from '@/layouts/PageLayout.astro';
 import BootSequence from '@/components/BootSequence.astro';
 import HeroVisual from '@/components/HeroVisual.astro';
-import LogoMarquee from '@/components/LogoMarquee.astro';
 import WhatWeDo from '@/components/WhatWeDo.astro';
 import Figure from '@/components/Figure.astro';
 import SectionHead from '@/components/SectionHead.astro';
@@ -12,7 +11,7 @@ import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import ImpactSection from '@/components/ImpactSection.astro';
 import ProjectsSection from '@/components/ProjectsSection.astro';
 import ContactSection from '@/components/ContactSection.astro';
-import { site, contact, expertise, metrics, localityLine } from '@/data/site';
+import { site, contact, expertise } from '@/data/site';
 import { projectStats } from '@/data/projects';
 
 const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
@@ -40,14 +39,6 @@ const schema = {
     itemOffered: { '@type': 'Service', name: p.data.name, description: p.data.summary },
   })),
 };
-
-/** Readouts floating over the lattice. Each is a fact the site publishes. */
-const readouts = [
-  { label: 'Engagements', value: String(projectStats.total), sub: 'across 6 sectors', tone: 'd1', pos: 'left-0 top-[4%]' },
-  { label: 'In production', value: String(projectStats.live), sub: 'live today', tone: 'd2', pos: 'right-0 top-[20%]' },
-  { label: 'Platforms', value: '4', sub: 'proprietary', tone: 'd3', pos: 'left-[2%] bottom-[18%]' },
-  { label: 'Regions', value: '5', sub: 'delivery', tone: 'd4', pos: 'right-[4%] bottom-[6%]' },
-];
 
 const principles = [
   {
@@ -82,22 +73,18 @@ const method = [
 >
   <BootSequence />
 
-  <!-- ══════════ 00 · HERO ══════════ -->
+  {/* ══════════ 00 · HERO ══════════
+      Stripped back to a headline, one line, two buttons and the rings.
+      Everything else that used to live here competed with it: four floating
+      readout cards, a three-up metric strip, a provenance line, a blueprint
+      grid and two washes. The numbers were never lost by removing them, they
+      already appear in the ticker above and as gauges in Impact. */}
   <section class="relative overflow-hidden">
-    <div class="blueprint pointer-events-none absolute inset-0"></div>
-    {/* Two washes, not one: a single blob centred behind the headline reads as
-        a glow effect, while an opposed pair reads as depth in the ground. */}
-    <div class="aurora -left-40 -top-32 h-[38rem] w-[38rem]"></div>
-    <div class="aurora -bottom-48 -right-32 h-[30rem] w-[30rem]" style="animation-delay:-9s"></div>
+    <div class="aurora -right-40 -top-40 h-[34rem] w-[34rem]"></div>
 
-    <div class="shell relative grid items-center gap-14 pb-16 pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-20">
+    <div class="shell relative grid items-center gap-12 pb-24 pt-20 lg:grid-cols-[1fr_0.85fr] lg:gap-16 lg:pb-36 lg:pt-28">
       <div>
-        <p class="chip veil">
-          <span class="pulse"></span>
-          Software engineering orchestration
-        </p>
-
-        <h1 class="t-hero mt-7">
+        <h1 class="t-hero">
           <span class="block overflow-hidden">
             <span class="rise block" style="--step:0">Transformation,</span>
           </span>
@@ -111,62 +98,25 @@ const method = [
           </span>
         </h1>
 
-        <p class="t-lede rise measure mt-6 text-fg-3" style="--step:3">
-          Ionic pairs strategic consulting with proprietary AI-enabled platforms to deliver
-          enterprise transformation end-to-end, from first workshop to production and beyond.
+        <p class="t-lede rise measure mt-8 text-fg-3" style="--step:3">
+          Strategic consulting and our own AI-enabled platforms, from the first workshop
+          through to production.
         </p>
 
-        <div class="rise mt-8 flex flex-wrap items-center gap-2.5" style="--step:4">
+        <div class="rise mt-10 flex flex-wrap items-center gap-3" style="--step:4">
           <a href="/contact/" class="btn">
             <span>Start a conversation</span>
             <span aria-hidden="true">→</span>
           </a>
           <a href="#work" class="btn-ghost">See the work</a>
         </div>
-
-        <dl class="rise mt-10 grid max-w-lg grid-cols-3 gap-px overflow-hidden rounded-lg border border-line bg-line" style="--step:5">
-          {
-            metrics.map((m, i) => (
-              <div class="bg-raised px-4 py-3.5">
-                <dd class="figure text-[1.375rem] leading-none">
-                  {m.value}
-                  <span class="text-[0.75em]" style={`color: var(--${['d2', 'd3', 'd4'][i]})`}>
-                    {m.unit}
-                  </span>
-                </dd>
-                <dt class="mt-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-fg-4">{m.label}</dt>
-              </div>
-            ))
-          }
-        </dl>
-
-        <p class="rise mt-3 font-mono text-[0.625rem] text-fg-4" style="--step:6">
-          As reported by clients · {localityLine}
-        </p>
       </div>
 
-      <div class="lift relative mx-auto w-full max-w-[520px]" style="--step:2">
+      <div class="lift relative mx-auto w-full max-w-[460px]" style="--step:2">
         <HeroVisual />
-
-        {
-          readouts.map((r, i) => (
-            <div class={`readout lift absolute ${r.pos} px-3 py-2`} style={`--step:${4 + i}`}>
-              <div class="flex items-baseline gap-2">
-                <span class="h-1.5 w-1.5 rounded-full" style={`background: var(--${r.tone})`} />
-                <span class="figure text-[1.0625rem] leading-none">{r.value}</span>
-              </div>
-              <p class="mt-1 font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-fg-4">{r.label}</p>
-              <p class="font-mono text-[0.5625rem] text-fg-4">{r.sub}</p>
-            </div>
-          ))
-        }
       </div>
     </div>
-
   </section>
-
-  <!-- ══════════ CLIENT / SYSTEM MARQUEE ══════════ -->
-  <LogoMarquee />
 
 
   <!-- ══════════ 01 · WHAT WE DO ══════════ -->
