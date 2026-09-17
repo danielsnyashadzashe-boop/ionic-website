@@ -22,6 +22,13 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
  * mega menu rendered below and has its own markup.
  */
 const links = nav.primary.filter((l) => !('children' in l && l.children));
+
+/**
+ * A product page is "under" Platforms, so the trigger should read as the
+ * current section there. Without this, /process-genesis/ showed nothing in
+ * the nav as active and the header looked detached from the page.
+ */
+const onProduct = products.some((p) => path === `/${p.data.slug}/`);
 ---
 
 <header class="sticky top-0 z-50">
@@ -33,12 +40,23 @@ const links = nav.primary.filter((l) => !('children' in l && l.children));
         </a>
 
         <!-- Desktop nav -->
-        <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        {/* `nav-ink` is a single underline that glides between items rather
+            than each one drawing its own. It rests under the current page and
+            follows the pointer, which is what makes the bar feel like one
+            control instead of five separate links. */}
+        <nav class="relative hidden items-center gap-1 lg:flex" aria-label="Primary" id="primary-nav">
+          <span id="nav-ink" aria-hidden="true"></span>
+
           <div class="relative" id="mm-wrap">
             <button
               type="button"
               id="mm-trigger"
-              class="flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.8125rem] text-fg-2 transition-colors hover:bg-panel hover:text-fg"
+              data-nav-item
+              data-nav-active={onProduct ? 'true' : undefined}
+              class:list={[
+                'relative flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.8125rem] transition-colors hover:text-fg',
+                onProduct ? 'text-fg' : 'text-fg-2',
+              ]}
               aria-expanded="false"
               aria-controls="mm-panel"
             >
@@ -53,8 +71,11 @@ const links = nav.primary.filter((l) => !('children' in l && l.children));
             links.map((l) => (
               <a
                 href={l.href}
+                data-nav-item
+                data-nav-active={isActive(l.href) ? 'true' : undefined}
+                aria-current={isActive(l.href) ? 'page' : undefined}
                 class:list={[
-                  'rounded-md px-3 py-2 text-[0.8125rem] transition-colors hover:bg-panel hover:text-fg',
+                  'relative rounded-md px-3 py-2 text-[0.8125rem] transition-colors hover:text-fg',
                   isActive(l.href) ? 'text-fg' : 'text-fg-2',
                 ]}
               >
@@ -205,6 +226,27 @@ const links = nav.primary.filter((l) => !('children' in l && l.children));
   #burger[aria-expanded='true'] .bl:nth-child(2) { opacity: 0; }
   #burger[aria-expanded='true'] .bl:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
+  /* The gliding indicator. Starts hidden and is positioned by script, so it
+     never flashes at 0,0 before the first measurement. */
+  #nav-ink {
+    position: absolute;
+    bottom: 0.15rem;
+    left: 0;
+    height: 2px;
+    width: 0;
+    opacity: 0;
+    border-radius: 2px;
+    background: var(--accent-warm);
+    pointer-events: none;
+    transition:
+      transform 0.38s var(--ease-out-soft),
+      width 0.38s var(--ease-out-soft),
+      opacity 0.25s linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #nav-ink { transition: opacity 0.25s linear; }
+  }
+
   #mobile-nav.showing { display: block; }
   #mobile-nav.showing .mob {
     animation: slide-x 0.34s var(--ease-out-soft) both;
@@ -234,6 +276,41 @@ const links = nav.primary.filter((l) => !('children' in l && l.children));
       window.addEventListener('scroll', onScroll, { passive: true });
     }
     onScroll();
+
+    /* ── Gliding nav underline ─────────────────────────────────────────
+       One indicator for the whole bar. It parks under the current page,
+       follows hover and keyboard focus, and returns on leave. Width and
+       offset are read from the item, so it needs no per-item markup and
+       adapts to label length automatically. */
+    const navEl = document.getElementById('primary-nav');
+    const ink = document.getElementById('nav-ink');
+    if (navEl && ink && navEl.dataset.inkBound !== '1') {
+      navEl.dataset.inkBound = '1';
+      const items = [...navEl.querySelectorAll<HTMLElement>('[data-nav-item]')];
+      const home = items.find((i) => i.dataset.navActive === 'true') ?? null;
+
+      const moveTo = (el: HTMLElement | null) => {
+        if (!el) { ink.style.opacity = '0'; return; }
+        ink.style.opacity = '1';
+        ink.style.width = `${el.offsetWidth - 24}px`;
+        ink.style.transform = `translateX(${el.offsetLeft + 12}px)`;
+      };
+
+      items.forEach((i) => {
+        i.addEventListener('pointerenter', () => moveTo(i));
+        i.addEventListener('focus', () => moveTo(i));
+      });
+      navEl.addEventListener('pointerleave', () => moveTo(home));
+      navEl.addEventListener('focusout', (e) => {
+        if (!navEl.contains(e.relatedTarget as Node)) moveTo(home);
+      });
+
+      // Fonts load after first paint and change label widths, so measure
+      // again once they have settled rather than locking in a stale offset.
+      moveTo(home);
+      document.fonts?.ready.then(() => moveTo(home));
+      window.addEventListener('resize', () => moveTo(home), { passive: true });
+    }
 
     const trigger = document.getElementById('mm-trigger');
     const panel = document.getElementById('mm-panel');

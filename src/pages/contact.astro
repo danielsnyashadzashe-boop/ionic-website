@@ -55,10 +55,20 @@ const steps = [
   description="Talk to Ionic about digital transformation, process automation, GRC or expense management. Operating across South Africa and Canada. We reply to every enquiry within one business day."
   schema={schema}
 >
+  {/* This page had no <h1> at all: it went from breadcrumbs straight into the
+      contact panel, whose heading is an h2. Every page needs exactly one. */}
   <section class="relative overflow-hidden">
-
-    <div class="shell relative pb-10 pt-14">
+    <div class="shell relative pb-14 pt-14">
       <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Contact' }]} />
+
+      <p class="marker veil mt-10">Contact</p>
+      <h1 class="t-title rise mt-4" style="--step:1">
+        Tell us what you are <span class="grad-text">trying to change.</span>
+      </h1>
+      <p class="t-lede rise measure mt-6 text-fg-3" style="--step:2">
+        A real person reads every enquiry and replies within one business day, usually with a
+        few questions so the first call is useful rather than introductory.
+      </p>
     </div>
   </section>
 
