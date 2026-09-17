@@ -330,11 +330,18 @@ const painOptions = [
 
   [data-compass] [data-hero-needle] { transform-origin: 200px 200px; animation: hero-sweep 5s ease-in-out infinite alternate; }
   @keyframes hero-sweep { from { transform: rotate(-56deg); } to { transform: rotate(34deg); } }
+  /* Each wave loops by translating exactly a whole number of its own
+     repeats, so the restart is invisible.
+       hero path:   60 -> 150 -> 240 ...  period 90,  travel 180 (2x)
+       vessel path: 40 -> 106 -> 172 ...  period 66,  travel 264 (4x)
+     Travelling an arbitrary distance leaves a visible jump every cycle. The
+     reference has this: it moves the vessel wave 260 against a 66 period. */
   [data-compass] [data-hero-water] { animation: hero-drift 6s linear infinite; }
-  @keyframes hero-drift { to { transform: translateX(-120px); } }
+  @keyframes hero-drift { to { transform: translateX(-180px); } }
 
   [data-compass] [data-arm] { animation: swing var(--period, 1.2s) ease-in-out infinite alternate; }
-  [data-compass] [data-wave] { animation: hero-drift 3.2s linear infinite; }
+  [data-compass] [data-wave] { animation: wave-drift 3.2s linear infinite; }
+  @keyframes wave-drift { to { transform: translateX(-264px); } }
 
   [data-compass] [data-chain] .node { transform-box: fill-box; transform-origin: center; }
   [data-compass] [data-chain] .node.pop { animation: pop-in 0.45s var(--ease-spring) both; }

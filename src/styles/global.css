@@ -594,6 +594,10 @@
     transition: transform 0.6s var(--ease-mech);
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px var(--primary), 0 16px 34px -14px var(--primary); }
+  /* Press feedback. The reference has it and it is the difference between a
+     button that feels clicked and one that only changes colour. */
+  .btn:active { transform: scale(0.98); }
+  .btn-ghost:active { transform: scale(0.98); }
   .btn:hover::after { transform: translateX(120%); }
 
   .btn-ghost {
