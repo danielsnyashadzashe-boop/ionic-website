@@ -34,6 +34,14 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function ContactForm({ source, returnPath, action = '/contact.php', email }: Props) {
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [step, setStep] = useState(0);
+  /**
+   * Staging is opt-in, set after mount. Rendering `stages-on` during SSR
+   * would hide the later fields for anyone without JavaScript, and the plain
+   * POST would arrive with no message.
+   */
+  const [staged, setStaged] = useState(false);
+  useEffect(() => setStaged(true), []);
   const formRef = useRef<HTMLFormElement>(null);
   const tsRef = useRef<HTMLInputElement>(null);
 
@@ -111,8 +119,45 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
 
   const busy = status.kind === 'sending';
 
+  /**
+   * Staged brief rather than one wall of fields, matching the Process
+   * Compass. Same rail, same counter, same one-thing-at-a-time rhythm, so
+   * the two flows read as one product.
+   *
+   * Two things this must not break. Every field stays mounted, hidden with
+   * CSS rather than unmounted, so a normal form POST still carries all of
+   * them when JavaScript is unavailable; and without JS no stage is ever
+   * hidden, because `is-on` is only removed by the script below.
+   */
+  const STEPS = [
+    { key: 'who', label: 'About you', fields: ['name', 'email'] as const },
+    { key: 'what', label: 'What you need', fields: ['message'] as const },
+  ];
+  const last = step === STEPS.length - 1;
+
+  const advance = () => {
+    const form = formRef.current;
+    if (!form) return;
+    const next: Record<string, string> = {};
+    for (const f of STEPS[step].fields) {
+      const el = form.elements.namedItem(f) as HTMLInputElement | HTMLTextAreaElement | null;
+      const v = el?.value.trim() ?? '';
+      if (!v) next[f] = 'Required';
+      else if (f === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) next[f] = 'Check this address';
+    }
+    setErrors(next);
+    if (!Object.keys(next).length) setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  };
+
   return (
-    <form ref={formRef} action={action} method="post" onSubmit={onSubmit} noValidate className="space-y-5">
+    <form
+      ref={formRef}
+      action={action}
+      method="post"
+      onSubmit={onSubmit}
+      noValidate
+      className={staged ? 'stages-on' : undefined}
+    >
       {/* Handler contract: do not rename */}
       <input type="hidden" name="source" value={source} />
       <input type="hidden" name="return" value={returnPath} />
@@ -124,28 +169,61 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field id="name" label="Name" error={errors.name}>
-          <Input id="name" name="name" autoComplete="name" maxLength={100} required aria-invalid={!!errors.name} />
-        </Field>
+      {/* The rail is meaningless when every field is on screen at once. */}
+      {staged && (
+        <>
+          <div className="flex items-baseline justify-between gap-4">
+            <p className="mono-label">{STEPS[step].label}</p>
+            <p className="stage-count">{step + 1} of {STEPS.length}</p>
+          </div>
+          <div className="stage-rail mt-3">
+            <b style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
+          </div>
+        </>
+      )}
 
-        <Field id="email" label="Work email" error={errors.email}>
-          <Input id="email" name="email" type="email" autoComplete="email" maxLength={150} required aria-invalid={!!errors.email} />
-        </Field>
+      <div className="mt-8 space-y-5">
+        <div className={step === 0 ? 'stage is-on' : 'stage'}>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field id="name" label="Name" error={errors.name}>
+              <Input id="name" name="name" autoComplete="name" maxLength={100} required aria-invalid={!!errors.name} />
+            </Field>
+
+            <Field id="email" label="Work email" error={errors.email}>
+              <Input id="email" name="email" type="email" autoComplete="email" maxLength={150} required aria-invalid={!!errors.email} />
+            </Field>
+          </div>
+
+          <div className="mt-5">
+            <Field id="company" label="Company" hint="optional">
+              <Input id="company" name="company" autoComplete="organization" maxLength={150} />
+            </Field>
+          </div>
+        </div>
+
+        <div className={step === 1 ? 'stage is-on' : 'stage'}>
+          <Field id="message" label="How can we help?" error={errors.message}>
+            <Textarea id="message" name="message" rows={6} maxLength={5000} required aria-invalid={!!errors.message} />
+          </Field>
+        </div>
       </div>
 
-      <Field id="company" label="Company" hint="optional">
-        <Input id="company" name="company" autoComplete="organization" maxLength={150} />
-      </Field>
+      <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center">
+        {step > 0 && (
+          <button type="button" className="btn-ghost" onClick={() => setStep((s) => s - 1)}>
+            Back
+          </button>
+        )}
 
-      <Field id="message" label="How can we help?" error={errors.message}>
-        <Textarea id="message" name="message" rows={5} maxLength={5000} required aria-invalid={!!errors.message} />
-      </Field>
-
-      <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center">
-        <Button type="submit" disabled={busy} size="lg" className="group relative overflow-hidden">
-          <span className="relative z-10">{busy ? 'Sending…' : 'Send message'}</span>
-        </Button>
+        {last || !staged ? (
+          <Button type="submit" disabled={busy} size="lg" className="group relative overflow-hidden">
+            <span className="relative z-10">{busy ? 'Sending…' : 'Send message'}</span>
+          </Button>
+        ) : (
+          <Button type="button" size="lg" onClick={advance} className="group relative overflow-hidden">
+            <span className="relative z-10">Continue</span>
+          </Button>
+        )}
 
         <p
           role="status"

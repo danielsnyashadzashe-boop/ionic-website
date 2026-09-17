@@ -51,6 +51,7 @@ await new Promise((r) => server.listen(PORT, r));
 
 const WIDTHS = [320, 375, 414, 640, 768, 1024, 1280, 1440, 1920];
 const PAGES = [
+  '/compass/',
   '/',
   '/process-genesis/',
   '/ionic-grc/',

@@ -37,7 +37,9 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(PORT, r));
 
-const PAGES = ['/', '/process-genesis/', '/case-studies/', '/insights/', '/contact/'];
+const PAGES = [
+  '/', '/compass/', '/process-genesis/', '/case-studies/', '/insights/', '/contact/',
+];
 
 const CHECK = () => {
   const cv = document.createElement('canvas');

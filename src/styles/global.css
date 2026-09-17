@@ -421,6 +421,11 @@
 @keyframes floating  { from { transform: translateY(0); } 65% { transform: translateY(15px); } to { transform: translateY(0); } }
 @keyframes shine     { from { background-position: -200% bottom; } to { background-position: 200% bottom; } }
 @keyframes move-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes stage-in  { from { opacity: 0; transform: translateY(1.1rem); } to { opacity: 1; transform: none; } }
+@keyframes stage-out { to { opacity: 0; transform: translateY(-0.75rem); } }
+@keyframes pop-in    { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes link-draw { from { stroke-dashoffset: 60; opacity: 0; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes swing     { from { transform: rotate(-26deg); } to { transform: rotate(26deg); } }
 @keyframes wander    { from { transform: none; } to { transform: translate3d(4%, -6%, 0) scale(1.12); } }
 
 @layer components {
@@ -845,6 +850,137 @@
   }
   .u-draw:hover::after,
   .u-draw:focus-visible::after { animation: move-line 0.5s var(--ease-out-soft) forwards; }
+
+  /* ── Staged flows ───────────────────────────────────────────────────
+     One set of mechanics for every multi-step thing on the site: the
+     Process Compass, the contact brief, and anything added later. The
+     point is that a visitor learns the interaction once. If each flow
+     invented its own rail and transition they would read as different
+     products bolted together. */
+  .stage-rail {
+    height: 2px;
+    background: var(--line-strong);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .stage-rail > b {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--primary);
+    transition: width 0.6s var(--ease-out-soft);
+  }
+  .stage-count {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    min-height: 1.25rem;
+  }
+
+  /* Stages only collapse once a controller has claimed the flow by adding
+     `stages-on`. Hiding them by default would mean that with JavaScript
+     unavailable the contact form's later fields were display:none, and a
+     plain POST would arrive missing its message. Default is everything
+     visible; the script opts into the staged behaviour. */
+  .stage { display: block; }
+  .stages-on .stage { display: none; }
+  .stages-on .stage.is-on {
+    display: block;
+    animation: stage-in 0.5s var(--ease-out-soft) both;
+  }
+  .stages-on .stage.is-off { animation: stage-out 0.26s ease-in both; }
+
+  /* Instrument column shared by every stage that has one. */
+  .instrument {
+    width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+  .instrument svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .readout-big {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    min-height: 3.25rem;
+  }
+  .readout-big small {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0;
+    color: var(--fg-3);
+  }
+
+  /* Range input, restyled to the design system. Kept a real <input> so it
+     is keyboard and screen-reader operable; the SVG above it is decoration
+     that happens to be draggable. */
+  .dial {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 1.75rem;
+    margin-top: 0.75rem;
+    background: transparent;
+  }
+  .dial::-webkit-slider-runnable-track { height: 2px; background: var(--line-strong); border-radius: 2px; }
+  .dial::-moz-range-track { height: 2px; background: var(--line-strong); border-radius: 2px; }
+  .dial::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1.25rem; height: 1.25rem;
+    margin-top: -0.59rem;
+    border-radius: 50%;
+    background: var(--raised);
+    border: 2px solid var(--primary);
+    transition: transform 0.2s var(--ease-spring), background-color 0.2s;
+  }
+  .dial::-moz-range-thumb {
+    width: 1.1rem; height: 1.1rem; border-radius: 50%;
+    background: var(--raised); border: 2px solid var(--primary);
+  }
+  .dial:active::-webkit-slider-thumb { transform: scale(1.15); background: var(--primary); }
+
+  /* Choice tile. The fill sweeps from the corner rather than snapping. */
+  .tile {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.875rem;
+    min-height: 9rem;
+    padding: 1.35rem 1.25rem 1.2rem;
+    text-align: left;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--fg);
+    transition: border-color 0.25s, transform 0.25s var(--ease-spring);
+  }
+  .tile:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .tile::before {
+    content: "";
+    position: absolute;
+    inset: auto auto -2.5rem -2.5rem;
+    width: 5rem; height: 5rem;
+    border-radius: 50%;
+    background: var(--primary);
+    transform: scale(0);
+    transition: transform 0.55s var(--ease-out-soft);
+    z-index: 0;
+  }
+  .tile > * { position: relative; z-index: 1; }
+  .tile[aria-checked="true"] { border-color: var(--primary); color: var(--on-primary); }
+  .tile[aria-checked="true"]::before { transform: scale(9); }
+  .tile svg {
+    width: 1.75rem; height: 1.75rem;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .tile b { font-weight: 500; font-size: 1.0625rem; letter-spacing: -0.01em; }
 
   /* Trailing slash after a section title, lifted from the reference. Cheap,
      distinctive, and it gives a heading somewhere to end. */

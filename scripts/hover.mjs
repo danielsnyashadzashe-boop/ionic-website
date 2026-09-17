@@ -42,6 +42,7 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(PORT, r));
 
 const PAGES = [
+  '/compass/',
   '/', '/process-genesis/', '/ionic-grc/', '/case-studies/',
   '/case-studies/old-mutual/', '/insights/', '/contact/', '/404.html',
 ];

@@ -23,13 +23,19 @@ const d = product.data;
   {/* Image header. The card is the place the notch motif actually earns its
       keep: it is the element a visitor sees before any photograph deeper in
       the page. Caption suppressed, because the card's own copy says it. */}
-  <Figure
-    photo={d.photo}
-    showCaption={false}
-    ratio={wide ? '21 / 9' : '16 / 10'}
-    sizes="(min-width: 1024px) 22rem, (min-width: 768px) 45vw, 92vw"
-    class="px-6 pt-6 md:px-7 md:pt-7"
-  />
+  {
+    /* `photo` is optional in the schema, so a product without one gets a
+       text-only card rather than a broken frame. */
+    d.photo && (
+      <Figure
+        photo={d.photo}
+        showCaption={false}
+        ratio={wide ? '21 / 9' : '16 / 10'}
+        sizes="(min-width: 1024px) 22rem, (min-width: 768px) 45vw, 92vw"
+        class="px-6 pt-6 md:px-7 md:pt-7"
+      />
+    )
+  }
 
   <div class="flex flex-1 flex-col p-6 pt-5 md:p-7 md:pt-5">
   <!-- Tone wash keyed to the product's data hue -->

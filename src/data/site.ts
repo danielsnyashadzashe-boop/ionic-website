@@ -53,6 +53,7 @@ export const nav = {
     { label: 'Platforms', href: '/#platforms', children: true },
     { label: 'Case studies', href: '/case-studies/' },
     { label: 'Insights', href: '/insights/' },
+    { label: 'Compass', href: '/compass/' },
     { label: 'About', href: '/#about' },
   ],
   footer: [
@@ -60,6 +61,7 @@ export const nav = {
     { label: 'Platforms', href: '/#platforms' },
     { label: 'Case studies', href: '/case-studies/' },
     { label: 'Insights', href: '/insights/' },
+    { label: 'Process Compass', href: '/compass/' },
     { label: 'Privacy', href: '/privacy/' },
     { label: 'Contact', href: '/contact/' },
   ],

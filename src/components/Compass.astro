@@ -1,0 +1,667 @@
+---
+import { contact } from '@/data/site';
+
+/**
+ * Process Compass: five questions answered by moving an instrument rather
+ * than filling a field, then one recommendation.
+ *
+ * Adapted from the reference prototype, not pasted. The prototype is a
+ * paper-and-terracotta design in Newsreader and Manrope; dropping that onto
+ * this site would read as a second brand. What carries over is the idea
+ * (instruments instead of inputs, one question per stage, a reasoned verdict
+ * at the end) and the mechanics, which now live in lib/stages.ts so the
+ * contact brief behaves identically.
+ *
+ * Every instrument is decoration over a real <input type="range">. The SVG
+ * is draggable for a mouse, the range is there for a keyboard and a screen
+ * reader, and both write to the same state.
+ */
+
+const painOptions = [
+  { key: 'slow', label: 'It takes too long', icon: 'M12 7v5l3 2' },
+  { key: 'errors', label: 'Mistakes slip through', icon: 'M12 10v4M12 17.5v.5' },
+  { key: 'cost', label: 'It costs too much', icon: 'M12 6v2M12 16v2' },
+  { key: 'visibility', label: 'We cannot see what is happening', icon: '' },
+];
+---
+
+<div class="surface overflow-hidden" data-stages data-compass>
+  <div class="border-b border-line px-6 py-5 md:px-10">
+    <div class="flex items-baseline justify-between gap-4">
+      <p class="mono-label">Process Compass</p>
+      <p class="stage-count" data-stage-count></p>
+    </div>
+    <div class="stage-rail mt-3" data-stage-rail><b></b></div>
+  </div>
+
+  <div class="px-6 py-10 md:px-10 md:py-14">
+    <!-- ══ Intro ══ -->
+    <section class="stage is-on" data-stage="intro">
+      <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <h2 class="t-title">
+            Where should your process <span class="grad-text">go next?</span><span class="slash" aria-hidden="true">/</span>
+          </h2>
+          <p class="t-lede measure mt-6 text-fg-3">
+            Five questions, each answered by moving a dial, filling a tank or setting a tempo.
+            At the end you get one recommendation for what to do first, and why.
+          </p>
+          <div class="mt-9 flex flex-wrap items-center gap-4">
+            <button type="button" class="btn" data-goto="q1">
+              <span>Start reading</span>
+              <span aria-hidden="true">→</span>
+            </button>
+            <span class="mono-label">About two minutes</span>
+          </div>
+          <p class="mt-5 text-[0.875rem] text-fg-4">
+            Works best with one process in mind: invoicing, onboarding, order handling,
+            anything you run more than once.
+          </p>
+        </div>
+
+        <div class="instrument mx-auto max-w-[24rem]" aria-hidden="true">
+          <svg viewBox="0 0 400 400">
+            <defs>
+              <clipPath id="cmp-hero-clip"><rect x="60" y="230" width="280" height="130" rx="20" /></clipPath>
+            </defs>
+            <path d="M40 200 A160 160 0 0 1 360 200" fill="none" stroke="var(--line-strong)" stroke-width="2" />
+            <g data-hero-ticks></g>
+            <line
+              data-hero-needle
+              x1="200" y1="200" x2="200" y2="72"
+              stroke="var(--primary)" stroke-width="3" stroke-linecap="round"
+            />
+            <circle cx="200" cy="200" r="7" fill="var(--accent-warm)" />
+            <rect x="60" y="230" width="280" height="130" rx="20" fill="none" stroke="var(--line-strong)" stroke-width="2" />
+            <g clip-path="url(#cmp-hero-clip)">
+              <path
+                data-hero-water
+                fill="var(--primary)" opacity="0.28"
+                d="M60 300 C90 290 120 310 150 300 C180 290 210 310 240 300 C270 290 300 310 330 300 C360 290 390 310 420 300 C450 290 480 310 510 300 L510 380 L60 380 Z"
+              />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Q1 · maturity ══ -->
+    <section class="stage" data-stage="q1">
+      <div class="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
+          <p class="marker"><b>01</b><span>Maturity</span></p>
+          <h2 class="t-section mt-4" tabindex="-1">How settled is the process today?</h2>
+          <p class="measure mt-4 text-fg-3">
+            Turn the needle. Left means every run is improvised. Right means it is written
+            down, followed and measured.
+          </p>
+          <p class="readout-big figure mt-7" data-read="maturity" role="status"></p>
+          <div class="mt-6 flex items-center gap-4">
+            <button type="button" class="btn-ghost" data-back>Back</button>
+            <button type="button" class="btn" data-next><span>Continue</span></button>
+          </div>
+        </div>
+
+        <div class="instrument mx-auto max-w-[26rem]">
+          <svg viewBox="0 0 400 250" data-gauge aria-hidden="true">
+            <path d="M40 200 A160 160 0 0 1 360 200" fill="none" stroke="var(--line-strong)" stroke-width="2" />
+            <g data-ticks></g>
+            {/* Without these the dial is a pretty arc with no units. */}
+            <g class="gauge-key">
+              <text x="26" y="228" text-anchor="start">Ad hoc</text>
+              <text x="84" y="88" text-anchor="middle">Repeatable</text>
+              <text x="200" y="22" text-anchor="middle">Defined</text>
+              <text x="316" y="88" text-anchor="middle">Managed</text>
+              <text x="374" y="228" text-anchor="end">Optimised</text>
+            </g>
+            <line
+              data-needle
+              x1="200" y1="200" x2="200" y2="66"
+              stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round"
+            />
+            <circle cx="200" cy="200" r="8" fill="var(--accent-warm)" />
+          </svg>
+          <input class="dial" type="range" min="0" max="100" value="45" data-in="maturity" aria-label="How settled the process is, 0 to 100" />
+          <p class="mt-2 text-center text-[0.8125rem] text-fg-4">Drag the dial, or use the slider</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Q2 · automation ══ -->
+    <section class="stage" data-stage="q2">
+      <div class="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
+          <p class="marker"><b>02</b><span>Automation</span></p>
+          <h2 class="t-section mt-4" tabindex="-1">How much runs without a person?</h2>
+          <p class="measure mt-4 text-fg-3">
+            Fill the tank to the share of steps that happen on their own. No one typing,
+            copying, forwarding or approving.
+          </p>
+          <p class="readout-big figure mt-7" data-read="automation" role="status"></p>
+          <div class="mt-6 flex items-center gap-4">
+            <button type="button" class="btn-ghost" data-back>Back</button>
+            <button type="button" class="btn" data-next><span>Continue</span></button>
+          </div>
+        </div>
+
+        <div class="instrument mx-auto max-w-[17rem]">
+          <svg viewBox="0 0 300 320" data-vessel aria-hidden="true">
+            <defs>
+              <clipPath id="cmp-vessel-clip"><rect x="40" y="20" width="220" height="280" rx="30" /></clipPath>
+            </defs>
+            <rect x="40" y="20" width="220" height="280" rx="30" fill="none" stroke="var(--line-strong)" stroke-width="2" />
+            <g data-marks></g>
+            <g clip-path="url(#cmp-vessel-clip)">
+              <g data-water>
+                <path
+                  data-wave
+                  fill="var(--primary)" opacity="0.55"
+                  d="M40 300 C62 292 84 308 106 300 C128 292 150 308 172 300 C194 292 216 308 238 300 C260 292 282 308 304 300 C326 292 348 308 370 300 C392 292 414 308 436 300 C458 292 480 308 502 300 C524 292 546 308 568 300 L568 620 L40 620 Z"
+                />
+              </g>
+            </g>
+            <text data-level x="150" y="176" text-anchor="middle" class="figure" font-size="46" fill="var(--fg)">45%</text>
+          </svg>
+          <input class="dial" type="range" min="0" max="100" value="45" data-in="automation" aria-label="Percentage of the process that is automated" />
+          <p class="mt-2 text-center text-[0.8125rem] text-fg-4">Drag the tank, or use the slider</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Q3 · frequency ══ -->
+    <section class="stage" data-stage="q3">
+      <div class="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
+          <p class="marker"><b>03</b><span>Frequency</span></p>
+          <h2 class="t-section mt-4" tabindex="-1">How often does it run?</h2>
+          <p class="measure mt-4 text-fg-3">
+            Set the tempo. Something that runs once a quarter and something that never stops
+            deserve very different fixes.
+          </p>
+          <p class="readout-big figure mt-7" data-read="frequency" role="status"></p>
+          <div class="mt-6 flex items-center gap-4">
+            <button type="button" class="btn-ghost" data-back>Back</button>
+            <button type="button" class="btn" data-next><span>Continue</span></button>
+          </div>
+        </div>
+
+        <div class="instrument mx-auto max-w-[15rem]">
+          <svg viewBox="0 0 260 300" aria-hidden="true">
+            <path
+              d="M70 280 L100 30 Q130 20 160 30 L190 280 Q130 292 70 280 Z"
+              fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" stroke-linejoin="round"
+            />
+            <g data-arm style="transform-origin:130px 250px">
+              <line x1="130" y1="250" x2="130" y2="60" stroke="var(--fg-2)" stroke-width="3" stroke-linecap="round" />
+              <rect data-weight x="116" y="150" width="28" height="18" rx="4" fill="var(--primary)" />
+            </g>
+            <circle cx="130" cy="250" r="9" fill="var(--accent-warm)" />
+          </svg>
+          <input class="dial" type="range" min="1" max="5" value="3" step="1" data-in="frequency" aria-label="How often the process runs" />
+          <p class="mt-2 text-center text-[0.8125rem] text-fg-4">Rarely through to constantly</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Q4 · handoffs ══ -->
+    <section class="stage" data-stage="q4">
+      <div class="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
+          <p class="marker"><b>04</b><span>Handoffs</span></p>
+          <h2 class="t-section mt-4" tabindex="-1">How many hands touch it?</h2>
+          <p class="measure mt-4 text-fg-3">
+            Count the people or teams work passes through. Every handoff is somewhere delay
+            and error can get in.
+          </p>
+          <p class="readout-big figure mt-7" data-read="handoffs" role="status"></p>
+          <div class="mt-6 flex items-center gap-4">
+            <button type="button" class="btn-ghost" data-back>Back</button>
+            <button type="button" class="btn" data-next><span>Continue</span></button>
+          </div>
+        </div>
+
+        <div class="instrument mx-auto max-w-[26rem]">
+          <svg viewBox="0 0 480 180" data-chain aria-hidden="true"></svg>
+          <input class="dial" type="range" min="1" max="8" value="3" step="1" data-in="handoffs" aria-label="Number of people or teams involved" />
+          <p class="mt-2 text-center text-[0.8125rem] text-fg-4">One person up to eight or more</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Q5 · pain ══ -->
+    <section class="stage" data-stage="q5">
+      <div class="grid items-start gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
+          <p class="marker"><b>05</b><span>Priority</span></p>
+          <h2 class="t-section mt-4" tabindex="-1">What hurts most right now?</h2>
+          <p class="measure mt-4 text-fg-3">Pick the one thing you would fix tomorrow.</p>
+          <p class="readout-big figure mt-7" data-read="pain" role="status"></p>
+          <div class="mt-6 flex items-center gap-4">
+            <button type="button" class="btn-ghost" data-back>Back</button>
+            <button type="button" class="btn" data-next data-finish disabled>
+              <span>See recommendation</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Biggest problem" data-tiles>
+          {
+            painOptions.map((o) => (
+              <button type="button" class="tile" role="radio" aria-checked="false" data-pain={o.key}>
+                <svg viewBox="0 0 24 24">
+                  {o.key === 'visibility' ? (
+                    <>
+                      <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </>
+                  ) : o.key === 'errors' ? (
+                    <>
+                      <path d="M12 3l10 18H2z" />
+                      <path d={o.icon} />
+                    </>
+                  ) : (
+                    <>
+                      <circle cx="12" cy="12" r="9" />
+                      <path d={o.icon} />
+                    </>
+                  )}
+                </svg>
+                <b>{o.label}</b>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Result ══ -->
+    <section class="stage" data-stage="result">
+      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-5" data-readings></dl>
+
+      <div class="mt-12 grid gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <p class="marker"><b>—</b><span>Recommendation</span></p>
+          <h2 class="t-title mt-4" data-v-title tabindex="-1"></h2>
+          <p class="t-lede measure mt-5 text-fg-2" data-v-why></p>
+          <p class="measure mt-4 text-fg-3" data-v-summary></p>
+          <div class="mt-8 flex flex-wrap items-center gap-4">
+            <a class="btn" href="/contact/"><span>Book a working session</span><span aria-hidden="true">→</span></a>
+            <button type="button" class="btn-ghost" data-goto="intro">Start again</button>
+          </div>
+          <p class="mt-5 text-[0.8125rem] text-fg-4">
+            This is a rule of thumb, not an assessment. It reflects what you told us here and
+            nothing else. Email <a class="link-u" href={`mailto:${contact.email}`}>{contact.email}</a>{' '}
+            if you would rather talk it through.
+          </p>
+        </div>
+
+        <div class="surface surface-2 p-7 md:p-9">
+          <h3 class="text-[1.25rem] font-medium tracking-[-0.02em]">Where we would start</h3>
+          <ol class="mt-6 space-y-0" data-v-steps></ol>
+          <p class="mt-5 text-[0.8125rem] text-fg-4" data-v-time></p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+{/*
+  `is:global`, deliberately. Astro scopes component styles by stamping a
+  data attribute on the markup it renders, but the chain nodes and the
+  recommendation steps are built by JavaScript at runtime, so they never
+  carry that attribute and scoped rules silently skip them. That is why the
+  steps first rendered as three unnumbered lines. Every selector below is
+  prefixed with [data-compass] so going global does not leak.
+*/}
+<style is:global>
+  /* The needle and water animate to a new value; the transition is removed
+     while dragging so the instrument tracks the pointer exactly. */
+  [data-compass] [data-needle] { transform-origin: 200px 200px; transition: transform 0.5s var(--ease-spring); }
+  [data-compass] [data-water] { transition: transform 0.55s var(--ease-out-soft); }
+  [data-compass] [data-weight] { transition: transform 0.5s var(--ease-out-soft); }
+
+  [data-compass] .gauge-key text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    fill: var(--fg-4);
+  }
+
+  [data-compass] [data-hero-needle] { transform-origin: 200px 200px; animation: hero-sweep 5s ease-in-out infinite alternate; }
+  @keyframes hero-sweep { from { transform: rotate(-56deg); } to { transform: rotate(34deg); } }
+  [data-compass] [data-hero-water] { animation: hero-drift 6s linear infinite; }
+  @keyframes hero-drift { to { transform: translateX(-120px); } }
+
+  [data-compass] [data-arm] { animation: swing var(--period, 1.2s) ease-in-out infinite alternate; }
+  [data-compass] [data-wave] { animation: hero-drift 3.2s linear infinite; }
+
+  [data-compass] [data-chain] .node { transform-box: fill-box; transform-origin: center; }
+  [data-compass] [data-chain] .node.pop { animation: pop-in 0.45s var(--ease-spring) both; }
+  [data-compass] [data-chain] .link { stroke: var(--fg-4); stroke-width: 2; stroke-dasharray: 4 5; }
+  [data-compass] [data-chain] .link.draw { animation: link-draw 0.45s var(--ease-out-soft) both; }
+
+  [data-compass] [data-v-steps] li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.6rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--fg-3);
+    animation: stage-in 0.5s var(--ease-out-soft) both;
+  }
+  [data-compass] [data-v-steps] li:nth-child(1) { animation-delay: 0.1s; }
+  [data-compass] [data-v-steps] li:nth-child(2) { animation-delay: 0.22s; }
+  [data-compass] [data-v-steps] li:nth-child(3) { animation-delay: 0.34s; }
+  [data-compass] [data-v-steps] li::before {
+    content: counter(step);
+    counter-increment: step;
+    font-family: var(--font-mono);
+    color: var(--accent-warm);
+  }
+  [data-compass] [data-v-steps] { counter-reset: step; }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-compass] [data-arm], [data-compass] [data-wave], [data-compass] [data-hero-needle], [data-compass] [data-hero-water] { animation: none !important; }
+  }
+</style>
+
+<script>
+  import { mountStages, dragSvg } from '@/lib/stages';
+
+  const root = document.querySelector<HTMLElement>('[data-compass]');
+  if (root) {
+    mountStages(root);
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const state = { maturity: 45, automation: 45, frequency: 3, handoffs: 3, pain: '' };
+
+    const $ = <T extends Element>(sel: string) => root.querySelector<T>(sel);
+    const read = (k: string) => root.querySelector<HTMLElement>(`[data-read="${k}"]`);
+    const input = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`);
+
+    const maturityLabel = (v: number) =>
+      v < 20 ? 'Ad hoc' : v < 40 ? 'Repeatable' : v < 60 ? 'Defined' : v < 80 ? 'Managed' : 'Optimised';
+    const maturityNote = (v: number) =>
+      v < 20 ? 'Every run is a little different'
+      : v < 40 ? 'It works, mostly from memory'
+      : v < 60 ? 'Written down and usually followed'
+      : v < 80 ? 'Followed and measured'
+      : 'Measured and continually improved';
+
+    const freqLabel = ['', 'A few times a year', 'Weekly', 'Daily', 'Hourly', 'Continuously'];
+    const freqPeriod = ['', '2.6s', '1.8s', '1.2s', '.7s', '.42s'];
+    const freqWeight = [0, 0, -22, -44, -66, -88];
+    const freqNote = ['', 'Rare enough that people forget the steps', 'A regular rhythm with quiet days between',
+      'Part of the daily routine', 'Many times a day, every day', 'Never stops; a queue is always waiting'];
+    const painLabel: Record<string, string> = {
+      slow: 'it takes too long', errors: 'mistakes slip through',
+      cost: 'it costs too much', visibility: 'nobody can see what is happening',
+    };
+    const painShort: Record<string, string> = {
+      slow: 'Speed', errors: 'Accuracy', cost: 'Cost', visibility: 'Visibility',
+    };
+
+    /* ── tick marks ─────────────────────────────────────────────── */
+    const arc = (g: Element, steps: number, major: number) => {
+      for (let i = 0; i <= steps; i++) {
+        const a = Math.PI - (i / steps) * Math.PI;
+        const r2 = i % major === 0 ? 142 : i % (major / 2) === 0 ? 150 : 155;
+        const l = document.createElementNS(NS, 'line');
+        l.setAttribute('x1', String(200 + Math.cos(a) * 160));
+        l.setAttribute('y1', String(200 - Math.sin(a) * 160));
+        l.setAttribute('x2', String(200 + Math.cos(a) * r2));
+        l.setAttribute('y2', String(200 - Math.sin(a) * r2));
+        l.setAttribute('stroke', i % major === 0 ? 'var(--fg-3)' : 'var(--line-strong)');
+        l.setAttribute('stroke-width', '2');
+        g.appendChild(l);
+      }
+    };
+    const ticks = $('[data-ticks]');
+    if (ticks) arc(ticks, 40, 10);
+    const heroTicks = $('[data-hero-ticks]');
+    if (heroTicks) arc(heroTicks, 20, 5);
+
+    const marks = $('[data-marks]');
+    if (marks) {
+      for (let i = 1; i < 10; i++) {
+        const y = 300 - i * 28;
+        const l = document.createElementNS(NS, 'line');
+        l.setAttribute('x1', '41');
+        l.setAttribute('x2', i % 5 === 0 ? '62' : '52');
+        l.setAttribute('y1', String(y));
+        l.setAttribute('y2', String(y));
+        l.setAttribute('stroke', 'var(--line-strong)');
+        l.setAttribute('stroke-width', '2');
+        marks.appendChild(l);
+      }
+    }
+
+    /* ── Q1 gauge ───────────────────────────────────────────────── */
+    const needle = $<SVGLineElement>('[data-needle]');
+    const setMaturity = (v: number) => {
+      v = Math.max(0, Math.min(100, Math.round(v)));
+      state.maturity = v;
+      input('maturity')!.value = String(v);
+      if (needle) needle.style.transform = `rotate(${(v / 100) * 180 - 90}deg)`;
+      read('maturity')!.innerHTML = `${maturityLabel(v)}<small>${maturityNote(v)}</small>`;
+    };
+    input('maturity')!.addEventListener('input', (e) => setMaturity(+(e.target as HTMLInputElement).value));
+    const gauge = $<SVGSVGElement>('[data-gauge]');
+    if (gauge && needle) {
+      dragSvg(gauge, (x, y) => {
+        let deg = (Math.atan2(200 - y, x - 200) * 180) / Math.PI;
+        if (deg < 0) deg = deg < -90 ? 180 : 0;
+        needle.style.transition = 'transform .12s ease-out';
+        setMaturity(((180 - deg) / 180) * 100);
+      }, () => { needle.style.transition = ''; });
+    }
+    setMaturity(45);
+
+    /* ── Q2 vessel ──────────────────────────────────────────────── */
+    const water = $<SVGGElement>('[data-water]');
+    const level = $<SVGTextElement>('[data-level]');
+    const setAutomation = (v: number) => {
+      v = Math.max(0, Math.min(100, Math.round(v)));
+      state.automation = v;
+      input('automation')!.value = String(v);
+      const surface = 300 - (v / 100) * 280;
+      if (water) water.style.transform = `translateY(${surface - 300}px)`;
+      if (level) {
+        level.textContent = `${v}%`;
+        // Flip to the on-water colour once the surface rises past the label.
+        level.setAttribute('fill', surface < 176 ? 'var(--on-primary)' : 'var(--fg)');
+      }
+      const note = v < 15 ? 'Almost everything is done by hand'
+        : v < 40 ? 'A few steps are automated, most are manual'
+        : v < 70 ? 'About half runs itself'
+        : v < 90 ? 'Mostly automated, people handle exceptions'
+        : 'Runs itself; people only watch';
+      read('automation')!.innerHTML = `${v}% automated<small>${note}</small>`;
+    };
+    input('automation')!.addEventListener('input', (e) => setAutomation(+(e.target as HTMLInputElement).value));
+    const vessel = $<SVGSVGElement>('[data-vessel]');
+    if (vessel && water) {
+      dragSvg(vessel, (_x, y) => {
+        water.style.transition = 'transform .1s ease-out';
+        setAutomation(((300 - y) / 280) * 100);
+      }, () => { water.style.transition = ''; });
+    }
+    setAutomation(45);
+
+    /* ── Q3 metronome ───────────────────────────────────────────── */
+    const arm = $<SVGGElement>('[data-arm]');
+    const weight = $<SVGRectElement>('[data-weight]');
+    const setFrequency = (v: number) => {
+      v = Math.max(1, Math.min(5, Math.round(v)));
+      state.frequency = v;
+      input('frequency')!.value = String(v);
+      arm?.style.setProperty('--period', freqPeriod[v]);
+      if (weight) weight.style.transform = `translateY(${freqWeight[v]}px)`;
+      read('frequency')!.innerHTML = `${freqLabel[v]}<small>${freqNote[v]}</small>`;
+    };
+    input('frequency')!.addEventListener('input', (e) => setFrequency(+(e.target as HTMLInputElement).value));
+    setFrequency(3);
+
+    /* ── Q4 chain ───────────────────────────────────────────────── */
+    const chain = $<SVGSVGElement>('[data-chain]');
+    const setHandoffs = (v: number) => {
+      v = Math.max(1, Math.min(8, Math.round(v)));
+      const prev = state.handoffs;
+      state.handoffs = v;
+      input('handoffs')!.value = String(v);
+      if (chain) {
+        chain.innerHTML = '';
+        const gap = 56;
+        const startX = 240 - ((v - 1) * gap) / 2;
+        const cy = 90;
+        for (let i = 0; i < v; i++) {
+          const x = startX + i * gap;
+          const fresh = v > prev && i >= prev;
+          if (i > 0) {
+            const l = document.createElementNS(NS, 'line');
+            l.setAttribute('x1', String(x - gap + 20));
+            l.setAttribute('x2', String(x - 20));
+            l.setAttribute('y1', String(cy));
+            l.setAttribute('y2', String(cy));
+            l.setAttribute('class', `link${fresh ? ' draw' : ''}`);
+            chain.appendChild(l);
+          }
+          const g = document.createElementNS(NS, 'g');
+          g.setAttribute('class', `node${fresh ? ' pop' : ''}`);
+          const end = i === 0 || i === v - 1;
+          g.innerHTML =
+            `<circle cx="${x}" cy="${cy}" r="20" fill="${end ? 'var(--primary)' : 'var(--panel)'}" stroke="var(--line-strong)" stroke-width="2"/>` +
+            `<circle cx="${x}" cy="${cy - 5}" r="5" fill="${end ? 'var(--on-primary)' : 'var(--fg-2)'}"/>` +
+            `<path d="M${x - 9} ${cy + 11} a9 8 0 0 1 18 0" fill="${end ? 'var(--on-primary)' : 'var(--fg-2)'}"/>`;
+          chain.appendChild(g);
+        }
+      }
+      const note = v === 1 ? 'One person owns it start to finish'
+        : v <= 3 ? 'A short relay with a couple of handoffs'
+        : v <= 5 ? 'Several desks, several inboxes'
+        : 'A long chain where work waits between people';
+      read('handoffs')!.innerHTML = `${v === 1 ? '1 person' : `${v} people`}<small>${note}</small>`;
+    };
+    input('handoffs')!.addEventListener('input', (e) => setHandoffs(+(e.target as HTMLInputElement).value));
+    setHandoffs(3);
+
+    /* ── Q5 tiles ───────────────────────────────────────────────── */
+    const tiles = [...root.querySelectorAll<HTMLButtonElement>('[data-pain]')];
+    const finish = root.querySelector<HTMLButtonElement>('[data-finish]')!;
+    tiles.forEach((t) => t.addEventListener('click', () => {
+      tiles.forEach((o) => o.setAttribute('aria-checked', String(o === t)));
+      state.pain = t.dataset.pain!;
+      read('pain')!.innerHTML =
+        `${painShort[state.pain]}<small>Fix first: ${painLabel[state.pain]}</small>`;
+      finish.disabled = false;
+    }));
+
+    /* ── Verdict ────────────────────────────────────────────────── */
+    const tracks: Record<string, { title: string; summary: string; steps: string[]; time: string }> = {
+      map: {
+        title: 'Map it and make it dependable',
+        summary: 'Automation multiplies whatever it is given, so an unclear process becomes a fast unclear process. The first win is agreeing one way the work should happen, and proving it holds before any tooling is added.',
+        steps: [
+          'Walk the process end to end with the people who actually run it.',
+          'Write down the one way it should work, including who decides what.',
+          'Run it that way for a few cycles and measure time and errors.',
+        ],
+        time: 'Typically three to five weeks.',
+      },
+      automate: {
+        title: 'Automate the workflow',
+        summary: 'The process is clear enough to trust and runs often enough to pay back the effort, yet most of it is still done by hand. That is the sweet spot: real hours back, quickly, at low risk.',
+        steps: [
+          'Pick the three steps that consume the most hours or cause the most rework.',
+          'Build the flow with human checkpoints only where judgement is needed.',
+          'Run old and new side by side for two weeks, then switch over.',
+        ],
+        time: 'Typically four to eight weeks.',
+      },
+      connect: {
+        title: 'Connect the systems',
+        summary: 'Handoffs are where time and accuracy go missing. The fix is usually not more automation inside one tool, but fewer gaps between tools, so work moves without a person carrying it.',
+        steps: [
+          'List every place data is re-typed, re-sent, or waits in an inbox.',
+          'Integrate the systems so each record moves itself to the next stage.',
+          'Give every handoff one owner and one visible status.',
+        ],
+        time: 'Typically five to ten weeks.',
+      },
+      intelligence: {
+        title: 'Add intelligence to the exceptions',
+        summary: 'The process is mature and largely automated. What is left for people is judgement: reading, classifying, deciding. That is where an AI assistant earns its place, with review built in.',
+        steps: [
+          'Identify the decisions people still make by hand, and how often each occurs.',
+          'Put an assistant on the highest-volume one, with a human review loop.',
+          'Widen its scope step by step as accuracy holds.',
+        ],
+        time: 'Typically six to twelve weeks.',
+      },
+      measure: {
+        title: 'Measure it, then optimise',
+        summary: 'The machinery is built; what is missing is the instrument panel. Until the process reports on itself, improvements are guesses. Make the numbers visible and the next fix becomes obvious.',
+        steps: [
+          'Define the three numbers that show the process is healthy.',
+          'Instrument the workflow so those numbers update themselves.',
+          'Review weekly and remove the biggest bottleneck each time.',
+        ],
+        time: 'Typically three to six weeks.',
+      },
+    };
+
+    const choose = () => {
+      const { maturity: m, automation: a, frequency: f, handoffs: h, pain: p } = state;
+      if (m < 35) return 'map';
+      if (a < 40) return f >= 2 ? 'automate' : 'map';
+      if (h >= 5 && a < 75) return 'connect';
+      if (p === 'visibility') return 'measure';
+      if (m >= 60 && a >= 60) return 'intelligence';
+      if (a >= 75 && p === 'cost') return 'measure';
+      return 'automate';
+    };
+
+    const why = (key: string) => {
+      const { maturity: m, automation: a, frequency: f, handoffs: h, pain: p } = state;
+      const base = `Your process reads as ${maturityLabel(m).toLowerCase()}, ${a}% automated, running ${freqLabel[f].toLowerCase()}, across ${h === 1 ? 'one person' : `${h} people`}. The biggest pain is that ${painLabel[p]}.`;
+      const tail: Record<string, string> = {
+        map: ' With the process still forming, tooling would lock in the inconsistency.',
+        automate: ' The gap between how often it runs and how little runs itself is where the return is.',
+        connect: ` With ${h} people in the chain, the delays live between the tools rather than inside them.`,
+        intelligence: ' The routine work is already handled; what remains is judgement.',
+        measure: ' The process is running, but nobody can tell how well.',
+      };
+      return base + tail[key];
+    };
+
+    const cell = (label: string, value: string) =>
+      `<div class="bg-raised px-4 py-3.5"><dt class="mono-label">${label}</dt>` +
+      `<dd class="figure mt-1.5 text-[1.0625rem] leading-tight">${value}</dd></div>`;
+
+    root.addEventListener('stagechange', (e) => {
+      if ((e as CustomEvent).detail.stage !== 'result') return;
+      const key = choose();
+      const t = tracks[key];
+      root.querySelector('[data-readings]')!.innerHTML =
+        cell('Maturity', maturityLabel(state.maturity)) +
+        cell('Automated', `${state.automation}%`) +
+        cell('Runs', freqLabel[state.frequency]) +
+        cell('People', String(state.handoffs)) +
+        cell('Fix first', painShort[state.pain]);
+      root.querySelector('[data-v-title]')!.textContent = t.title;
+      root.querySelector('[data-v-why]')!.textContent = why(key);
+      root.querySelector('[data-v-summary]')!.textContent = t.summary;
+      const ol = root.querySelector('[data-v-steps]')!;
+      ol.innerHTML = '';
+      t.steps.forEach((s) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${s}</span>`;
+        ol.appendChild(li);
+      });
+      root.querySelector('[data-v-time]')!.textContent = t.time;
+    });
+  }
+</script>
