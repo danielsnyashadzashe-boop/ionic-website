@@ -1,0 +1,81 @@
+---
+import SectionHead from './SectionHead.astro';
+import Figure from './Figure.astro';
+import type { PhotoKey } from '@/data/photos';
+
+/**
+ * Three-up capability cards on a pale band.
+ *
+ * This is the shape of the model site's opening section: a centred heading
+ * and intro, then three image-led cards each closing with a button. It sits
+ * directly under the hero because that is where it sits on theirs, and
+ * because the previous page went from hero straight into a wall of prose.
+ *
+ * The three are capabilities, not products. Products get their own section
+ * further down; leading with four named platforms asks a first-time visitor
+ * to care about names they have never heard.
+ */
+
+interface Area {
+  title: string;
+  body: string;
+  photo: PhotoKey;
+  href: string;
+  cta: string;
+}
+
+const areas: Area[] = [
+  {
+    title: 'Artificial intelligence',
+    body: 'Document understanding, decisioning and anomaly detection, built into the process rather than bolted alongside it.',
+    photo: 'aiInterface',
+    href: '/process-genesis/',
+    cta: 'Learn more',
+  },
+  {
+    title: 'Software development',
+    body: 'Custom platforms where the requirements are genuinely specific, and our own products where they genuinely fit.',
+    photo: 'codeReview',
+    href: '/work/',
+    cta: 'See the work',
+  },
+  {
+    title: 'Consulting',
+    body: 'Discovery, target operating model and change management. The half that decides whether the software gets adopted.',
+    photo: 'analyticsBriefing',
+    href: '/case-studies/',
+    cta: 'Case studies',
+  },
+];
+---
+
+<section class="band-alt seam">
+  <div class="shell py-28 md:py-36">
+    <SectionHead
+      center
+      marker="What we do"
+      title="Empowering solutions for"
+      titleAccent="your business."
+      lede="Leverage your data, remove the work nobody should be doing by hand, and scale on platforms that were built for the problem."
+    />
+
+    <div class="mt-16 grid gap-8 md:grid-cols-3 md:gap-6">
+      {
+        areas.map((a, i) => (
+          <article class="rise flex flex-col" style={`--step:${i}`}>
+            <Figure photo={a.photo} showCaption={false} ratio="4 / 3" sizes="(min-width: 768px) 22rem, 92vw" float />
+
+            <h3 class="mt-8 text-center text-[1.25rem] font-medium tracking-[-0.02em] text-fg">{a.title}</h3>
+            <p class="mx-auto mt-3 max-w-[22rem] flex-1 text-center text-[0.9375rem] leading-relaxed text-fg-3">
+              {a.body}
+            </p>
+
+            <a href={a.href} class="btn mx-auto mt-6">
+              <span>{a.cta}</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

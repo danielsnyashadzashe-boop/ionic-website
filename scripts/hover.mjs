@@ -28,9 +28,16 @@ const server = createServer(async (req, res) => {
     let f = join(ROOT, p);
     try { if ((await stat(f)).isDirectory()) f = join(f, 'index.html'); }
     catch { f = join(ROOT, p, 'index.html'); }
+    // Read BEFORE writing the header. Writing 200 first meant any missing
+    // file threw inside the catch (headers already sent), which took the
+    // whole process down instead of serving a 404.
+    const body = await readFile(f);
     res.writeHead(200, { 'Content-Type': MIME[extname(f)] ?? 'application/octet-stream' });
-    res.end(await readFile(f));
-  } catch { res.writeHead(404).end('nf'); }
+    res.end(body);
+  } catch {
+    if (!res.headersSent) res.writeHead(404);
+    res.end('nf');
+  }
 });
 await new Promise((r) => server.listen(PORT, r));
 

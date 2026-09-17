@@ -4,6 +4,7 @@ import PageLayout from '@/layouts/PageLayout.astro';
 import BootSequence from '@/components/BootSequence.astro';
 import HeroVisual from '@/components/HeroVisual.astro';
 import LogoMarquee from '@/components/LogoMarquee.astro';
+import WhatWeDo from '@/components/WhatWeDo.astro';
 import Figure from '@/components/Figure.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import ProductCard from '@/components/ProductCard.astro';
@@ -168,7 +169,12 @@ const method = [
   <LogoMarquee />
 
 
-  <!-- ══════════ 01 · PRINCIPLES ══════════ -->
+  <!-- ══════════ 01 · WHAT WE DO ══════════ -->
+  {/* Pale band directly under the hero, mirroring the model site's opening
+      move. The page used to run from hero straight into prose. */}
+  <WhatWeDo />
+
+  <!-- ══════════ 02 · PRINCIPLES ══════════ -->
   <section id="about" class="seam scroll-mt-16">
     <div class="shell py-28 md:py-36">
       <SectionHead n="01" marker="Approach" title="We become an extension of" titleAccent="your business." />
@@ -239,8 +245,10 @@ const method = [
   <!-- ══════════ 04 · WORK ══════════ -->
   <ProjectsSection />
 
+  {/* Method stays on the page ground: the model site's process row is one of
+      its dark sections, and two pale bands in a row loses the alternation. */}
   <!-- ══════════ 05 · METHOD ══════════ -->
-  <section class="band-alt seam">
+  <section class="seam">
     <div class="shell py-28 md:py-36">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead n="05" marker="Method" title="Four steps," titleAccent="in this order." />

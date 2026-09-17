@@ -6,13 +6,15 @@ interface Props {
   /** Rendered in the primary accent, appended to the title. */
   titleAccent?: string;
   lede?: string;
+  /** Centred, as the model site sets its section intros. */
+  center?: boolean;
   class?: string;
 }
 
-const { n, marker, title, titleAccent, lede, class: className = '' } = Astro.props;
+const { n, marker, title, titleAccent, lede, center = false, class: className = '' } = Astro.props;
 ---
 
-<header class={className}>
+<header class:list={[className, center && 'mx-auto max-w-3xl text-center']}>
   {
     (n || marker) && (
       <p class="marker veil">
@@ -23,11 +25,17 @@ const { n, marker, title, titleAccent, lede, class: className = '' } = Astro.pro
     )
   }
 
-  <h2 class="t-section rise mt-5 max-w-3xl" style="--step:1">
+  <h2 class:list={['t-section rise mt-5', center ? 'mx-auto' : 'max-w-3xl']} style="--step:1">
     {title}
     {titleAccent && <> <span class="grad-text">{titleAccent}</span></>}
     <span class="slash" aria-hidden="true">/</span>
   </h2>
 
-  {lede && <p class="t-lede rise measure mt-5 text-fg-3" style="--step:2">{lede}</p>}
+  {
+    lede && (
+      <p class:list={['t-lede rise mt-5 text-fg-3', center ? 'mx-auto max-w-2xl' : 'measure']} style="--step:2">
+        {lede}
+      </p>
+    )
+  }
 </header>
