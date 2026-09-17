@@ -1,112 +1,73 @@
 ---
 /**
- * The Ionic Innovate mark.
+ * The Ionic Innovate logo, from the supplied artwork.
  *
- * Replaces an invented "open arc and arrowhead" that was never the company's
- * logo. This follows the real one: a ring that is dark for most of its sweep
- * with a yellow segment through the top right, an "iN" monogram inside it,
- * and the wordmark set as IONIC over a letterspaced INNOVATE.
+ * Replaces both an invented arc-and-arrowhead mark that was never the
+ * company's logo, and the vector reconstruction that stood in for it.
  *
- * IMPORTANT: this is a vector reconstruction, not the supplied artwork. It is
- * close, not exact, and it should be replaced with the real file. Drop the
- * official SVG at `public/brand/ionic-mark.svg` and swap the <svg> below for
- * an <img>; nothing else needs to change, because every consumer goes
- * through this component.
+ * Two variants ship for each lockup, because the supplied ink is a near-black
+ * navy: on this site's ground it measured luminance 0.01 against 0.016 and
+ * was effectively invisible. `-on-dark` recolours that ink to near-white and
+ * leaves the yellow untouched; `-on-light` is the artwork as supplied.
  *
- * The dark parts use `currentColor` rather than the brand navy. The site is
- * dark-themed, and a navy mark on a navy ground is invisible; inheriting the
- * text colour means the logo reads correctly on both grounds. The yellow is
- * literal, because it is the one part that must not shift.
+ * Which one shows is pure CSS, keyed off exactly the same conditions that
+ * drive the palette, so a logo dropped inside a pale band flips with it. No
+ * JavaScript, so it is correct in the server-rendered HTML.
  */
 interface Props {
-  /** `lockup` is mark plus wordmark; `mark` is the ring on its own. */
-  variant?: 'lockup' | 'mark';
-  /** Stack the wordmark beneath the mark instead of beside it. */
-  stacked?: boolean;
-  size?: number;
+  /** `lockup` is horizontal; `stacked` puts the wordmark under the mark. */
+  variant?: 'lockup' | 'stacked';
+  /** Rendered width in px. Height follows the artwork's own ratio. */
+  width?: number;
   class?: string;
 }
 
-const { variant = 'lockup', stacked = false, size = 28, class: className = '' } = Astro.props;
+const { variant = 'lockup', width = 132, class: className = '' } = Astro.props;
 
-const YELLOW = '#FFC20E';
-const YELLOW_DEEP = '#F5A623';
-const uid = `lg${Math.random().toString(36).slice(2, 8)}`;
+/** Intrinsic sizes, so the browser reserves the right box and never shifts. */
+const BOX = {
+  lockup: { w: 760, h: 304 },
+  stacked: { w: 520, h: 451 },
+} as const;
+
+const box = BOX[variant];
+const height = Math.round((width * box.h) / box.w);
+const base = `/brand/ionic-${variant}`;
 ---
 
-<span
-  class:list={[
-    'inline-flex shrink-0',
-    stacked ? 'flex-col items-center gap-2' : 'items-center gap-2.5',
-    className,
-  ]}
->
-  <svg
-    viewBox="0 0 100 100"
-    width={size}
-    height={size}
-    class="shrink-0"
-    role="img"
-    aria-label="Ionic Innovate"
-  >
-    <defs>
-      <linearGradient id={`${uid}-dot`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color={YELLOW} />
-        <stop offset="100%" stop-color={YELLOW_DEEP} />
-      </linearGradient>
-    </defs>
-
-    {/* Ring: dark through the left and bottom, yellow through the top right,
-        left open at the lower right where the monogram breaks out. */}
-    <path
-      d="M 46.5 10.2 A 40 40 0 1 0 80.6 75.7"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="7.5"
-      stroke-linecap="round"
-    />
-    <path
-      d="M 60.4 11.4 A 40 40 0 0 1 88.6 60.4"
-      fill="none"
-      stroke={YELLOW}
-      stroke-width="7.5"
-      stroke-linecap="round"
-    />
-
-    {/* "i": dot over a stem. */}
-    <circle cx="38.5" cy="31" r="7" fill={`url(#${uid}-dot)`} />
-    <path d="M 32.5 43 L 44.5 43 L 44.5 74 L 32.5 74 Z" fill="currentColor" />
-
-    {/* "N": a thick diagonal rising from the stem, capped and dropping right. */}
-    <path
-      d="M 48.5 74 L 48.5 52 Q 48.5 42 57 42 Q 62 42 64.5 47 L 74 66 L 74 44 L 74 44"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="11.5"
-      stroke-linejoin="round"
-      stroke-linecap="round"
-    />
-  </svg>
-
-  {
-    variant === 'lockup' && (
-      <span class:list={['leading-none', stacked && 'text-center']}>
-        <span class="block text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg">
-          IONIC
-        </span>
-        {/* The wordmark takes --accent-warm rather than the literal brand
-            yellow. #FFC20E at this size is 1.49:1 on a pale ground, so on the
-            light theme "INNOVATE" was effectively invisible. WCAG exempts
-            logotypes from contrast, but an unreadable wordmark is still an
-            unreadable wordmark. The token is the brand yellow on dark and a
-            bronze on pale, so it stays right where it can. */}
-        <span
-          class="mt-0.5 block font-mono text-[0.5rem] font-medium uppercase tracking-[0.34em]"
-          style="color: var(--accent-warm)"
-        >
-          Innovate
-        </span>
-      </span>
-    )
-  }
+<span class={`logo-swap relative inline-block shrink-0 ${className}`} style={`width:${width}px;height:${height}px`}>
+  <img
+    src={`${base}-on-dark.png`}
+    alt="Ionic Innovate"
+    width={box.w}
+    height={box.h}
+    decoding="async"
+    class="logo-on-dark absolute inset-0 h-full w-full object-contain"
+  />
+  <img
+    src={`${base}-on-light.png`}
+    alt=""
+    aria-hidden="true"
+    width={box.w}
+    height={box.h}
+    decoding="async"
+    class="logo-on-light absolute inset-0 h-full w-full object-contain"
+  />
 </span>
+
+<style is:global>
+  /* Dark ground by default, so the light-ink artwork shows. Each rule below
+     mirrors one of the palette's ground conditions. Only the alt text on the
+     visible one is read, because the hidden twin is aria-hidden and the pair
+     never both display. */
+  .logo-on-light { display: none; }
+
+  .light .logo-on-dark,
+  .band-alt .logo-on-dark { display: none; }
+  .light .logo-on-light,
+  .band-alt .logo-on-light { display: block; }
+
+  /* A pale band inside the light theme is dark again, so it flips back. */
+  .light .band-alt .logo-on-dark { display: block; }
+  .light .band-alt .logo-on-light { display: none; }
+</style>
