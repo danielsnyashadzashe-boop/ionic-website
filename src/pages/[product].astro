@@ -70,7 +70,7 @@ const schema = [
     <div class="shell relative pb-20 pt-14 md:pb-28 md:pt-16">
       <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Platforms', href: '/#platforms' }, { label: d.name }]} />
 
-      <div class="mt-16 grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+      <div class="mt-20 grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
         <div>
           {
             d.flagship && (
@@ -160,7 +160,7 @@ const schema = [
         title={d.capabilities.length > 4 ? 'Six capabilities, one platform' : 'What the platform does'}
       />
 
-      <div class="mt-16 grid gap-px overflow-hidden  border border-line bg-line-strong sm:grid-cols-2">
+      <div class="mt-20 grid gap-px overflow-hidden  border border-line bg-line-strong sm:grid-cols-2">
         {
           d.capabilities.map((c, i) => (
             <article class="rise group relative bg-base p-8 transition-colors duration-500 hover:bg-raised md:p-10" style={`--step:${i}`}>

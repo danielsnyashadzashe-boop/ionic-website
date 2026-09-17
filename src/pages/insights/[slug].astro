@@ -70,7 +70,7 @@ const schema = [
           ]}
         />
 
-        <div class="mt-16 flex flex-wrap items-center gap-x-5 gap-y-2" style="animation:rise 0.9s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:60ms">
+        <div class="mt-20 flex flex-wrap items-center gap-x-5 gap-y-2" style="animation:rise 0.9s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:60ms">
           <time datetime={d.published.toISOString()} class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-fg-4">
             {fmt(d.published)}
           </time>
@@ -113,7 +113,7 @@ const schema = [
     }
 
     <div class="border-t border-line">
-      <div class="shell py-24 md:py-28">
+      <div class="shell py-28 md:py-36">
         <div class="prose-tech rise">
           <Content />
         </div>
@@ -137,7 +137,7 @@ const schema = [
     {
       others.length > 0 && (
         <div class="border-t border-line">
-          <div class="shell py-24 md:py-28">
+          <div class="shell py-28 md:py-36">
             <h2 class="t-section rise font-display">Keep reading</h2>
 
             <ul class="mt-10 grid gap-5 md:grid-cols-2">

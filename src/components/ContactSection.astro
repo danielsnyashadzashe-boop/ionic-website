@@ -41,8 +41,8 @@ const facts = [
       framed block with a short line, one button, and an image holding the
       right side. It sits above the form so the page asks before it demands
       a dozen fields. */}
-  <div class="shell relative pt-28 md:pt-36">
-    <div class="surface rise relative overflow-hidden border-2 border-primary/60 px-7 py-12 md:px-14 md:py-16">
+  <div class="shell relative pt-32 md:pt-44">
+    <div class="surface rise relative overflow-hidden border border-primary/25 px-7 py-14 md:px-16 md:py-20">
       <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
         <div>
           <h2 class="t-title">
@@ -63,10 +63,10 @@ const facts = [
     </div>
   </div>
 
-  <div class="shell relative py-28 md:py-36">
+  <div class="shell relative py-32 md:py-44">
     <SectionHead {n} marker="Contact" {title} {titleAccent} {lede} />
 
-    <div class="mt-16 grid gap-3 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
+    <div class="mt-20 grid gap-3 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
       <dl class="surface divide-y divide-line overflow-hidden">
         {
           facts.map((f, i) => (

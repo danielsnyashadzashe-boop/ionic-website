@@ -126,10 +126,10 @@ const method = [
 
   <!-- ══════════ 02 · PRINCIPLES ══════════ -->
   <section id="about" class="seam scroll-mt-16">
-    <div class="shell py-28 md:py-36">
+    <div class="shell py-32 md:py-44">
       <SectionHead n="01" marker="Approach" title="We become an extension of" titleAccent="your business." />
 
-      <div class="mt-16 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
+      <div class="mt-20 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
         <Figure
           photo="deliveryTeam"
           class="lift"
@@ -165,7 +165,7 @@ const method = [
       and that rhythm is most of what makes it feel spacious; a single ground
       down the whole page cannot produce it. */}
   <section id="platforms" class="band-alt seam scroll-mt-16">
-    <div class="shell py-28 md:py-36">
+    <div class="shell py-32 md:py-44">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead
           n="02"
@@ -182,7 +182,7 @@ const method = [
       {/* Two up, not four. Four products across a 4-column grid with the
           flagship spanning two left a single orphan on the second row, and
           the cards were too narrow for the image to carry anything. */}
-      <div class="mt-16 grid gap-5 md:grid-cols-2">
+      <div class="mt-20 grid gap-5 md:grid-cols-2">
         {flagship && <ProductCard product={flagship} index={0} />}
         {rest.map((p, i) => <ProductCard product={p} index={i + 1} />)}
       </div>
@@ -199,7 +199,7 @@ const method = [
       its dark sections, and two pale bands in a row loses the alternation. */}
   <!-- ══════════ 05 · METHOD ══════════ -->
   <section class="seam">
-    <div class="shell py-28 md:py-36">
+    <div class="shell py-32 md:py-44">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead n="05" marker="Method" title="Four steps," titleAccent="in this order." />
         <div class="rise w-full max-w-md lg:max-w-lg" style="--step:2">
@@ -275,7 +275,7 @@ const method = [
 
   <!-- ══════════ 06 · CASE STUDIES ══════════ -->
   <section class="seam">
-    <div class="shell py-28 md:py-36">
+    <div class="shell py-32 md:py-44">
       <div class="flex flex-wrap items-end justify-between gap-8">
         <SectionHead n="06" marker="Engagements" title="Trusted where" titleAccent="it counts." />
         <a href="/case-studies/" class="link-u rise font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3" style="--step:3">
@@ -283,7 +283,7 @@ const method = [
         </a>
       </div>
 
-      <div class="mt-16 grid gap-3 md:grid-cols-3">
+      <div class="mt-20 grid gap-3 md:grid-cols-3">
         {studies.map((s, i) => <CaseStudyCard study={s} index={i} />)}
       </div>
     </div>

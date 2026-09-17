@@ -82,6 +82,10 @@
      ground: #007ba3 carries white text fine but is only 4.4:1 as a link on
      pale grey, so text links take the deeper blue there. */
   --accent-ink: #00c3e8;
+  /* Second, warmer accent. Used sparingly: section eyebrows and a single
+     speck per frame. Yellow at small sizes is the first thing to fail
+     contrast, so the pale-ground value is almost a bronze. */
+  --accent-warm: #e8b94a;
 
   /* Their actual gradient, verbatim:
        linear-gradient(to right, #0097c9 33%, #00c3e8 50%, #0097c9 66%)
@@ -135,10 +139,11 @@
   --fg-3: #5c5f60;
   --fg-4: #64686a;
 
-  --primary: #007ba3;
+  --primary: #00749a;
   --primary-deep: #005d7c;
   --primary-wash: #e6f7fd;
   --accent-ink: #005d7c;
+  --accent-warm: #7e600e;
 
   /* Same ramp, pulled down in lightness. On a white ground the dark-theme
      stops wash out to pastel, so the gradient has to be darker, not inverted. */
@@ -149,12 +154,12 @@
   --d1: oklch(0.52 0.16 258);
   --d2: oklch(0.52 0.135 214);
   --d3: oklch(0.50 0.115 160);
-  --d4: oklch(0.62 0.135 78);
+  --d4: oklch(0.50 0.125 78);
   --d5: oklch(0.55 0.17 30);
   --d6: oklch(0.50 0.17 320);
 
   --ok: oklch(0.50 0.115 160);
-  --warn: oklch(0.60 0.13 78);
+  --warn: oklch(0.50 0.125 78);
   --crit: oklch(0.53 0.19 28);
 
   --on-primary: oklch(0.99 0 0);
@@ -191,10 +196,11 @@
   --fg-3: #5c5f60;
   --fg-4: #64686a;
 
-  --primary: #007ba3;
+  --primary: #00749a;
   --primary-deep: #005d7c;
   --primary-wash: #e6f7fd;
   --accent-ink: #005d7c;
+  --accent-warm: #7e600e;
 
   --grad-a: #007ba3;
   --grad-b: #0097c9;
@@ -235,6 +241,10 @@
      ground: #007ba3 carries white text fine but is only 4.4:1 as a link on
      pale grey, so text links take the deeper blue there. */
   --accent-ink: #00c3e8;
+  /* Second, warmer accent. Used sparingly: section eyebrows and a single
+     speck per frame. Yellow at small sizes is the first thing to fail
+     contrast, so the pale-ground value is almost a bronze. */
+  --accent-warm: #e8b94a;
 
   --grad-a: #0097c9;
   --grad-b: #00c3e8;
@@ -499,17 +509,21 @@
   }
 
   /* Section marker: 03 / IMPACT */
+  /* Section eyebrow. Warm rather than grey: it is the one place a second
+     accent can sit without competing with the blue, and it gives the caps
+     a little life. One per section, so it stays a seasoning. */
   .marker {
     display: inline-flex;
     align-items: baseline;
     gap: 0.55rem;
     font-family: var(--font-mono);
     font-size: 0.6875rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--fg-4);
+    color: var(--accent-warm);
   }
-  .marker b { font-weight: 500; color: var(--primary); }
+  .marker b { font-weight: 500; color: var(--accent-warm); }
+  .marker .text-fg-4 { color: color-mix(in oklch, var(--accent-warm) 45%, transparent); }
 
   /* ── Chips & tags ─────────────────────────────────────────────────── */
   .chip {
@@ -728,10 +742,12 @@
     overflow: visible;
     pointer-events: none;
     color: var(--primary);
-    opacity: 0.7;
+    /* Very faint. At 0.7 the outline read as a second object competing with
+       the photograph; this is a trace you notice only once you look. */
+    opacity: 0.22;
     transition: opacity 0.5s var(--ease-out-soft), translate 0.5s var(--ease-out-soft);
   }
-  .group:hover .notch-line { opacity: 1; translate: 0.75rem -0.75rem; }
+  .group:hover .notch-line { opacity: 0.45; translate: 0.7rem -0.7rem; }
 
   /* Loose squares. Sizes and offsets are set per instance in the markup. */
   .speck {
@@ -739,10 +755,12 @@
     display: block;
     pointer-events: none;
     background: var(--primary);
+    opacity: 0.4;
     animation: drift 7s var(--ease-out-soft) infinite alternate;
   }
-  .speck-mute { background: var(--fg-4); opacity: 0.5; }
-  .speck-ring { background: none; border: 1.5px solid var(--primary); }
+  .speck-mute { background: var(--fg-4); opacity: 0.3; }
+  .speck-warm { background: var(--accent-warm); opacity: 0.65; }
+  .speck-ring { background: none; border: 1px solid var(--primary); opacity: 0.35; }
 
   /* Too small to carry decoration. */
   @container notchframe (max-width: 18rem) {

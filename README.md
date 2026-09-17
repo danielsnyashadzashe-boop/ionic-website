@@ -64,8 +64,19 @@ src/
 
 scripts/
 ├── og.mjs                 Generates public/og-default.png
-└── shots.mjs              Screenshots every page in both themes
+├── shots.mjs              Screenshots every page in both themes
+├── responsive.mjs         Overflow and tap targets, 9 widths x 10 pages
+├── hover.mjs              Contrast of every hover state, both themes
+└── statictext.mjs         Contrast of plain text, both themes
 ```
+
+`statictext.mjs` exists because `hover.mjs` only ever visited interactive
+elements, so ordinary paragraph and label text was never checked. It found 22
+real failures the first time it ran, most of them pre-dating the colour work.
+Two of its checks are worth knowing about: it skips anything inside
+`[aria-hidden="true"]`, and for gradient-filled text it measures the
+gradient's own stops, because `background-clip: text` leaves `color`
+transparent and a naive read scores perfectly legible headings at 1:1.
 
 ### Adding content
 
@@ -118,11 +129,25 @@ weight. Products, chart series, status dots and the ledger all draw from the
 same `--d1..--d6` set, so a legend in the dashboard matches a product dot in
 the nav.
 
-The ground carries real blue (chroma `0.024`, hue `236`) rather than being a
-near-neutral charcoal, and primary sits at hue `224`. Note what did *not*
-change: the four-step elevation ramp. Saturating the ground while flattening
-the ramp is exactly the failure described above, so the ramp is the part to
-leave alone when the palette shifts again.
+Brand values are the model site's literal hex rather than converted
+approximations: `#0097c9`, `#00c3e8`, `#007ba3`. Note what did *not* change:
+the four-step elevation ramp. Saturating the ground while flattening the ramp
+is exactly the failure described above, so the ramp is the part to leave alone
+when the palette shifts again.
+
+**One accent is not enough, and one value per accent is not either.** Three
+tokens exist because a single blue cannot do three jobs:
+
+| Token | For | Why separate |
+| --- | --- | --- |
+| `--primary` | fills, icons, borders | white text needs a mid blue behind it |
+| `--accent-ink` | text links on the current ground | `#007ba3` is only 4.4:1 as small text on pale grey |
+| `--accent-warm` | section eyebrows, one speck per frame | a warm second accent, kept to a seasoning |
+
+`--accent-warm` is a soft amber on dark grounds and nearly a bronze on pale
+ones (`#7e600e`). Yellow is the first colour to fail contrast at small sizes,
+so the pale value cannot be the pretty one. The amber data hue `--d4` had to
+come down for the same reason.
 
 **Gradients** run one three-stop ramp, `--grad-a` (indigo) → `--grad-b`
 (azure) → `--grad-c` (cyan). Everything gradient-filled derives from it, so a
