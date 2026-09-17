@@ -53,8 +53,8 @@
   --panel: #0c2b38;
   --float: #113445;
 
-  --line: oklch(1 0 0 / 0.07);
-  --line-strong: oklch(1 0 0 / 0.14);
+  --line: oklch(1 0 0 / 0.045);
+  --line-strong: oklch(1 0 0 / 0.095);
   /* Top edge of a raised surface catches light; the bottom sits in shadow.
      This one pair is what stops panels reading as flat rectangles. */
   --edge-lit: oklch(1 0 0 / 0.10);
@@ -65,37 +65,34 @@
   --fg-3: oklch(0.71 0.014 231);
   --fg-4: oklch(0.67 0.014 231);
 
-  /* The model site's brand blues, used as literal hex so there is no
-     conversion drift. My earlier guess landed 7 degrees off hue, 0.017 over
-     on chroma and far too light, which is why it never looked like theirs.
-
-       #0097c9  oklch(0.634 0.128 231)  their primary
-       #00c3e8  oklch(0.752 0.118 216)  their bright accent
-       #007ba3  oklch(0.546 0.109 230)  their pressed/dark
-
-     Dark mode leads with the bright one, because their primary is too dark
-     to carry text or an icon on a navy ground. */
-  --primary: #00c3e8;
-  --primary-deep: #0097c9;
-  --primary-wash: color-mix(in oklch, #00c3e8 12%, transparent);
-  /* Accent for text. Fills and text need different values on the same
-     ground: #007ba3 carries white text fine but is only 4.4:1 as a link on
-     pale grey, so text links take the deeper blue there. */
-  --accent-ink: #00c3e8;
+  /* Near-monochrome, deliberately.
+   *
+   * This was the model site's electric cyan (#00c3e8). On a navy ground it
+   * read as neon, which is the single most generic thing a technology site
+   * can do. The accent is now a cool grey and the only real colour on the
+   * page is --accent-warm, which is what makes that amber register at all.
+   *
+   * The ground is still hue 231, so the greys sit slightly cool against it
+   * rather than reading as a separate neutral bolted on. */
+  --primary: #cdd7da;
+  --primary-deep: #a8b6bb;
+  --primary-wash: color-mix(in oklch, #cdd7da 10%, transparent);
+  /* Accent for text. A fill accent and a text accent cannot share one value
+     on the same ground: what carries white text at button size is too light
+     to be a link at 12px, so text takes the deeper value on pale. */
+  --accent-ink: #cdd7da;
   /* Second, warmer accent. Used sparingly: section eyebrows and a single
      speck per frame. Yellow at small sizes is the first thing to fail
      contrast, so the pale-ground value is almost a bronze. */
   --accent-warm: #e8b94a;
 
-  /* Their actual gradient, verbatim:
-       linear-gradient(to right, #0097c9 33%, #00c3e8 50%, #0097c9 66%)
-     It returns to where it started, which is why it reads as a sheen
-     travelling across a surface rather than a two-colour ramp. That is the
-     effect asked for, and the reason the indigo-to-cyan version I tried
-     before looked like a rainbow. */
-  --grad-a: #0097c9;
-  --grad-b: #00c3e8;
-  --grad-c: #0097c9;
+  /* The ramp returns to its starting value. That is why it reads as a sheen
+     travelling across a surface rather than a two-colour gradient, and why
+     it does not look like a rainbow the way a three-hue ramp did. The shape
+     is kept from the model site; the hue is ours. */
+  --grad-a: #9fafb4;
+  --grad-b: #dce5e8;
+  --grad-c: #9fafb4;
 
   /* Data hues. Matched perceived weight so a legend reads as one set. */
   --d1: oklch(0.78 0.14 220);
@@ -109,9 +106,9 @@
   --warn: oklch(0.83 0.135 92);
   --crit: oklch(0.72 0.16 28);
 
-  --on-primary: #052330;
-  --glow: 0 0 0 1px color-mix(in oklch, #00c3e8 22%, transparent),
-          0 0 32px -6px color-mix(in oklch, #00c3e8 30%, transparent);
+  --on-primary: #06202a;
+  --glow: 0 0 0 1px color-mix(in oklch, #cdd7da 18%, transparent),
+          0 0 28px -8px color-mix(in oklch, #cdd7da 22%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
 
   --grid-line: oklch(1 0 0 / 0.035);
@@ -129,8 +126,8 @@
   --panel: #ededee;
   --float: #e2e3e5;
 
-  --line: oklch(0.20 0.02 258 / 0.10);
-  --line-strong: oklch(0.20 0.02 258 / 0.20);
+  --line: oklch(0.20 0.02 258 / 0.065);
+  --line-strong: oklch(0.20 0.02 258 / 0.13);
   --edge-lit: oklch(1 0 0 / 0.9);
   --edge-shade: oklch(0.20 0.03 258 / 0.14);
 
@@ -139,17 +136,17 @@
   --fg-3: #5c5f60;
   --fg-4: #64686a;
 
-  --primary: #00749a;
-  --primary-deep: #005d7c;
-  --primary-wash: #e6f7fd;
-  --accent-ink: #005d7c;
+  --primary: #3f4e53;
+  --primary-deep: #2b383c;
+  --primary-wash: #eef1f2;
+  --accent-ink: #2b383c;
   --accent-warm: #7e600e;
 
   /* Same ramp, pulled down in lightness. On a white ground the dark-theme
      stops wash out to pastel, so the gradient has to be darker, not inverted. */
-  --grad-a: #007ba3;
-  --grad-b: #0097c9;
-  --grad-c: #007ba3;
+  --grad-a: #55666b;
+  --grad-b: #334246;
+  --grad-c: #55666b;
 
   --d1: oklch(0.52 0.16 258);
   --d2: oklch(0.52 0.135 214);
@@ -163,8 +160,8 @@
   --crit: oklch(0.53 0.19 28);
 
   --on-primary: oklch(0.99 0 0);
-  --glow: 0 0 0 1px color-mix(in oklch, #0097c9 20%, transparent),
-          0 10px 30px -18px color-mix(in oklch, #0097c9 40%, transparent);
+  --glow: 0 0 0 1px color-mix(in oklch, #3f4e53 18%, transparent),
+          0 10px 30px -18px color-mix(in oklch, #3f4e53 30%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 12px 30px -22px var(--edge-shade);
 
   --grid-line: oklch(0.20 0.02 258 / 0.05);
@@ -186,8 +183,8 @@
   --panel: #ededee;
   --float: #e2e3e5;
 
-  --line: oklch(0.20 0.02 236 / 0.10);
-  --line-strong: oklch(0.20 0.02 236 / 0.20);
+  --line: oklch(0.20 0.02 236 / 0.065);
+  --line-strong: oklch(0.20 0.02 236 / 0.13);
   --edge-lit: oklch(1 0 0 / 0.9);
   --edge-shade: oklch(0.20 0.03 236 / 0.14);
 
@@ -196,19 +193,19 @@
   --fg-3: #5c5f60;
   --fg-4: #64686a;
 
-  --primary: #00749a;
-  --primary-deep: #005d7c;
-  --primary-wash: #e6f7fd;
-  --accent-ink: #005d7c;
+  --primary: #3f4e53;
+  --primary-deep: #2b383c;
+  --primary-wash: #eef1f2;
+  --accent-ink: #2b383c;
   --accent-warm: #7e600e;
 
-  --grad-a: #007ba3;
-  --grad-b: #0097c9;
-  --grad-c: #007ba3;
+  --grad-a: #55666b;
+  --grad-b: #334246;
+  --grad-c: #55666b;
 
   --on-primary: oklch(0.99 0 0);
-  --glow: 0 0 0 1px color-mix(in oklch, #0097c9 20%, transparent),
-          0 10px 30px -18px color-mix(in oklch, #0097c9 40%, transparent);
+  --glow: 0 0 0 1px color-mix(in oklch, #3f4e53 18%, transparent),
+          0 10px 30px -18px color-mix(in oklch, #3f4e53 30%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 12px 30px -22px var(--edge-shade);
   --grid-line: oklch(0.20 0.02 236 / 0.05);
 
@@ -224,8 +221,8 @@
   --panel: #0c2b38;
   --float: #113445;
 
-  --line: oklch(1 0 0 / 0.07);
-  --line-strong: oklch(1 0 0 / 0.14);
+  --line: oklch(1 0 0 / 0.045);
+  --line-strong: oklch(1 0 0 / 0.095);
   --edge-lit: oklch(1 0 0 / 0.10);
   --edge-shade: oklch(0 0 0 / 0.35);
 
@@ -234,25 +231,25 @@
   --fg-3: oklch(0.71 0.014 231);
   --fg-4: oklch(0.67 0.014 231);
 
-  --primary: #00c3e8;
-  --primary-deep: #0097c9;
-  --primary-wash: color-mix(in oklch, #00c3e8 12%, transparent);
-  /* Accent for text. Fills and text need different values on the same
-     ground: #007ba3 carries white text fine but is only 4.4:1 as a link on
-     pale grey, so text links take the deeper blue there. */
-  --accent-ink: #00c3e8;
+  --primary: #cdd7da;
+  --primary-deep: #a8b6bb;
+  --primary-wash: color-mix(in oklch, #cdd7da 10%, transparent);
+  /* Accent for text. A fill accent and a text accent cannot share one value
+     on the same ground: what carries white text at button size is too light
+     to be a link at 12px, so text takes the deeper value on pale. */
+  --accent-ink: #cdd7da;
   /* Second, warmer accent. Used sparingly: section eyebrows and a single
      speck per frame. Yellow at small sizes is the first thing to fail
      contrast, so the pale-ground value is almost a bronze. */
   --accent-warm: #e8b94a;
 
-  --grad-a: #0097c9;
-  --grad-b: #00c3e8;
-  --grad-c: #0097c9;
+  --grad-a: #9fafb4;
+  --grad-b: #dce5e8;
+  --grad-c: #9fafb4;
 
-  --on-primary: #052330;
-  --glow: 0 0 0 1px color-mix(in oklch, #00c3e8 22%, transparent),
-          0 0 32px -6px color-mix(in oklch, #00c3e8 30%, transparent);
+  --on-primary: #06202a;
+  --glow: 0 0 0 1px color-mix(in oklch, #cdd7da 18%, transparent),
+          0 0 28px -8px color-mix(in oklch, #cdd7da 22%, transparent);
   --depth: 0 1px 0 0 var(--edge-lit) inset, 0 18px 44px -28px var(--edge-shade);
   --grid-line: oklch(1 0 0 / 0.035);
 }
@@ -749,10 +746,10 @@
     color: var(--primary);
     /* Very faint. At 0.7 the outline read as a second object competing with
        the photograph; this is a trace you notice only once you look. */
-    opacity: 0.22;
+    opacity: 0.14;
     transition: opacity 0.5s var(--ease-out-soft), translate 0.5s var(--ease-out-soft);
   }
-  .group:hover .notch-line { opacity: 0.45; translate: 0.7rem -0.7rem; }
+  .group:hover .notch-line { opacity: 0.3; translate: 0.7rem -0.7rem; }
 
   /* Loose squares. Sizes and offsets are set per instance in the markup. */
   .speck {

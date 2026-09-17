@@ -14,10 +14,16 @@
 
 // Deterministic layout: rings of nodes at fixed angles, so the composition
 // is designed rather than random-per-build.
+/**
+ * Rings run near-monochrome, with one warm ring rather than three data hues.
+ * Three coloured rings made the lattice the most saturated thing on an
+ * otherwise grey page, which is exactly the neon look the palette moved away
+ * from. The warm ring is the innermost, so the eye still lands on the centre.
+ */
 const rings = [
-  { r: 62, nodes: [20, 95, 168, 250, 320], tone: 'd2' },
-  { r: 108, nodes: [8, 62, 130, 200, 268, 330], tone: 'd1' },
-  { r: 152, nodes: [40, 105, 175, 240, 300], tone: 'd3' },
+  { r: 62, nodes: [20, 95, 168, 250, 320], tone: 'accent-warm' },
+  { r: 108, nodes: [8, 62, 130, 200, 268, 330], tone: 'primary' },
+  { r: 152, nodes: [40, 105, 175, 240, 300], tone: 'fg-4' },
 ];
 
 const C = 180;
@@ -43,8 +49,8 @@ const routes = [
   <svg viewBox="0 0 360 360" class="relative h-full w-full overflow-visible" role="img" aria-label="Orchestration lattice: nodes and routes across regions">
     <defs>
       <linearGradient id="route-grad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="var(--d2)" stop-opacity="0.55" />
-        <stop offset="100%" stop-color="var(--d1)" stop-opacity="0.12" />
+        <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.45" />
+        <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.08" />
       </linearGradient>
     </defs>
 
@@ -89,7 +95,7 @@ const routes = [
         return (
           <>
             <path class="lat-route" d={d} fill="none" stroke="url(#route-grad)" stroke-width="1.1" style={`--i:${i}`} />
-            <circle class="lat-packet" r="2" fill="var(--d2)" style={`--i:${i}`}>
+            <circle class="lat-packet" r="2" fill="var(--accent-warm)" style={`--i:${i}`}>
               <animateMotion dur={`${5 + i * 0.8}s`} repeatCount="indefinite" path={d} begin={`${i * 0.9}s`} />
             </circle>
           </>
