@@ -30,7 +30,6 @@ export const brands: Brand[] = [
   { name: 'Fidelity', mono: 'FD', tone: 'd2', kind: 'client' },
   { name: 'Bidvest Group', mono: 'BV', tone: 'd3', kind: 'client' },
   { name: '3Sixty Health', mono: '3S', tone: 'd6', kind: 'client' },
-  { name: 'Momentum', mono: 'MO', tone: 'd4', kind: 'client' },
   { name: 'National Video Vision', mono: 'NV', tone: 'd3', kind: 'client' },
   { name: 'Split Time', mono: 'ST', tone: 'd5', kind: 'client' },
   { name: 'Niche Consulting', mono: 'NC', tone: 'd4', kind: 'client' },

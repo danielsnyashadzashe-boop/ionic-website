@@ -18,7 +18,7 @@ seoDescription: >-
   Health for fraud, waste and abuse monitoring.
 showMetrics: false
 photo: codeReview
-homeProof: 3Sixty Health deployment; Momentum in discussions
+homeProof: Deployed at 3Sixty Health for fraud, waste and abuse monitoring
 capabilities:
   - name: Fraud detection & prevention
     detail: >-
@@ -44,8 +44,6 @@ traction:
         Fraud, waste and abuse monitoring system deployed to proactively detect
         and mitigate current and potential losses, alongside business process
         optimisation.
-    - client: Momentum
-      detail: In discussions for GRC platform adoption.
 ---
 
 ## Fraud detection belongs inside GRC, not beside it

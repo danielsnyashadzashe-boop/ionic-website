@@ -7,9 +7,24 @@
  * Deliberately no dates: the source material never states engagement years,
  * and inventing a timeline on a page that clients will read is not a
  * cosmetic liberty.
+ *
+ * ── What may and may not be published ──────────────────────────────────
+ *
+ * `In discussion` is a SALES PIPELINE state, not delivered work, and it must
+ * never reach the public site. Naming a company as being in commercial talks
+ * tells the world something that company has not agreed to make public, and
+ * tells competitors the shape of the pipeline. Momentum was being published
+ * this way.
+ *
+ * The guard is structural rather than a convention anyone has to remember:
+ * the full list is module-private, and `projects` (the only export) is
+ * already filtered. A component cannot publish a prospect by accident.
  */
 
 export type ProjectStatus = 'Live' | 'Pilot' | 'Partner' | 'In discussion';
+
+/** States that represent real, contracted work and are safe to publish. */
+const PUBLISHABLE: ReadonlySet<ProjectStatus> = new Set<ProjectStatus>(['Live', 'Pilot', 'Partner']);
 
 export interface Project {
   client: string;
@@ -24,7 +39,8 @@ export interface Project {
   study?: string;
 }
 
-export const projects: Project[] = [
+/** The full internal record. Not exported: see the note above. */
+const allProjects: Project[] = [
   {
     client: 'Old Mutual',
     deliverable: 'Group-wide process automation across all business units',
@@ -119,7 +135,17 @@ export const projects: Project[] = [
   },
 ];
 
-/** Disciplines, in the order they should appear as filters. */
+/**
+ * The public ledger. Prospects are filtered out here, once, so every page,
+ * chart and count downstream is safe by construction.
+ */
+export const projects: Project[] = allProjects.filter((p) => PUBLISHABLE.has(p.status));
+
+/**
+ * Disciplines, in the order they should appear as filters. Derived from the
+ * filtered list, not the full one, or a prospect-only discipline would leak
+ * into the filter bar as an option that matches nothing.
+ */
 export const disciplines = [...new Set(projects.map((p) => p.discipline))];
 
 export const projectStats = {

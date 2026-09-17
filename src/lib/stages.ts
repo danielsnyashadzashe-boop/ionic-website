@@ -41,7 +41,7 @@ export function mountStages(root: HTMLElement): StageController | null {
   const count = root.querySelector<HTMLElement>('[data-stage-count]');
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let current = names.find((n, i) => stages[i].classList.contains('is-on')) ?? names[0];
+  let current = names.find((_n, i) => stages[i].classList.contains('is-on')) ?? names[0];
   let moving = false;
 
   // Claim the flow. Until this runs every stage is visible, so the markup

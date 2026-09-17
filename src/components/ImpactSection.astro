@@ -5,7 +5,6 @@ import Gauge from './charts/Gauge.astro';
 import BarsH from './charts/BarsH.astro';
 import BarsV from './charts/BarsV.astro';
 import Donut from './charts/Donut.astro';
-import Trend from './charts/Trend.astro';
 import { projects, disciplines } from '@/data/projects';
 
 /**
@@ -58,29 +57,25 @@ const disciplineData = disciplines
   .map((label) => ({ label, value: projects.filter((p) => p.discipline === label).length }))
   .sort((a, b) => b.value - a.value);
 
-const stageOrder = [
-  { stage: 'In discussion', tone: 'd6' },
-  { stage: 'Pilot', tone: 'd4' },
-  { stage: 'Partner', tone: 'd1' },
-  { stage: 'Live', tone: 'd2' },
-] as const;
+/**
+ * Two panels here used to publish sales-pipeline data: a donut of engagement
+ * stages including "In discussion", and a cumulative "first contact to
+ * production" chart, which is a funnel. Both are internal commercial
+ * information. A prospect reading the funnel learns how thin the pipeline
+ * is; a competitor learns the same thing. Replaced with what a buyer
+ * actually wants to know, which is whether we have done this in their
+ * industry and what kind of work it was.
+ */
+const sectors = [...new Set(studies.map((s) => s.data.sector))].sort();
 
-const stageCounts = stageOrder
-  .map(({ stage, tone }) => ({
-    label: stage,
-    tone,
-    value: projects.filter((p) => p.status === stage).length,
-  }))
-  .filter((d) => d.value > 0);
-
-let running = 0;
-const pipeline = stageCounts.map((d) => {
-  running += d.value;
-  return { label: d.label, value: running };
-});
+const sectorTones = ['d1', 'd2', 'd3', 'd4', 'd5', 'd6'] as const;
+const sectorData = sectors.map((label, i) => ({
+  label,
+  value: studies.filter((s) => s.data.sector === label).length,
+  tone: sectorTones[i % sectorTones.length],
+}));
 
 const totalEngagements = projects.length;
-const sectors = [...new Set(studies.map((s) => s.data.sector))].sort();
 ---
 
 <section id="impact" class="seam relative scroll-mt-16 overflow-hidden">
@@ -115,18 +110,18 @@ const sectors = [...new Set(studies.map((s) => s.data.sector))].sort();
         </div>
       </article>
 
-      <!-- Portfolio -->
+      <!-- Sectors delivered in -->
       <article class="surface rise min-w-0 p-6 lg:col-span-5" style="--step:1">
         <div class="flex flex-wrap items-baseline justify-between gap-3">
-          <h3 class="text-[0.9375rem] font-medium text-fg">Engagement portfolio</h3>
-          <span class="mono-label">Live</span>
+          <h3 class="text-[0.9375rem] font-medium text-fg">Sectors delivered in</h3>
+          <span class="mono-label">{sectors.length} sectors</span>
         </div>
         <div class="mt-4">
-          <Donut slices={stageCounts} centreValue={String(totalEngagements)} centreLabel="ENGAGEMENTS" />
+          <Donut slices={sectorData} centreValue={String(totalEngagements)} centreLabel="ENGAGEMENTS" />
         </div>
         <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-line pt-4">
           {
-            stageCounts.map((d) => (
+            sectorData.map((d) => (
               <li class="flex items-center justify-between gap-3 text-xs">
                 <span class="flex items-center gap-2 text-fg-3">
                   <span class="h-1.5 w-1.5 shrink-0 rounded-full" style={`background: var(--${d.tone})`} />
@@ -149,20 +144,11 @@ const sectors = [...new Set(studies.map((s) => s.data.sector))].sort();
       </article>
 
       <!-- Platform load -->
-      <article class="surface rise min-w-0 p-6 lg:col-span-4" style="--step:3">
+      <article class="surface rise min-w-0 p-6 lg:col-span-8" style="--step:3">
         <h3 class="text-[0.9375rem] font-medium text-fg">Where work sits</h3>
         <p class="mt-1.5 text-xs leading-relaxed text-fg-4">Engagements running on each platform.</p>
         <div class="mt-6">
           <BarsV items={platformLoad} ticks={3} />
-        </div>
-      </article>
-
-      <!-- Pipeline -->
-      <article class="surface rise min-w-0 p-6 lg:col-span-4" style="--step:4">
-        <h3 class="text-[0.9375rem] font-medium text-fg">Pipeline shape</h3>
-        <p class="mt-1.5 text-xs leading-relaxed text-fg-4">Cumulative, first contact to production.</p>
-        <div class="mt-6">
-          <Trend points={pipeline} />
         </div>
       </article>
 
