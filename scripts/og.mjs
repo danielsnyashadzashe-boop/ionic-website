@@ -22,17 +22,22 @@ const H = 630;
 // values are duplicated here rather than referenced. Keep them in step with
 // the palette block in global.css.
 const C = {
-  base: '#14181F',
-  raised: '#1D222B',
-  panel: '#252B35',
-  rule: '#333A45',
-  fg: '#F5F6F8',
-  fg3: '#8C93A0',
-  fg4: '#6B7280',
-  primary: '#5FD8E8',
-  d1: '#71C2F5',
-  d3: '#63DCB0',
-  d4: '#E5CE72',
+  // These had drifted badly: a charcoal ground and a cyan accent, from two
+  // palettes ago. The card is the first thing anyone sees when the site is
+  // shared, so it looking like a different product is worse than most bugs.
+  base: '#0b2334',
+  raised: '#102b3f',
+  panel: '#15334a',
+  rule: '#24384a',
+  fg: '#F2F5F6',
+  fg3: '#b9c4c8',
+  fg4: '#93a1a6',
+  primary: '#cdd7da',
+  d1: '#8fb4c9',
+  d3: '#9fc7b4',
+  d4: '#d8c48a',
+  /** Brand yellow, matching --accent-warm and the logo. */
+  yellow: '#FFC20E',
 };
 
 
@@ -54,14 +59,19 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
   ${Array.from({ length: 18 }, (_, i) => `<line x1="${i * 64}" y1="0" x2="${i * 64}" y2="${H}" stroke="${C.fg}" stroke-opacity="0.035" stroke-width="1"/>`).join('')}
   ${Array.from({ length: 10 }, (_, i) => `<line x1="0" y1="${i * 64}" x2="${W}" y2="${i * 64}" stroke="${C.fg}" stroke-opacity="0.035" stroke-width="1"/>`).join('')}
 
-  <!-- Mark + wordmark -->
-  <g transform="translate(64,44) scale(0.155) translate(130,148)">
-    <path d="M -53 -84.8 A 100 100 0 1 0 66.9 -74.3" fill="none" stroke="${C.primary}" stroke-width="21" stroke-linecap="round"/>
-    <path d="M -3 -19 L 32 0 L -3 19 L 4 0 Z" fill="${C.primary}" transform="translate(66.9,-74.3) rotate(-138)"/>
-    <line x1="-17" y1="-140" x2="-17" y2="-52" stroke="${C.primary}" stroke-width="13" stroke-linecap="round"/>
-    <line x1="17" y1="-140" x2="17" y2="-52" stroke="${C.primary}" stroke-width="13" stroke-linecap="round"/>
+  <!-- Mark + wordmark. This drew the old invented arc-and-arrowhead, which
+       meant every LinkedIn and Slack share carried a logo the company does
+       not use. Same geometry as Logo.astro, in the card's coordinates. -->
+  <g transform="translate(64,40) scale(0.52)">
+    <path d="M 46.5 10.2 A 40 40 0 1 0 80.6 75.7" fill="none" stroke="${C.fg}" stroke-width="7.5" stroke-linecap="round"/>
+    <path d="M 60.4 11.4 A 40 40 0 0 1 88.6 60.4" fill="none" stroke="${C.yellow}" stroke-width="7.5" stroke-linecap="round"/>
+    <circle cx="38.5" cy="31" r="7" fill="${C.yellow}"/>
+    <path d="M 32.5 43 L 44.5 43 L 44.5 74 L 32.5 74 Z" fill="${C.fg}"/>
+    <path d="M 48.5 74 L 48.5 52 Q 48.5 42 57 42 Q 62 42 64.5 47 L 74 66 L 74 44"
+          fill="none" stroke="${C.fg}" stroke-width="11.5" stroke-linejoin="round" stroke-linecap="round"/>
   </g>
-  <text x="112" y="76" font-family="${SANS}" font-size="24" font-weight="600" fill="${C.fg}">Ionic</text>
+  <text x="124" y="72" font-family="${SANS}" font-size="26" font-weight="700" letter-spacing="0.5" fill="${C.fg}">IONIC</text>
+  <text x="125" y="90" font-family="${MONO}" font-size="11" font-weight="600" letter-spacing="5" fill="${C.yellow}">INNOVATE</text>
 
   <!-- Status strip -->
   <line x1="64" y1="118" x2="${W - 64}" y2="118" stroke="${C.rule}" stroke-width="1"/>

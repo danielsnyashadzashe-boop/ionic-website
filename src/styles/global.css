@@ -84,7 +84,7 @@
   /* Second, warmer accent. Used sparingly: section eyebrows and a single
      speck per frame. Yellow at small sizes is the first thing to fail
      contrast, so the pale-ground value is almost a bronze. */
-  --accent-warm: #e8b94a;
+  --accent-warm: #ffc20e;
 
   /* The ramp returns to its starting value. That is why it reads as a sheen
      travelling across a surface rather than a two-colour gradient, and why
@@ -241,7 +241,7 @@
   /* Second, warmer accent. Used sparingly: section eyebrows and a single
      speck per frame. Yellow at small sizes is the first thing to fail
      contrast, so the pale-ground value is almost a bronze. */
-  --accent-warm: #e8b94a;
+  --accent-warm: #ffc20e;
 
   --grad-a: #9fafb4;
   --grad-b: #dce5e8;

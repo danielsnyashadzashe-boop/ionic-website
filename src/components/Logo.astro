@@ -1,39 +1,112 @@
 ---
 /**
- * The Ionic mark: an open arc terminating in an arrowhead, with two
- * ascending bars. Geometry carried over from the original site so the brand
- * stays continuous.
+ * The Ionic Innovate mark.
+ *
+ * Replaces an invented "open arc and arrowhead" that was never the company's
+ * logo. This follows the real one: a ring that is dark for most of its sweep
+ * with a yellow segment through the top right, an "iN" monogram inside it,
+ * and the wordmark set as IONIC over a letterspaced INNOVATE.
+ *
+ * IMPORTANT: this is a vector reconstruction, not the supplied artwork. It is
+ * close, not exact, and it should be replaced with the real file. Drop the
+ * official SVG at `public/brand/ionic-mark.svg` and swap the <svg> below for
+ * an <img>; nothing else needs to change, because every consumer goes
+ * through this component.
+ *
+ * The dark parts use `currentColor` rather than the brand navy. The site is
+ * dark-themed, and a navy mark on a navy ground is invisible; inheriting the
+ * text colour means the logo reads correctly on both grounds. The yellow is
+ * literal, because it is the one part that must not shift.
  */
 interface Props {
+  /** `lockup` is mark plus wordmark; `mark` is the ring on its own. */
+  variant?: 'lockup' | 'mark';
+  /** Stack the wordmark beneath the mark instead of beside it. */
+  stacked?: boolean;
   size?: number;
-  withWord?: boolean;
   class?: string;
 }
 
-const { size = 22, withWord = true, class: className = '' } = Astro.props;
+const { variant = 'lockup', stacked = false, size = 28, class: className = '' } = Astro.props;
+
+const YELLOW = '#FFC20E';
+const YELLOW_DEEP = '#F5A623';
+const uid = `lg${Math.random().toString(36).slice(2, 8)}`;
 ---
 
-<span class={`inline-flex items-center gap-2.5 ${className}`}>
-  <svg viewBox="-130 -148 260 260" width={size} height={size} role="img" aria-label="Ionic" class="shrink-0 overflow-visible">
+<span
+  class:list={[
+    'inline-flex shrink-0',
+    stacked ? 'flex-col items-center gap-2' : 'items-center gap-2.5',
+    className,
+  ]}
+>
+  <svg
+    viewBox="0 0 100 100"
+    width={size}
+    height={size}
+    class="shrink-0"
+    role="img"
+    aria-label="Ionic Innovate"
+  >
+    <defs>
+      <linearGradient id={`${uid}-dot`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color={YELLOW} />
+        <stop offset="100%" stop-color={YELLOW_DEEP} />
+      </linearGradient>
+    </defs>
+
+    {/* Ring: dark through the left and bottom, yellow through the top right,
+        left open at the lower right where the monogram breaks out. */}
     <path
-      d="M -53 -84.8 A 100 100 0 1 0 66.9 -74.3"
+      d="M 46.5 10.2 A 40 40 0 1 0 80.6 75.7"
       fill="none"
       stroke="currentColor"
-      stroke-width="21"
+      stroke-width="7.5"
       stroke-linecap="round"
     />
     <path
-      d="M -3 -19 L 32 0 L -3 19 L 4 0 Z"
-      transform="translate(66.9,-74.3) rotate(-138)"
-      fill="currentColor"
+      d="M 60.4 11.4 A 40 40 0 0 1 88.6 60.4"
+      fill="none"
+      stroke={YELLOW}
+      stroke-width="7.5"
+      stroke-linecap="round"
     />
-    <line x1="-17" y1="-140" x2="-17" y2="-52" stroke="currentColor" stroke-width="13" stroke-linecap="round" />
-    <line x1="17" y1="-140" x2="17" y2="-52" stroke="currentColor" stroke-width="13" stroke-linecap="round" />
+
+    {/* "i": dot over a stem. */}
+    <circle cx="38.5" cy="31" r="7" fill={`url(#${uid}-dot)`} />
+    <path d="M 32.5 43 L 44.5 43 L 44.5 74 L 32.5 74 Z" fill="currentColor" />
+
+    {/* "N": a thick diagonal rising from the stem, capped and dropping right. */}
+    <path
+      d="M 48.5 74 L 48.5 52 Q 48.5 42 57 42 Q 62 42 64.5 47 L 74 66 L 74 44 L 74 44"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="11.5"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    />
   </svg>
 
   {
-    withWord && (
-      <span class="text-[0.9375rem] font-semibold tracking-[-0.02em] text-fg">Ionic</span>
+    variant === 'lockup' && (
+      <span class:list={['leading-none', stacked && 'text-center']}>
+        <span class="block text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg">
+          IONIC
+        </span>
+        {/* The wordmark takes --accent-warm rather than the literal brand
+            yellow. #FFC20E at this size is 1.49:1 on a pale ground, so on the
+            light theme "INNOVATE" was effectively invisible. WCAG exempts
+            logotypes from contrast, but an unreadable wordmark is still an
+            unreadable wordmark. The token is the brand yellow on dark and a
+            bronze on pale, so it stays right where it can. */}
+        <span
+          class="mt-0.5 block font-mono text-[0.5rem] font-medium uppercase tracking-[0.34em]"
+          style="color: var(--accent-warm)"
+        >
+          Innovate
+        </span>
+      </span>
     )
   }
 </span>
