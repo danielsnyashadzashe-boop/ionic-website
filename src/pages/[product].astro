@@ -133,7 +133,7 @@ const schema = [
   {
     d.showMetrics && (
       <div class="seam">
-        <div class="shell py-10">
+        <div class="shell py-14 md:py-16">
           <div class="flex flex-wrap items-center gap-x-10 gap-y-5">
             <p class="mono-label">Reported outcomes</p>
             {metrics.map((m, i) => (
@@ -154,7 +154,7 @@ const schema = [
 
   <!-- ══ CAPABILITIES ══════════════════════════════════════════════════ -->
   <section id="capabilities" class="border-t border-line scroll-mt-20">
-    <div class="shell py-24 md:py-32">
+    <div class="shell py-32 md:py-44">
       <SectionHead
         marker="Capabilities"
         title={d.capabilities.length > 4 ? 'Six capabilities, one platform' : 'What the platform does'}
@@ -177,7 +177,7 @@ const schema = [
 
   <!-- ══ NARRATIVE (Markdown body) ═════════════════════════════════════ -->
   <section class="border-t border-line">
-    <div class="shell py-24 md:py-32">
+    <div class="shell py-32 md:py-44">
       <div class="grid gap-14 lg:grid-cols-[0.32fr_1fr] lg:gap-20">
         <p class="marker rise lg:pt-3">In depth</p>
         <div class="prose-tech rise" style="--step:1">
@@ -189,7 +189,7 @@ const schema = [
 
   <!-- ══ TRACTION ══════════════════════════════════════════════════════ -->
   <section class="border-t border-line">
-    <div class="shell py-24 md:py-32">
+    <div class="shell py-32 md:py-44">
       <SectionHead marker="Traction" title={d.traction.heading} />
 
       <div class="mt-16 space-y-0">

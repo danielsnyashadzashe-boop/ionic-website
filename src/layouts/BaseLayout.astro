@@ -16,8 +16,11 @@ const canonical = new URL(Astro.url.pathname, site.domain).href;
 const ogImage = new URL('/og-default.png', site.domain).href;
 const schemaList = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 
-const favicon =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-130 -148 260 260'%3E%3Cg stroke='%235FD8E8' fill='%235FD8E8'%3E%3Cpath d='M -53 -84.8 A 100 100 0 1 0 66.9 -74.3' fill='none' stroke-width='21' stroke-linecap='round'/%3E%3Cpath d='M -3 -19 L 32 0 L -3 19 L 4 0 Z' transform='translate(66.9,-74.3) rotate(-138)' stroke='none'/%3E%3Cline x1='-17' y1='-140' x2='-17' y2='-52' stroke-width='13' stroke-linecap='round'/%3E%3Cline x1='17' y1='-140' x2='17' y2='-52' stroke-width='13' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E";
+/**
+ * The favicon was an inline data URI of the old invented mark, in a cyan the
+ * palette no longer uses. These are cropped from the real artwork: the light
+ * one for pale browser chrome, the dark-ink one for dark chrome.
+ */
 ---
 
 <!doctype html>
@@ -28,7 +31,15 @@ const favicon =
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href={favicon} />
+    <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="256x256"
+      href="/favicon-dark.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {/* Single value, not a prefers-color-scheme pair. The page no longer
         follows the OS, so a media-matched theme-color would paint the mobile
         browser chrome light over a dark page. ThemeToggle rewrites it. */}
