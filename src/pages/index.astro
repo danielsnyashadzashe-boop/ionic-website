@@ -84,23 +84,32 @@ const method = [
 
     <div class="shell relative grid items-center gap-12 pb-24 pt-20 lg:grid-cols-[1fr_0.85fr] lg:gap-16 lg:pb-36 lg:pt-28">
       <div>
-        <h1 class="t-hero">
+        {/* The landing screen had no warm accent at all, which is why the
+            second colour was invisible on the page people see first. */}
+        <p class="marker veil">
+          <span>Digital and business transformation</span>
+        </p>
+
+        <h1 class="t-hero mt-6">
           <span class="block overflow-hidden">
             <span class="rise block" style="--step:0">Transformation,</span>
           </span>
-          {/* The slash has to sit inside the second line. The two line
-              wrappers are block-level, so an inline-block sibling after them
-              wrapped onto a third line at hero size. */}
           <span class="block overflow-hidden">
-            <span class="rise block" style="--step:1.6">
-              <span class="grad-text">instrumented.</span><span class="slash" aria-hidden="true">/</span>
+            <span class="rise grad-text block" style="--step:1.6">instrumented.</span>
+          </span>
+          {/* Third line at two-thirds scale: it carries the actual proposition
+              while keeping the first two lines as the hook. */}
+          <span class="block overflow-hidden">
+            <span class="rise block text-[0.62em] leading-[1.15] text-fg-2" style="--step:2.4">
+              Consulting, platforms and delivery in one engagement.
             </span>
           </span>
         </h1>
 
         <p class="t-lede rise measure mt-8 text-fg-3" style="--step:3">
-          Strategic consulting and our own AI-enabled platforms, from the first workshop
-          through to production.
+          We map how the work actually moves, quantify where the time goes, then build and
+          run what changes it. Strategy and our own AI-enabled platforms from the same team,
+          from first workshop through to production and beyond.
         </p>
 
         <div class="rise mt-10 flex flex-wrap items-center gap-3" style="--step:4">
@@ -142,7 +151,7 @@ const method = [
           {
             principles.map((p, i) => (
               <article class="surface card-i rise p-6" style={`--step:${i}`}>
-                <span class="figure text-[0.6875rem] text-primary">{p.n}</span>
+                <span class="figure text-[0.6875rem]" style="color: var(--accent-warm)">{p.n}</span>
                 <h3 class="mt-5 text-[1.0625rem] font-medium tracking-[-0.02em]">{p.head}</h3>
                 <p class="mt-3 text-[0.875rem] leading-relaxed text-fg-3">{p.body}</p>
               </article>
@@ -260,7 +269,7 @@ const method = [
                 </span>
 
                 <div class="step-dot order-1 w-32 md:order-none md:row-start-3 md:w-full md:max-w-[9.5rem]">
-                  <span class="figure text-[1.75rem] leading-none text-fg-2">
+                  <span class="figure text-[1.75rem] leading-none" style="color: var(--accent-warm)">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <h3 class="mt-1 text-[0.9375rem] font-medium tracking-[-0.01em]">{m.step}</h3>

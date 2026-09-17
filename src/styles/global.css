@@ -764,7 +764,7 @@
     animation: drift 7s var(--ease-out-soft) infinite alternate;
   }
   .speck-mute { background: var(--fg-4); opacity: 0.3; }
-  .speck-warm { background: var(--accent-warm); opacity: 0.65; }
+  .speck-warm { background: var(--accent-warm); opacity: 0.9; }
   .speck-ring { background: none; border: 1px solid var(--primary); opacity: 0.35; }
 
   /* Too small to carry decoration. */
