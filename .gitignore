@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # Screenshot output from scripts/shots.mjs
 .shots/
+
+# Documents published as artifacts (content-audit.html and friends)
+.artifact/
