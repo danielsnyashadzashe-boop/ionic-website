@@ -20,6 +20,23 @@ const studies = (await getCollection('caseStudies'))
 
 /** Longest first, so the masonry columns fill evenly rather than by accident. */
 const ordered = [...studies].sort((a, b) => (b.data.quote!.length - a.data.quote!.length));
+
+/**
+ * Shout about unapproved wording on every build.
+ *
+ * A placeholder quote under a named individual is the kind of thing that
+ * ships because nobody remembered it was there. This makes forgetting
+ * impossible: the warning appears in every build and every dev start, and
+ * only goes away when the flag is cleared in the content file.
+ */
+const pending = ordered.filter((s) => s.data.quotePending);
+if (pending.length > 0) {
+  console.warn(
+    `\n  ⚠  ${pending.length} testimonial quote(s) are PLACEHOLDERS and not approved:\n` +
+      pending.map((s) => `     - ${s.data.quoteAttribution}  (src/content/case-studies/${s.id}.md)`).join('\n') +
+      `\n     Replace with real wording or remove before publishing.\n`,
+  );
+}
 ---
 
 {

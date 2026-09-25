@@ -421,8 +421,14 @@ Carried over from the old site and worth deciding on:
 
 - **No phone number or physical address** anywhere, despite claiming offices in
   two countries. Email is the only channel.
-- **Testimonials are attributed to companies only**: no individual names or
-  titles on any of the six.
+- **One testimonial quote is a placeholder and must not be published as is.**
+  The Tippa card is attributed to John Arvanitakis, who has not said those
+  words and has not approved them. `quotePending: true` in
+  `src/content/case-studies/tippa.md` marks it, and `Testimonials.astro`
+  prints a warning on every build and every dev start naming the file. Clear
+  the flag once real wording arrives, or delete the quote.
+- **The other testimonials are attributed to companies only**: no individual
+  names or titles on any of the six carried over from the old site.
 - **The 85% / 60% / 99%+ metrics carry no published methodology.** The metric band
   now says "available on request", which is a promise someone has to be able to keep.
 - **No analytics installed.** The privacy policy has been reworded to say so

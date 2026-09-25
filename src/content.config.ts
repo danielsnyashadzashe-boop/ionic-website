@@ -86,6 +86,15 @@ const caseStudies = defineCollection({
      * quote, this is "Name, Company".
      */
     quoteAttribution: z.string(),
+    /**
+     * Placeholder wording that the attributed person has NOT approved.
+     *
+     * Attributing words to a named individual who did not say them is a
+     * different thing from company boilerplate, so this is tracked rather
+     * than trusted to memory: Testimonials.astro prints a build warning
+     * listing every pending quote, on every build, until the flag is cleared.
+     */
+    quotePending: z.boolean().default(false),
     highlights: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     featured: z.boolean().default(false),
   }),

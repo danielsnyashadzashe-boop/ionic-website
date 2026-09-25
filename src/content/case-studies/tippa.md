@@ -14,6 +14,13 @@ summary: >-
   A tipping and payments platform for car guards, live at 10 malls and centres:
   a customer-facing QR flow with no app to download, a wallet app in every
   guard's hand, an operations portal, and automated bank reconciliation.
+# PLACEHOLDER. John Arvanitakis has not said this and has not approved it.
+# Replace with his own words, or delete both lines, before this site is
+# published. `quotePending` makes every build print a warning until it goes.
+quote: >-
+  They built the platform, then stayed on site until people were actually
+  using it. The second part is the one that made the difference.
+quotePending: true
 quoteAttribution: John Arvanitakis, Tippa Payment Solutions
 highlights:
   - label: Sites live
