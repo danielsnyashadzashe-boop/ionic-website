@@ -62,6 +62,7 @@ export const nav = {
     { label: 'Platforms', href: '/#platforms', children: true },
     { label: 'Work', href: '/#work' },
     { label: 'Case studies', href: '/case-studies/' },
+    { label: 'Testimonials', href: '/#testimonials' },
     { label: 'Insights', href: '/insights/' },
     { label: 'Compass', href: '/compass/' },
   ],

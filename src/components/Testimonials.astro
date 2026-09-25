@@ -9,17 +9,17 @@ import SectionHead from './SectionHead.astro';
  * and its write-up can never disagree, and every card links to the engagement
  * it came from.
  *
- * Only studies that actually carry a quote appear. A study published before
- * its quote is cleared is simply absent, which is the correct behaviour: the
- * alternative is writing words for a client and attributing them, and that is
- * not something we do.
+ * Composition: one lead quote at display size on a notched panel, the rest as
+ * a grid beneath it. An even grid of equal cards is the version that reads as
+ * a filler section, because nothing in it is worth stopping on. Giving one
+ * quote real scale makes the row underneath supporting evidence rather than
+ * six things competing.
  */
-const studies = (await getCollection('caseStudies'))
+const all = (await getCollection('caseStudies'))
   .filter((s) => s.data.quote && s.data.quote.trim().length > 0)
   .sort((a, b) => a.data.order - b.data.order);
 
-/** Longest first, so the masonry columns fill evenly rather than by accident. */
-const ordered = [...studies].sort((a, b) => (b.data.quote!.length - a.data.quote!.length));
+const [lead, ...rest] = all;
 
 /**
  * Shout about unapproved wording on every build.
@@ -29,7 +29,7 @@ const ordered = [...studies].sort((a, b) => (b.data.quote!.length - a.data.quote
  * impossible: the warning appears in every build and every dev start, and
  * only goes away when the flag is cleared in the content file.
  */
-const pending = ordered.filter((s) => s.data.quotePending);
+const pending = all.filter((s) => s.data.quotePending);
 if (pending.length > 0) {
   console.warn(
     `\n  ⚠  ${pending.length} testimonial quote(s) are PLACEHOLDERS and not approved:\n` +
@@ -37,12 +37,34 @@ if (pending.length > 0) {
       `\n     Replace with real wording or remove before publishing.\n`,
   );
 }
+
+/**
+ * Two-letter monogram from the company name. A single-word name falls back
+ * to its first two letters, because "Fidelity" rendering as a lone "F" made
+ * that tile look unfinished next to the two-letter ones.
+ */
+const mono = (name: string) => {
+  const words = name.split(',')[0].split(/\s+/).filter((w) => /^[A-Za-z0-9]/.test(w));
+  if (words.length === 0) return '';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+};
+
+/** "John Arvanitakis, Tippa" splits into a person and an organisation. */
+const split = (attr: string) => {
+  const i = attr.indexOf(',');
+  return i === -1
+    ? { person: '', org: attr.trim() }
+    : { person: attr.slice(0, i).trim(), org: attr.slice(i + 1).trim() };
+};
 ---
 
 {
-  ordered.length > 0 && (
-    <section id="testimonials" class="band-alt seam scroll-mt-16">
-      <div class="shell py-32 md:py-44">
+  lead && (
+    <section id="testimonials" class="band-alt seam relative scroll-mt-16 overflow-hidden">
+      <div class="aurora -right-48 top-10 h-[32rem] w-[32rem]" aria-hidden="true" />
+
+      <div class="shell relative py-32 md:py-44">
         <SectionHead
           center
           marker="In their words"
@@ -51,55 +73,133 @@ if (pending.length > 0) {
           lede="Taken from the engagements themselves. Every quote links to the write-up it came from, so you can read the whole story rather than the flattering sentence."
         />
 
-        {/* Columns rather than a grid: quotes differ in length, and a grid
-            would stretch every card to match the tallest in its row. */}
-        <div class="mt-20 gap-6 sm:columns-2 lg:columns-3">
-          {ordered.map((s, i) => (
-            <a
-              href={`/case-studies/${s.id}/`}
-              class="surface card-i rise mb-6 block break-inside-avoid p-7 md:p-8"
-              style={`--step:${i}`}
-            >
-              <svg
-                width="24"
-                height="19"
-                viewBox="0 0 26 20"
-                class="text-accent-warm"
-                aria-hidden="true"
-                style="color: var(--accent-warm)"
-              >
-                <path
-                  d="M10.6 0v3.9C7.4 4.6 5.8 6.5 5.8 9.5h4.1V20H0V9.9C0 4 3.5.6 10.6 0Zm15.4 0v3.9c-3.2.7-4.8 2.6-4.8 5.6h4.1V20h-9.9V9.9C15.4 4 18.9.6 26 0Z"
-                  fill="currentColor"
-                />
-              </svg>
+        {/* ── Lead quote ───────────────────────────────────────────── */}
+        <a
+          href={`/case-studies/${lead.id}/`}
+          class="group rise relative mt-20 block"
+          style="--step:0"
+        >
+          {/* No notch here. On a panel this wide and shallow the cut is a
+              huge shallow step, and a white panel on a pale band gives it
+              nothing to read against, so it looked like a misaligned
+              rectangle rather than a device. The tone rail does the work. */}
+          <div class="surface relative overflow-hidden p-9 md:p-16">
+            <span
+              class="pointer-events-none absolute inset-y-0 left-0 w-[3px]"
+              style={`background: var(--${lead.data.tone})`}
+              aria-hidden="true"
+            />
 
-              <blockquote class="mt-5 text-[1.0625rem] leading-relaxed text-fg-2">
-                {s.data.quote}
-              </blockquote>
+            <div class="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+              <div>
+                <svg width="34" height="26" viewBox="0 0 26 20" aria-hidden="true" style="color: var(--accent-warm)">
+                  <path
+                    d="M10.6 0v3.9C7.4 4.6 5.8 6.5 5.8 9.5h4.1V20H0V9.9C0 4 3.5.6 10.6 0Zm15.4 0v3.9c-3.2.7-4.8 2.6-4.8 5.6h4.1V20h-9.9V9.9C15.4 4 18.9.6 26 0Z"
+                    fill="currentColor"
+                  />
+                </svg>
 
-              {/* Stacks below `sm`. Side by side, a long sector name such as
-                  "Healthcare administration" was clipped at 320px, and a
-                  truncated sector is worse than a wrapped one. */}
-              <div class="mt-6 flex flex-col gap-2 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                <div class="min-w-0">
-                  <p class="text-[0.9375rem] font-medium text-fg">
-                    {s.data.quoteAttribution}
-                  </p>
-                  <p class="mt-1 font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.1em] text-fg-4">
-                    {s.data.sector}
-                  </p>
+                <blockquote class="t-section mt-7 max-w-[26ch] font-medium leading-[1.16] text-fg">
+                  {lead.data.quote}
+                </blockquote>
+
+                <div class="mt-9 flex items-center gap-4">
+                  <span
+                    class="figure grid h-11 w-11 shrink-0 place-items-center rounded-full text-[0.8125rem]"
+                    style={`background: color-mix(in oklch, var(--${lead.data.tone}) 18%, transparent); color: var(--${lead.data.tone})`}
+                    aria-hidden="true"
+                  >
+                    {mono(split(lead.data.quoteAttribution).org)}
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block text-[0.9375rem] font-medium text-fg">
+                      {split(lead.data.quoteAttribution).person || split(lead.data.quoteAttribution).org}
+                    </span>
+                    <span class="mt-0.5 block font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
+                      {split(lead.data.quoteAttribution).person
+                        ? `${split(lead.data.quoteAttribution).org} · ${lead.data.sector}`
+                        : lead.data.sector}
+                    </span>
+                  </span>
                 </div>
-                <span
-                  class="shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4 transition-colors group-hover:text-fg-2"
-                  aria-hidden="true"
-                >
-                  Read →
-                </span>
               </div>
-            </a>
-          ))}
+
+              {/* Highlights carry the numbers, so the panel is evidence and
+                  not only an opinion. */}
+              {lead.data.highlights.length > 0 && (
+                <dl class="grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-line bg-line lg:w-[19rem] lg:grid-cols-1">
+                  {lead.data.highlights.map((h) => (
+                    <div class="bg-raised px-5 py-4">
+                      <dt class="mono-label">{h.label}</dt>
+                      <dd class="figure mt-1.5 text-[1.125rem] leading-none text-fg">{h.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </div>
+
+            <span
+              class="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 transition-transform duration-700 ease-out group-hover:scale-x-100"
+              style={`background: linear-gradient(90deg, var(--${lead.data.tone}), transparent)`}
+              aria-hidden="true"
+            />
+          </div>
+        </a>
+
+        {/* ── Supporting quotes ────────────────────────────────────── */}
+        <div class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {rest.map((s, i) => {
+            const { person, org } = split(s.data.quoteAttribution);
+            return (
+              <a
+                href={`/case-studies/${s.id}/`}
+                class="surface card-i rise group relative flex flex-col overflow-hidden p-7 md:p-8"
+                style={`--step:${i + 1}`}
+              >
+                <span
+                  class="pointer-events-none absolute inset-x-0 top-0 h-px opacity-60"
+                  style={`background: linear-gradient(90deg, var(--${s.data.tone}), transparent)`}
+                  aria-hidden="true"
+                />
+
+                <blockquote class="flex-1 text-[1rem] leading-relaxed text-fg-2">
+                  <span class="mr-1 font-display text-[1.375rem] leading-none" style="color: var(--accent-warm)" aria-hidden="true">
+                    &ldquo;
+                  </span>
+                  {s.data.quote}
+                </blockquote>
+
+                <div class="mt-7 flex items-center gap-3 border-t border-line pt-5">
+                  <span
+                    class="figure grid h-9 w-9 shrink-0 place-items-center rounded-full text-[0.6875rem]"
+                    style={`background: color-mix(in oklch, var(--${s.data.tone}) 16%, transparent); color: var(--${s.data.tone})`}
+                    aria-hidden="true"
+                  >
+                    {mono(org)}
+                  </span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-[0.875rem] font-medium leading-snug text-fg">
+                      {person || org}
+                    </span>
+                    <span class="mt-0.5 block font-mono text-[0.5625rem] uppercase leading-relaxed tracking-[0.1em] text-fg-4">
+                      {person ? `${org} · ${s.data.sector}` : s.data.sector}
+                    </span>
+                  </span>
+                  <span
+                    class="shrink-0 font-mono text-[0.625rem] text-fg-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+                </div>
+              </a>
+            );
+          })}
         </div>
+
+        <p class="rise mt-12 text-center text-[0.8125rem] text-fg-4" style="--step:7">
+          Every quote above is attributed and links to the engagement it describes.
+        </p>
       </div>
     </section>
   )

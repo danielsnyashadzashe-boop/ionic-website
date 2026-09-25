@@ -7,7 +7,7 @@ tone: d1
 sector: Financial services
 region: South Africa
 stage: Production
-order: 1
+order: 2
 featured: true
 summary: >-
   A single pilot became a five-year engagement spanning every business unit:

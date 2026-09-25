@@ -7,7 +7,7 @@ tone: d1
 sector: Diversified industrial
 region: South Africa
 stage: Production
-order: 3
+order: 4
 featured: true
 summary: >-
   Tender portal deployment for the Execuflora and TopTurf divisions, with

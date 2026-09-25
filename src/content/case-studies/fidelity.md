@@ -7,7 +7,7 @@ tone: d1
 sector: Diversified services
 region: South Africa
 stage: Production
-order: 2
+order: 3
 featured: true
 summary: >-
   A group-wide digital transformation engagement spanning multiple industries,
