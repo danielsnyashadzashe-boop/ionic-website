@@ -22,6 +22,7 @@ quote: >-
   using it. The second part is the one that made the difference.
 quotePending: true
 quoteAttribution: John Arvanitakis, Tippa Payment Solutions
+photo: customerMoment
 highlights:
   - label: Sites live
     value: '10'

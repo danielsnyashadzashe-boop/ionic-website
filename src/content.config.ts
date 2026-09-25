@@ -98,6 +98,8 @@ const caseStudies = defineCollection({
      */
     quotePending: z.boolean().default(false),
     highlights: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+    /** Optional cover image. Case studies had no imagery at all before this. */
+    photo: photo.optional(),
     featured: z.boolean().default(false),
   }),
 });

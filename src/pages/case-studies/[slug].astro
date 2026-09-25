@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import PageLayout from '@/layouts/PageLayout.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Figure from '@/components/Figure.astro';
 import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import { site } from '@/data/site';
@@ -113,6 +114,24 @@ const facts = [
         </dl>
       </div>
     </div>
+
+    {/* Cover image. Case studies carried no imagery at all, which made them
+        the only long-form pages on the site that were pure text. */}
+    {
+      d.photo && (
+        <div class="border-t border-line">
+          <div class="shell py-16 md:py-20">
+            <Figure
+              photo={d.photo}
+              ratio="21 / 9"
+              sizes="(min-width: 1280px) 76rem, 100vw"
+              class="rise"
+              float
+            />
+          </div>
+        </div>
+      )
+    }
 
     {
       d.highlights.length > 0 && (
