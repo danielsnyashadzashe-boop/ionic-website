@@ -102,6 +102,19 @@ export function mountStages(root: HTMLElement): StageController | null {
     else step(-1);
   });
 
+  /**
+   * External control, one way.
+   *
+   * The preview cards on the platform page sit outside this root and need to
+   * open a named stage. They have no reference to the controller and nothing
+   * is exported to `window`, so they dispatch here instead. An unknown stage
+   * name is ignored rather than throwing.
+   */
+  root.addEventListener('stages:goto', (e) => {
+    const name = (e as CustomEvent<{ stage?: string }>).detail?.stage;
+    if (name && names.includes(name)) go(name);
+  });
+
   paint();
   return { go, next: () => step(1), back: () => step(-1), current: () => current };
 }

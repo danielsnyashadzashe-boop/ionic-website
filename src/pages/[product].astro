@@ -8,6 +8,7 @@ import Figure from '@/components/Figure.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import Compass from '@/components/Compass.astro';
+import CompassPreview from '@/components/CompassPreview.astro';
 import { site, metrics } from '@/data/site';
 
 /**
@@ -268,7 +269,19 @@ const schema = [
             lede={`Every ${d.name} engagement opens with discovery: we map how the work actually runs before a single thing is configured. The Compass is that first conversation in miniature, run on one of your own processes. Nothing is sent anywhere and nothing is stored, so you can answer honestly.`}
           />
 
+          {/* The instruments, shown before anything is clicked. The Compass
+              itself reveals one stage at a time, so at rest the section was
+              an intro panel and a button, and the questions it asks were
+              invisible to anyone who did not start it. */}
           <div class="mt-20">
+            <CompassPreview />
+          </div>
+
+          <div class="mt-24 border-t border-line pt-24">
+            <div class="mb-12 flex flex-wrap items-baseline justify-between gap-4">
+              <p class="marker"><b>03</b><span>Take the reading</span></p>
+              <p class="font-mono text-[0.6875rem] text-fg-4">Runs in your browser · nothing is stored</p>
+            </div>
             <Compass />
           </div>
         </div>
