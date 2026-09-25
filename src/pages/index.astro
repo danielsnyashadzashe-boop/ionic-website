@@ -10,6 +10,7 @@ import ProductCard from '@/components/ProductCard.astro';
 import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import ImpactSection from '@/components/ImpactSection.astro';
 import ProjectsSection from '@/components/ProjectsSection.astro';
+import Testimonials from '@/components/Testimonials.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import { site, contact, expertise } from '@/data/site';
 import { projectStats } from '@/data/projects';
@@ -298,7 +299,14 @@ const method = [
     </div>
   </section>
 
-  <!-- ══════════ 07 · CONTACT ══════════ -->
+  {/* Testimonials sit after the case-study tiles and before the contact ask,
+      which is the point at which a reader has seen the work and is deciding
+      whether to believe it. It is a pale band, so it also breaks up the run
+      of dark sections from Impact onwards. */}
+  <!-- ══════════ 07 · TESTIMONIALS ══════════ -->
+  <Testimonials />
+
+  <!-- ══════════ 08 · CONTACT ══════════ -->
   <ContactSection
     source="Homepage"
     returnPath="/"

@@ -126,6 +126,17 @@ const allProjects: Project[] = [
     tone: 'd3',
   },
   {
+    client: 'Tippa Payment Solutions',
+    deliverable:
+      'Cashless tipping platform for car guards: customer QR flow, wallet app, operations portal and automated bank reconciliation',
+    discipline: 'Custom platform build',
+    platform: 'Bespoke',
+    status: 'Live',
+    tone: 'd3',
+    metric: { value: '10', label: 'Sites live' },
+    study: 'tippa',
+  },
+  {
     client: 'Momentum',
     deliverable: 'GRC platform adoption under evaluation',
     discipline: 'Risk & compliance',

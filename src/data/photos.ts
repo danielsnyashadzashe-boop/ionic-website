@@ -7,6 +7,8 @@ import aiInterface from '@/assets/photos/ai-interface.jpg';
 import modelMonitoring from '@/assets/photos/model-monitoring.jpg';
 import deliveryTeam from '@/assets/photos/delivery-team.jpg';
 import programmeDelivery from '@/assets/photos/programme-delivery.jpg';
+import qrTip from '@/assets/photos/qr-tip.jpg';
+import customerMoment from '@/assets/photos/customer-moment.jpg';
 
 /**
  * Photography registry.
@@ -75,6 +77,20 @@ export const photos = {
     alt: 'A curved pedestrian bridge leading toward modern architecture at sunrise, overlaid with the words “Project Management” and a fine circular diagram.',
     caption:
       'Delivery is a sequence, not a launch. Each step exists to make the next one cheaper to get wrong.',
+    illustrative: true,
+  },
+  qrTip: {
+    src: qrTip,
+    alt: 'A hand holds a phone over a printed QR code, the camera framing the code ready to scan.',
+    caption:
+      'A tip takes one scan. No app to download, no account to create, and the payer sees who they are paying before they pay.',
+    illustrative: true,
+  },
+  customerMoment: {
+    src: customerMoment,
+    alt: 'A man sits at a table in a restaurant, seen from the side, reading a menu.',
+    caption:
+      'The gap Tippa closes is simple: the customer wants to tip and has no coins, so the money never moves.',
     illustrative: true,
   },
 } satisfies Record<string, Photo>;

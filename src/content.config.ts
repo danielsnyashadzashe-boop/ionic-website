@@ -73,8 +73,18 @@ const caseStudies = defineCollection({
     stage: z.enum(['Production', 'Pilot', 'Partner', 'Prospect']),
     order: z.number(),
     summary: z.string(),
-    quote: z.string(),
-    /** Company-attributed on the old site; no individual was ever named. */
+    /**
+     * Optional, because a study may be published before its quote has been
+     * cleared. The alternative is writing words for a client, which is not a
+     * thing we do. The testimonials section only renders entries that have
+     * one, so an empty quote is invisible rather than a hole in the page.
+     */
+    quote: z.string().optional(),
+    /**
+     * Company-attributed for every study carried over from the old site; no
+     * individual was ever named there. Where a named person has cleared a
+     * quote, this is "Name, Company".
+     */
     quoteAttribution: z.string(),
     highlights: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     featured: z.boolean().default(false),
