@@ -155,6 +155,27 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
               ))
             }
           </div>
+
+          {/* The Compass belongs to Process Genesis, so it is listed with the
+              platforms rather than as a sixth top-level nav item. Dashed
+              border marks it as a tool, not a product. */}
+          <a
+            href="/process-genesis/#compass"
+            class="mm-item group mt-2.5 flex items-center gap-3 rounded-lg border border-dashed border-line-strong p-3 transition-colors hover:border-primary/50 hover:bg-raised"
+            style="--i:5"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" class="shrink-0 text-primary transition-transform duration-500 group-hover:rotate-45" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4" />
+              <path d="m15.2 8.8-2 4.4-4.4 2 2-4.4z" fill="currentColor" />
+            </svg>
+            <span class="min-w-0">
+              <span class="block text-sm font-medium text-fg">Process Compass</span>
+              <span class="mt-0.5 block text-xs leading-relaxed text-fg-3">
+                Five questions about one of your processes · two minutes
+              </span>
+            </span>
+            <span class="ml-auto shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">Free</span>
+          </a>
         </div>
 
         <div class="lg:border-l lg:border-line lg:pl-8">
@@ -197,6 +218,13 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
         </a>
       ))
     }
+    <a href="/process-genesis/#compass" class="mob flex items-center gap-3 border-b border-line px-5 py-4" style="--i:5">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="shrink-0 text-primary" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4" />
+        <path d="m15.2 8.8-2 4.4-4.4 2 2-4.4z" fill="currentColor" />
+      </svg>
+      <span class="text-[0.9375rem] text-fg-2">Process Compass</span>
+    </a>
     <p class="mono-label px-5 pb-2 pt-6">Company</p>
     {
       [...links, { label: 'Contact', href: '/contact/' }].map((l, i) => (

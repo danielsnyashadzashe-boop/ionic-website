@@ -21,6 +21,7 @@ seoDescription: >-
 showMetrics: true
 photo: aiInterface
 homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
+compass: true
 capabilities:
   - name: Process discovery
     detail: >-

@@ -17,11 +17,18 @@ export default defineConfig({
     format: 'directory',
   },
 
+  // The Process Compass moved onto the platform it belongs to. This URL was
+  // shared before the move, so it redirects rather than 404s.
+  redirects: {
+    '/compass': '/process-genesis/#compass',
+  },
+
   integrations: [
     react(),
     sitemap({
-      // contact.php is a form handler, not a page.
-      filter: (page) => !page.includes('contact.php'),
+      // contact.php is a form handler, not a page. /compass/ is a redirect
+      // stub, and indexing it would compete with the page it points at.
+      filter: (page) => !page.includes('contact.php') && !page.includes('/compass/'),
     }),
   ],
 

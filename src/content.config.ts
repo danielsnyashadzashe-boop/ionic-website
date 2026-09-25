@@ -55,6 +55,17 @@ const products = defineCollection({
     showMetrics: z.boolean().default(false),
     homeProof: z.string(),
     photo: photo.optional(),
+    /**
+     * Places the Process Compass on this platform's page.
+     *
+     * The Compass asks five questions about one of your processes, which
+     * is Process Genesis's subject and nothing else's. It ran as a
+     * standalone /compass/ page, where it sat outside the product it
+     * belongs to and had to explain itself from scratch. A flag rather
+     * than a slug check in the template, so the template keeps knowing
+     * nothing about which platform is which.
+     */
+    compass: z.boolean().default(false),
   }),
 });
 
