@@ -1,19 +1,21 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'zod';
 import { glob } from 'astro/loaders';
+import { photos, type PhotoKey } from './data/photos';
 
 const tone = z.enum(['d1', 'd2', 'd3', 'd4', 'd5', 'd6']);
 
-/** Key into the photo registry in src/data/photos.ts. */
-const photo = z.enum([
-  'nightEngineering',
-  'analyticsBriefing',
-  'codeReview',
-  'aiInterface',
-  'modelMonitoring',
-  'deliveryTeam',
-  'programmeDelivery',
-]);
+/**
+ * Key into the photo registry.
+ *
+ * Read from the registry rather than retyped. This was a hand-maintained list
+ * of the same strings, and adding two photographs failed the build with a
+ * schema error that pointed at the content file rather than at the list that
+ * had not been updated. Now a new photo is usable the moment it is
+ * registered, and a typo in a content file still fails the build.
+ */
+const photoKeys = Object.keys(photos) as [PhotoKey, ...PhotoKey[]];
+const photo = z.enum(photoKeys);
 
 /**
  * Products. Four entries today; adding a fifth is a Markdown file, not a

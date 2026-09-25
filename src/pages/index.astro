@@ -16,6 +16,14 @@ import { site, contact, expertise } from '@/data/site';
 import { projectStats } from '@/data/projects';
 
 const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+
+/**
+ * The platforms heading used to hardcode "Four". Counting it means the page
+ * cannot end up claiming a number the collection disagrees with, and spelling
+ * it keeps the headline reading as prose rather than as a statistic.
+ */
+const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+const platformWord = WORDS[products.length] ?? String(products.length);
 const flagship = products.find((p) => p.data.flagship);
 const rest = products.filter((p) => !p.data.flagship);
 
@@ -180,8 +188,8 @@ const method = [
         <SectionHead
           n="02"
           marker="Platforms"
-          title="Four proprietary products,"
-          titleAccent="built for enterprise."
+          title={`${platformWord} platforms,`}
+          titleAccent="built and running."
           lede="Each solves a problem we kept meeting in consulting engagements. Each is deployed."
         />
         <a href="/case-studies/" class="link-u rise font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3" style="--step:3">

@@ -1,5 +1,12 @@
 ---
+import { getCollection } from 'astro:content';
 import { projectStats } from '@/data/projects';
+
+/**
+ * Counted, not typed. This said 4 while the collection held five, which is
+ * the sort of thing nobody notices until a reader does.
+ */
+const platformCount = (await getCollection('products')).length;
 
 /**
  * Slim status strip above the header.
@@ -14,7 +21,7 @@ const items = [
   { k: 'Engagements', v: String(projectStats.total) },
   { k: 'In production', v: String(projectStats.live) },
   { k: 'Regions', v: '5' },
-  { k: 'Platforms', v: '4' },
+  { k: 'Platforms', v: String(platformCount) },
   { k: 'Reply time', v: '< 1 business day' },
   { k: 'Sectors', v: '6' },
   { k: 'Faster processing', v: '85%' },
