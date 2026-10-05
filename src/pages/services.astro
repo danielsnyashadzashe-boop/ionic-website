@@ -3,6 +3,7 @@ import PageLayout from '@/layouts/PageLayout.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import ContactSection from '@/components/ContactSection.astro';
+import Glyph from '@/components/Glyph.astro';
 import { site } from '@/data/site';
 import { services, servicesByPillar, pillars } from '@/data/services';
 
@@ -102,11 +103,15 @@ const groups = [
 
           <div class="mt-20 space-y-0">
             {g.items.map((s, i) => (
-              <article id={s.slug} class="rise scroll-mt-20 border-t border-line py-12 md:py-16" style={`--step:${i}`}>
+              <article id={s.slug} class="rise scroll-mt-20 border-t border-line py-12 last:border-b md:py-16" style={`--step:${i}`}>
                 <div class="grid gap-8 lg:grid-cols-[0.38fr_1fr] lg:gap-16">
                   <div>
                     <span class="figure text-xs text-primary">{String(services.indexOf(s) + 1).padStart(2, '0')}</span>
                     <h3 class="mt-4 font-display text-[1.5rem] leading-snug text-fg">{s.name}</h3>
+                    {/* The column carried a number and a heading and then two
+                        hundred pixels of nothing. A motif per service reads as
+                        a decision rather than as a layout that lost something. */}
+                    <Glyph kind={s.glyph} class="glyph-lg mt-10 hidden lg:block" />
                   </div>
 
                   <div>

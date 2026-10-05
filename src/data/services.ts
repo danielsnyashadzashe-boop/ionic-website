@@ -14,6 +14,8 @@
 
 export interface Service {
   slug: string;
+  /** Animated motif in the left column. See Glyph.astro. */
+  glyph: 'strategy' | 'process' | 'change' | 'erp' | 'software' | 'ai' | 'run';
   pillar: 'business' | 'digital';
   name: string;
   summary: string;
@@ -39,6 +41,7 @@ export const pillars = {
 export const services: Service[] = [
   {
     slug: 'strategy',
+    glyph: 'strategy',
     pillar: 'business',
     name: 'Strategy and roadmap',
     summary:
@@ -52,6 +55,7 @@ export const services: Service[] = [
   },
   {
     slug: 'process',
+    glyph: 'process',
     pillar: 'business',
     name: 'Process redesign and automation',
     summary:
@@ -66,6 +70,7 @@ export const services: Service[] = [
   },
   {
     slug: 'change',
+    glyph: 'change',
     pillar: 'business',
     name: 'Change management and training',
     summary:
@@ -80,6 +85,7 @@ export const services: Service[] = [
   },
   {
     slug: 'erp',
+    glyph: 'erp',
     pillar: 'digital',
     name: 'ERP and operations platforms',
     summary:
@@ -94,6 +100,7 @@ export const services: Service[] = [
   },
   {
     slug: 'software',
+    glyph: 'software',
     pillar: 'digital',
     name: 'Custom software, apps and integration',
     summary:
@@ -108,6 +115,7 @@ export const services: Service[] = [
   },
   {
     slug: 'ai',
+    glyph: 'ai',
     pillar: 'digital',
     name: 'Data, AI and reporting',
     summary:
@@ -122,6 +130,7 @@ export const services: Service[] = [
   },
   {
     slug: 'run',
+    glyph: 'run',
     pillar: 'digital',
     name: 'Managed operations and support',
     summary:

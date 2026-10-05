@@ -122,12 +122,20 @@ const principles = [
             <article class="rise grid gap-10 lg:grid-cols-[0.32fr_1fr] lg:gap-16" style={`--step:${i}`}>
               <div class="lg:sticky lg:top-28 lg:self-start">
                 {/* Initials until a photograph exists. An empty frame reads as
-                    a broken image; a stock face would be a lie. */}
-                <div
-                  class="flex aspect-[4/5] w-full max-w-[13rem] items-center justify-center border border-line bg-raised"
-                  aria-hidden="true"
-                >
-                  <span class="figure text-[2.5rem] text-fg-4">{p.initials}</span>
+                    a broken image and a stock face would be a lie, so the
+                    placeholder is given a treatment of its own: corner ticks,
+                    a faint grid and a slow pass across it. It should look
+                    reserved, not unfinished. */}
+                <div class="portrait relative aspect-[4/5] w-full max-w-[13rem] overflow-hidden border border-line bg-raised" aria-hidden="true">
+                  <span class="portrait-grid"></span>
+                  <span class="portrait-scan"></span>
+                  <span class="portrait-tick" data-c="tl"></span>
+                  <span class="portrait-tick" data-c="tr"></span>
+                  <span class="portrait-tick" data-c="bl"></span>
+                  <span class="portrait-tick" data-c="br"></span>
+                  <span class="absolute inset-0 flex items-center justify-center">
+                    <span class="figure text-[2.5rem] text-fg-4">{p.initials}</span>
+                  </span>
                 </div>
 
                 <h2 class="mt-6 font-display text-[1.375rem] leading-snug text-fg">{p.name}</h2>
@@ -259,3 +267,48 @@ const principles = [
     lede="Thirty minutes with someone who has done this at enterprise scale. You leave with a clearer view of where to start, whether or not we work together."
   />
 </PageLayout>
+
+<style>
+  /* Faint measured grid, so the frame reads as a reserved slot. */
+  .portrait-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 25% 20%;
+    opacity: 0.45;
+  }
+
+  /* One slow pass, long gap between. Anything faster reads as a loading bar. */
+  .portrait-scan {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 28%;
+    background: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--primary) 14%, transparent), transparent);
+    animation: portrait-pass 9s ease-in-out infinite;
+  }
+  @keyframes portrait-pass {
+    0%, 8% { transform: translateY(-100%); }
+    42%, 100% { transform: translateY(360%); }
+  }
+
+  .portrait-tick {
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1px solid var(--accent-warm);
+    opacity: 0.55;
+    transition: opacity 0.4s;
+  }
+  .portrait-tick[data-c='tl'] { top: 0.5rem; left: 0.5rem; border-right: 0; border-bottom: 0; }
+  .portrait-tick[data-c='tr'] { top: 0.5rem; right: 0.5rem; border-left: 0; border-bottom: 0; }
+  .portrait-tick[data-c='bl'] { bottom: 0.5rem; left: 0.5rem; border-right: 0; border-top: 0; }
+  .portrait-tick[data-c='br'] { bottom: 0.5rem; right: 0.5rem; border-left: 0; border-top: 0; }
+  .portrait:hover .portrait-tick { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portrait-scan { animation: none; opacity: 0; }
+  }
+</style>
