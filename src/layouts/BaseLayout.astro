@@ -205,6 +205,23 @@ const schemaList = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
         cursorLight();
       });
     </script>
+  
+<script>
+  /**
+   * Record where this visit came from, on every page, as early as possible.
+   *
+   * This used to happen inside the contact form, which is a React island
+   * loaded when it scrolls into view. That meant a visitor who arrived on a
+   * case study from LinkedIn and then clicked through to /contact/ was logged
+   * as "direct": the referrer only exists on the page it referred to, and by
+   * the time the form woke up that page was gone.
+   *
+   * First touch wins, so running it everywhere costs nothing after the first
+   * page of a visit.
+   */
+  import { getAttribution } from '@/lib/attribution';
+  getAttribution();
+</script>
   </body>
 </html>
 

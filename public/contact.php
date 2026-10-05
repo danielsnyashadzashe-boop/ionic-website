@@ -27,8 +27,19 @@ declare(strict_types=1);
 @ini_set('log_errors', '1');
 error_reporting(E_ALL);
 
+/**
+ * TEAM: point this at the dedicated enquiries mailbox once it exists.
+ * Everything from the website should land somewhere a person owns and
+ * works through, not in the general inbox alongside invoices.
+ */
 const RECIPIENT     = 'info@ionicinnovate.com';
-const SUBJECT       = 'New enquiry from ionicinnovate.com';
+
+/**
+ * The subject carries the topic and the source, so the inbox can be
+ * filtered and counted before there is anywhere better to put a lead.
+ * Built per message rather than fixed; see $subject below.
+ */
+const SUBJECT_PREFIX = 'Website enquiry';
 const MIN_FILL_SECS = 3;   // Humans need at least a few seconds to fill the form.
 const MAX_FORM_AGE  = 7200; // Ignore a stamp older than two hours (stale tab).
 
@@ -120,12 +131,26 @@ $TOPICS  = [
     'consulting' => 'A transformation or automation project',
     'demo'       => 'A Process Genesis demo',
     'compass'    => 'A process mapped on the site',
+    'taster'     => 'The Process Genesis taster',
     'build'      => 'An ERP, platform or app build',
     'investor'   => 'An investor enquiry',
     'other'      => 'Something else',
 ];
 $region = $REGIONS[(string)($_POST['region'] ?? '')] ?? '(not given)';
 $topic  = $TOPICS[(string)($_POST['topic'] ?? '')] ?? '(not given)';
+
+/**
+ * Where the visit came from, stamped by the browser. Attacker-controlled,
+ * so it is stripped to a short safe set before it goes anywhere near a
+ * mail header or the body.
+ */
+$attribution = preg_replace('/[^A-Za-z0-9 .\-\/|=_]/', '', (string)($_POST['attribution'] ?? ''));
+$attribution = trim(mb_substr($attribution, 0, 300));
+if ($attribution === '') { $attribution = '(not captured)'; }
+
+/** First token of the source, for the subject line. */
+$sourceTag = 'direct';
+if (preg_match('/source=([A-Za-z0-9.\-]{1,40})/', $attribution, $m)) { $sourceTag = $m[1]; }
 $message = trim(mb_substr((string)($_POST['message'] ?? ''), 0, 5000));
 
 if ($name === '' || $email === '' || $message === '') {
@@ -149,6 +174,7 @@ $body = "New contact form enquiry\n"
     . "Region:  {$region}\n"
     . "About:   {$topic}\n"
     . "Page:    " . ($source !== '' ? $source : 'Unknown') . "\n"
+    . "Source:  {$attribution}\n"
     . "Sent:    " . gmdate('Y-m-d H:i:s') . " UTC\n"
     . "IP:      " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n"
     . str_repeat('-', 40) . "\n\n"
@@ -170,10 +196,14 @@ $headers = [
     'Content-Type: text/plain; charset=UTF-8',
 ];
 
+// Topic and source in the subject so the mailbox is sortable from day one,
+// and so counting leads by channel needs no tooling.
+$subject = SUBJECT_PREFIX . ' [' . $topic . '] via ' . $sourceTag;
+
 // Suppressed because a transport failure is handled below, not printed.
 $sent = @mail(
     RECIPIENT,
-    '=?UTF-8?B?' . base64_encode(SUBJECT) . '?=',
+    '=?UTF-8?B?' . base64_encode($subject) . '?=',
     $body,
     implode("\r\n", $headers)
 );

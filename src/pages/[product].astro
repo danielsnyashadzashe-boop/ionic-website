@@ -9,6 +9,8 @@ import ContactSection from '@/components/ContactSection.astro';
 import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import Compass from '@/components/Compass.astro';
 import CompassPreview from '@/components/CompassPreview.astro';
+import TasterEmbed from '@/components/TasterEmbed.astro';
+import { taster } from '@/data/site';
 import { site, metrics, metricsNote } from '@/data/site';
 
 /**
@@ -380,6 +382,29 @@ const schema = [
               <p class="font-mono text-[0.6875rem] text-fg-4">Runs in your browser · nothing is stored</p>
             </div>
             <Compass />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ══ TASTER ════════════════════════════════════════════════════════ -->
+  {/* The deeper version of the Compass above: the real platform, running on
+      your own process, rather than our rule of thumb about it. Renders
+      nothing at all until the PG host is configured. */}
+  {
+    d.compass && taster.host && (
+      <section id="taster" class="border-t border-line scroll-mt-20">
+        <div class="shell py-32 md:py-44">
+          <SectionHead
+            marker="Run the real thing"
+            title="Five questions,"
+            titleAccent="and the platform answers."
+            lede={`The Compass above is our rule of thumb. This is ${d.name} itself: describe one process and it draws how it runs today against the improved flow, then generates a preview of the system behind it. It takes about a minute to think, which is the honest cost of it being real.`}
+          />
+
+          <div class="mt-20">
+            <TasterEmbed contactPath="/contact/?topic=taster" />
           </div>
         </div>
       </section>

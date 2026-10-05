@@ -1554,3 +1554,168 @@ rather than rediscovered as a gap.
 | Ticket | Status |
 |---|---|
 | WEB-12 | **Partly done.** Enquiries now carry region and topic, so investor enquiries are distinguishable at the point of arrival. Routing them to a different inbox is still open. |
+
+---
+
+## K. Leads, the taster and the CRM
+
+From Reneil, 5 October: embed the Process Genesis taster, no calendar on the
+website, a dedicated mailbox people write to and we call back, leads tagged
+as coming from the website, fed into the marketing tool so timelines can be
+tracked, and a view of where most leads come from.
+
+What landed on our side in this round: first-touch attribution on every page
+and in every enquiry, a taster socket that routes to a conversation instead
+of a calendar, and a topic on the form for people arriving from the taster.
+These are the rest.
+
+---
+
+### WEB-69 · A dedicated enquiries mailbox
+
+**Type** Task  **Priority** High  **Epic** EP-2  **Needs** Nyasha
+
+Everything still goes to `info@ionicinnovate.com`, which is also where
+invoices and general post arrive. The brief asks for a mailbox people engage
+with and someone works through.
+
+The subject line now carries the topic and the source, so it is already
+sortable, but a filter on a shared inbox is not an owner.
+
+**Acceptance criteria**
+
+- [ ] A dedicated address exists with a named owner
+- [ ] `RECIPIENT` in `public/contact.php` points at it
+- [ ] An agreed response path: who replies, within what time, who calls back
+
+**Where** `public/contact.php`, the TEAM note above `RECIPIENT`
+
+---
+
+### WEB-70 · Deploy and enable the taster, then set the host
+
+**Type** Task  **Priority** High  **Epic** EP-2  **Needs** Backend, Nyasha
+
+`TasterEmbed.astro` is built and renders nothing until `taster.host` is set,
+which is deliberate: an iframe pointed at a host that does not answer is a
+broken box on a live page.
+
+Three things have to be true first, all on the PG side. `TASTER_ENABLED=true`.
+A real API-key provider, because their own notes forbid serving the public
+with `claude_code` on a personal Claude subscription. And the deployment has
+to be publicly reachable over https, serving `/taster.html`,
+`/taster-embed.js` and proxying `/api/taster/`.
+
+Two numbers worth agreeing before it goes live. Each run makes two AI calls
+we pay for, capped at 3 per IP per hour and 200 per day. And it takes 39 to
+57 seconds end to end, up to 101 seconds under concurrency, which is a long
+time to hold someone on a marketing page.
+
+**Acceptance criteria**
+
+- [ ] PG deployment reachable and the taster enabled with an API-key provider
+- [ ] `taster.host` set in `src/data/site.ts`
+- [ ] Booking CTA verified not to open a calendar (we pass `?book=message`)
+- [ ] A run completed end to end from the live site
+
+---
+
+### WEB-71 · The taster's call to action still says "Book a walkthrough"
+
+**Type** Bug  **Priority** High  **Epic** EP-2  **Component** PG repo
+**Needs** Whoever owns `website/pg-taster`
+
+We pass `?book=message`, which stops the frame opening a booking URL in a new
+tab and makes it post an event instead. We catch that and send the visitor to
+our contact form.
+
+The label does not change. The button inside the frame still reads **"Book a
+30-minute walkthrough"** next to a calendar icon, and no query parameter
+alters it. So the page says calendar and does mailbox, which is worse than
+either.
+
+**Acceptance criteria**
+
+- [ ] In `?book=message` mode the button reads something like "Tell us about
+      this process" with a non-calendar icon
+- [ ] Verified in our embed
+
+**Where** `frontend/vite-project/src/taster/Reveal.jsx`, around line 54
+
+---
+
+### WEB-72 · The taster records no lead source at all
+
+**Type** Bug  **Priority** Blocker  **Epic** EP-2  **Component** PG repo
+**Needs** Whoever owns `website/pg-taster`
+
+The brief's central question is where leads come from. A taster lead stores
+id, timestamp, name, email, company, phone, consent, consent text and the
+visitor's answers. **There is no source, no campaign, no referrer and no
+landing page**, and nothing in `taster.py`, `taster_api.py` or
+`taster_model.py` reads any.
+
+So every lead that comes through the taster is unattributable, and the
+question cannot be answered for exactly the channel we are about to promote.
+
+We already compute this on our side. The cheapest fix is for the embed to
+accept it and pass it through: our page knows the attribution, the frame can
+take it as a query parameter and include it in the `/lead` body.
+
+**Acceptance criteria**
+
+- [ ] `/api/taster/lead` accepts an optional `source` string, sanitised and
+      capped like the other fields
+- [ ] It is stored on the lead and shown in the bell row
+- [ ] `taster.html` reads it from its own query string so the embedding page
+      can supply it
+- [ ] Our `TasterEmbed` passes `attributionLine()` through
+
+---
+
+### WEB-73 · Decide where leads actually live
+
+**Type** Spike  **Priority** High  **Epic** EP-2  **Needs** Nyasha, Vashen Mooniyen
+
+The brief asks for leads in the marketing tool with timelines, and asks
+whether anyone has built a CRM. Nobody has answered that yet, and until
+somebody does there are three half-places a lead can sit: an inbox, the
+taster's JSONB document in the website org, and whatever the marketing tool
+is.
+
+Worth settling before more plumbing is built, because each of those three is
+a different integration.
+
+**Decision needed on**
+
+- [ ] Whether a CRM exists or is being built, and by whom
+- [ ] Which system is the system of record for a lead
+- [ ] Whether taster leads and form leads land in the same place
+- [ ] What "track timelines" means: first contact, response, call booked, won
+
+---
+
+### WEB-74 · Land the taster as its own pull request, not the branch compare
+
+**Type** Task  **Priority** Medium  **Epic** EP-3  **Component** PG repo
+**Needs** Whoever owns `website/pg-taster`
+
+The compare link we were sent is `main...website/pg-taster`: **88 commits
+ahead, 152 behind, 300 files**, from a merge base dated 21 September. Only 8
+of those 88 commits are the taster. The rest are design, operate, strategy,
+agents, pm, sourcing and control-room work.
+
+Opening it as one pull request asks for a review of twelve workstreams at
+once, which in practice means no review.
+
+The 8 taster commits touch an almost disjoint set of files, so they cherry-
+pick onto main cleanly: `backend/taster*.py`, `frontend/vite-project/src/taster/`,
+`taster.html`, `taster-embed.js`, `docs/website/TASTER.md`, plus small edits
+to `main.py`, `notifications.py`, `tokens.css`, `vite.config.js` and the
+route inventory. About 25 files instead of 300.
+
+**Acceptance criteria**
+
+- [ ] The 8 taster commits land on a branch cut from current main
+- [ ] That branch is the pull request
+- [ ] The rest of `website/pg-taster` is reviewed separately or abandoned

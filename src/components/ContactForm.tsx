@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { getAttribution, attributionLine } from '@/lib/attribution';
 
 /**
  * Contact form.
@@ -48,6 +49,7 @@ const TOPICS = [
   { value: 'consulting', label: 'A transformation or automation project' },
   { value: 'demo', label: 'A Process Genesis demo' },
   { value: 'compass', label: 'A process I mapped on your site' },
+  { value: 'taster', label: 'The Process Genesis taster I just ran' },
   { value: 'build', label: 'An ERP, platform or app build' },
   { value: 'investor', label: 'An investor enquiry' },
   { value: 'other', label: 'Something else' },
@@ -65,7 +67,19 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
   const [staged, setStaged] = useState(false);
   useEffect(() => setStaged(true), []);
   const formRef = useRef<HTMLFormElement>(null);
-  const tsRef = useRef<HTMLInputElement>(null);
+
+  /**
+   * Both hidden stamps are React state rather than refs written in an effect.
+   *
+   * They were refs. A ref assignment puts the value on the DOM node, and the
+   * next render of an uncontrolled input with `defaultValue=""` puts it back
+   * to empty. Nothing re-rendered this form before, so the bug was invisible;
+   * adding the region and topic prefill introduced a render and both stamps
+   * started arriving blank. The time trap had quietly stopped working with
+   * it, because the handler skips the check when the stamp is absent.
+   */
+  const [formTs, setFormTs] = useState('');
+  const [attribution, setAttribution] = useState('');
 
   // Preselected from the link that brought them here, after mount so a
   // cached page does not serve someone else's selection.
@@ -79,10 +93,25 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
     if (t && TOPICS.some((o) => o.value === t)) setTopic(t);
   }, []);
 
+  /**
+   * Where this visit came from, stamped after mount.
+   *
+   * Set on the client only: the page is static, so a value rendered at build
+   * time would be the same for every visitor. An empty string is a perfectly
+   * acceptable outcome, and never blocks the submission.
+   */
+  useEffect(() => {
+    try {
+      setAttribution(attributionLine(getAttribution()));
+    } catch {
+      /* attribution is a nice-to-have; the enquiry is not */
+    }
+  }, []);
+
   // Stamped client-side, as the handler expects. Set after mount so a cached
   // page does not submit a stale timestamp.
   useEffect(() => {
-    if (tsRef.current) tsRef.current.value = String(Math.floor(Date.now() / 1000));
+    setFormTs(String(Math.floor(Date.now() / 1000)));
   }, []);
 
   // Surface the result of a no-JS submission (handler redirects with a flag).
@@ -138,7 +167,8 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
 
       if (parsed?.ok) {
         form.reset();
-        if (tsRef.current) tsRef.current.value = String(Math.floor(Date.now() / 1000));
+        // Restamp, so a second enquiry from the same tab is not read as instant.
+        setFormTs(String(Math.floor(Date.now() / 1000)));
         setStatus({ kind: 'sent', message: `Thanks, we'll reply within one business day.` });
       } else {
         setStatus({
@@ -195,7 +225,8 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
       {/* Handler contract: do not rename */}
       <input type="hidden" name="source" value={source} />
       <input type="hidden" name="return" value={returnPath} />
-      <input ref={tsRef} type="hidden" name="form_ts" defaultValue="" />
+      <input type="hidden" name="form_ts" value={formTs} readOnly />
+      <input type="hidden" name="attribution" value={attribution} readOnly />
 
       {/* Honeypot: hidden from people, irresistible to bots */}
       <div className="absolute h-0 w-0 overflow-hidden" aria-hidden="true">
