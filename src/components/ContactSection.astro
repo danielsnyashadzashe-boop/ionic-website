@@ -25,9 +25,9 @@ const {
 } = Astro.props;
 
 const facts = [
-  { label: 'Email', value: contact.email, href: `mailto:${contact.email}`, mono: true },
+  { label: 'Email', value: contact.email, href: `mailto:${contact.email}`, mono: true, copy: true },
   ...(showInvestor
-    ? [{ label: 'Investment', value: contact.investorEmail, href: `mailto:${contact.investorEmail}`, mono: true }]
+    ? [{ label: 'Investment', value: contact.investorEmail, href: `mailto:${contact.investorEmail}`, mono: true, copy: true }]
     : []),
   { label: 'Locations', value: localityLine, mono: false },
   { label: 'Reply time', value: `A real person, ${site.responseTime}`, mono: false },
@@ -72,13 +72,24 @@ const facts = [
           facts.map((f, i) => (
             <div class="rise px-5 py-4" style={`--step:${i}`}>
               <dt class="mono-label">{f.label}</dt>
-              <dd class="mt-1.5">
+              <dd class="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 {f.href ? (
                   <a href={f.href} class:list={['link-u text-[0.9375rem]', f.mono && 'font-mono text-[0.875rem]']}>
                     {f.value}
                   </a>
                 ) : (
                   <span class="text-[0.9375rem] text-fg-3">{f.value}</span>
+                )}
+                {/* mailto: is unreliable for anyone without a mail client
+                    configured, so the address is also copyable. */}
+                {f.copy && (
+                  <button
+                    type="button"
+                    class="copy-addr font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4 transition-colors hover:text-primary"
+                    data-copy={f.value}
+                  >
+                    Copy
+                  </button>
                 )}
               </dd>
             </div>
@@ -92,3 +103,25 @@ const facts = [
     </div>
   </div>
 </section>
+
+<script>
+  /**
+   * Copy the address to the clipboard.
+   *
+   * writeText is refused in some embedded views, so the rejection is caught
+   * and the button says so rather than silently claiming success.
+   */
+  document.querySelectorAll<HTMLButtonElement>('.copy-addr').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const value = btn.dataset.copy ?? '';
+      const original = btn.textContent;
+      try {
+        await navigator.clipboard.writeText(value);
+        btn.textContent = 'Copied';
+      } catch {
+        btn.textContent = 'Select it';
+      }
+      window.setTimeout(() => (btn.textContent = original), 2000);
+    });
+  });
+</script>

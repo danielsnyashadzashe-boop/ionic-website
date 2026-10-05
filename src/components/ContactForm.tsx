@@ -31,6 +31,28 @@ interface Props {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * Where the enquiry is coming from and what it is about.
+ *
+ * Both are preselected from `?region=` and `?topic=` so a CTA can arrive
+ * pre-qualified: the Canada page sends `?region=ca`, the Compass sends
+ * `?topic=compass`. Two fewer things to ask on the call.
+ */
+const REGIONS = [
+  { value: 'za', label: 'South Africa' },
+  { value: 'ca', label: 'Canada' },
+  { value: 'other', label: 'Elsewhere' },
+] as const;
+
+const TOPICS = [
+  { value: 'consulting', label: 'A transformation or automation project' },
+  { value: 'demo', label: 'A Process Genesis demo' },
+  { value: 'compass', label: 'A process I mapped on your site' },
+  { value: 'build', label: 'An ERP, platform or app build' },
+  { value: 'investor', label: 'An investor enquiry' },
+  { value: 'other', label: 'Something else' },
+] as const;
+
 export default function ContactForm({ source, returnPath, action = '/contact.php', email }: Props) {
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -44,6 +66,18 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
   useEffect(() => setStaged(true), []);
   const formRef = useRef<HTMLFormElement>(null);
   const tsRef = useRef<HTMLInputElement>(null);
+
+  // Preselected from the link that brought them here, after mount so a
+  // cached page does not serve someone else's selection.
+  const [region, setRegion] = useState<string>('za');
+  const [topic, setTopic] = useState<string>('consulting');
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const r = q.get('region');
+    const t = q.get('topic');
+    if (r && REGIONS.some((o) => o.value === r)) setRegion(r);
+    if (t && TOPICS.some((o) => o.value === t)) setTopic(t);
+  }, []);
 
   // Stamped client-side, as the handler expects. Set after mount so a cached
   // page does not submit a stale timestamp.
@@ -194,9 +228,43 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
             </Field>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-5 grid gap-5 sm:grid-cols-2">
             <Field id="company" label="Company" hint="optional">
               <Input id="company" name="company" autoComplete="organization" maxLength={150} />
+            </Field>
+
+            <Field id="region" label="Where are you based?">
+              <select
+                id="region"
+                name="region"
+                className={"h-8 w-full min-w-0 appearance-none rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"}
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+              >
+                {REGIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <div className="mt-5">
+            <Field id="topic" label="What would you like to talk about?">
+              <select
+                id="topic"
+                name="topic"
+                className={"h-8 w-full min-w-0 appearance-none rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"}
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {TOPICS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
             </Field>
           </div>
         </div>

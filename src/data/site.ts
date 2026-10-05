@@ -147,6 +147,38 @@ export const compliance = [
   },
 ] as const;
 
+/**
+ * Industries we see most often.
+ *
+ * Deliberately separate from a region's `sectors`, which lists only where
+ * there is delivered work behind the name. This is the broader list, and the
+ * pages that show it say which is which. Conflating the two would turn
+ * "we have done this" into "we would take this on".
+ */
+export const industries = [
+  'Construction and fabrication',
+  'Manufacturing',
+  'Energy and resources',
+  'Financial services and insurance',
+  'Healthcare and professional practices',
+  'Professional services',
+  'Logistics and distribution',
+  'Retail and consumer',
+  'Trades and field services',
+  'Events and hospitality',
+] as const;
+
+/**
+ * Experience the team brings from before Ionic.
+ *
+ * Sectors and continents only. The named clients behind this belong to former
+ * employers, and listing them next to our own client work would read as ours.
+ */
+export const priorExperience = {
+  sectors: ['mining', 'energy', 'financial services', 'consumer goods', 'healthcare'],
+  regions: ['Canada', 'Africa', 'Europe', 'Australia'],
+} as const;
+
 export const expertise = [
   'Digital transformation',
   'Business process automation',

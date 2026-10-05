@@ -29,6 +29,16 @@ export interface Region {
   leadLine: string;
   /** Cities we can genuinely claim, used for `areaServed`. */
   cities: string[];
+  /** Reached from the core, named for search rather than claimed as offices. */
+  alsoServing: string[];
+  /**
+   * Postal node for the service schema. Region and country only: local search
+   * reads this even without a street address, and inventing one would be
+   * worse than leaving it partial.
+   */
+  address: { addressRegion?: string; addressCountry: string };
+  /** Headline figures scoped to this market. */
+  proof: { value: string; label: string }[];
   /** Sectors with real delivered work behind them in this market. */
   sectors: string[];
   /** Case study slugs to surface, in order. */
@@ -56,7 +66,14 @@ export const regions: Region[] = [
       'Our head office is in Alberta and our founder runs delivery from here. The full journey, from strategy and process work through to ERP, custom software and the people who keep it running.',
     leadName: 'Reneil Harilall',
     leadLine: 'Founder and Global CEO, based in Alberta',
-    cities: ['Calgary', 'Edmonton', 'Red Deer', 'Lethbridge'],
+    cities: ['Calgary', 'Edmonton', 'Red Deer', 'Lethbridge', 'Medicine Hat'],
+    alsoServing: ['Vancouver', 'Saskatoon', 'Regina', 'Winnipeg', 'Toronto', 'Ottawa', 'Montreal'],
+    address: { addressRegion: 'AB', addressCountry: 'CA' },
+    proof: [
+      { value: '16 → 1', label: 'Business functions onto one platform at the Kruse Group' },
+      { value: 'Removed', label: 'Vendor lock-in on the Kruse commercial operation' },
+      { value: '20', label: 'Doctors in the ExpenseFlow pilot' },
+    ],
     sectors: ['Construction and fabrication', 'Professional services', 'Healthcare administration'],
     studies: ['kruse-group'],
     alsoHere: ['Canadian medical group', 'Two Canadian accounting firms', 'Niche Consulting'],
@@ -100,6 +117,14 @@ export const regions: Region[] = [
     leadName: 'Rabind Deoraj',
     leadLine: 'CEO, South Africa',
     cities: ['Johannesburg', 'Cape Town', 'Durban', 'Pretoria'],
+    alsoServing: ['Gqeberha', 'Bloemfontein'],
+    address: { addressCountry: 'ZA' },
+    proof: [
+      { value: '8 mo → <1', label: 'Analysis per process at Sirago, Old Mutual Group' },
+      { value: '10 days', label: 'To onboard a new client at Depot in Durban' },
+      { value: '50%+', label: 'Below the closest competing quote on that ERP build' },
+      { value: 'National', label: 'Tippa live countrywide' },
+    ],
     sectors: [
       'Insurance',
       'Manufacturing',

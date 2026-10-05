@@ -74,6 +74,22 @@ const products = defineCollection({
      * answers are the content, not SEO filler: a question nobody asks does
      * not belong here.
      */
+    /**
+     * The arc a piece of work travels through the platform.
+     *
+     * Different cut from `capabilities`: that says what the product contains,
+     * this says what happens to your process, in order. Buyers follow the
+     * second more readily than the first.
+     */
+    journey: z
+      .array(z.object({ stage: z.string(), name: z.string(), detail: z.string() }))
+      .default([]),
+    /** Who gets what out of it, answered per audience rather than in general. */
+    audiences: z
+      .array(z.object({ who: z.string(), name: z.string(), detail: z.string() }))
+      .default([]),
+    /** Set where a product demo video should appear. */
+    video: z.boolean().default(false),
     faqs: z
       .array(z.object({ q: z.string(), a: z.string() }))
       .default([]),

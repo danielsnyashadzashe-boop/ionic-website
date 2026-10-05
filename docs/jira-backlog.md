@@ -1436,3 +1436,121 @@ domain in search and split the ranking.
 | WEB-16 | **Superseded.** Regional pages now carry sector lists with real work behind them. Per-industry pages remain worth doing, but are no longer the gap they were. |
 | WEB-07 | **Partly done.** Alberta head office and the South African city list are published. Phone numbers and street addresses are still outstanding. |
 | WEB-04 | **Partly done.** The metrics now carry their basis wherever they appear. Attribution to a named engagement is still outstanding. |
+
+---
+
+## J. Local search and citations
+
+From the parallel build's handover. None of this is site work, and the
+handover is blunt that the site alone will not get us into the top three
+without it.
+
+---
+
+### WEB-63 · Google Business Profile for each region
+
+**Type** Task  **Priority** High  **Epic** EP-7  **Component** Marketing
+**Needs** Nyasha
+
+Named as the single biggest lever for local results in Calgary, Edmonton,
+Johannesburg, Cape Town and Durban, and it costs nothing. One profile for
+Alberta and one for South Africa, the South African one set up as a
+service-area business covering the country with the address hidden if there
+is no client-facing office. Category "Business management consultant" or
+"Software company".
+
+**Acceptance criteria**
+
+- [ ] Both profiles created and verified
+- [ ] Categories, service areas and descriptions complete
+- [ ] Profiles kept in step with the site's NAP once WEB-07 lands
+
+---
+
+### WEB-64 · Ask every client for a Google review
+
+**Type** Task  **Priority** Medium  **Epic** EP-7  **Component** Commercial
+**Needs** Relationship owners
+
+Depends on WEB-63. Reviews are the other half of what moves local ranking,
+and we are asking the same people already being asked for quotes in WEB-29,
+so the two should go out together rather than as separate requests.
+
+---
+
+### WEB-65 · Location pages for cities we genuinely serve
+
+**Type** Story  **Priority** Medium  **Epic** EP-4  **Component** Frontend, Content
+**Needs** Nyasha
+
+Start with Calgary and Edmonton, then Toronto and Vancouver as Canadian work
+grows, plus Johannesburg, Cape Town and Durban.
+
+The warning in the handover is the important half: each page needs genuinely
+local content, a local client, local sectors, someone on the ground. Thin
+duplicated city pages are discounted, so a page without local substance is
+worse than no page. The regional template added in this round is the right
+place to extend from.
+
+**Acceptance criteria**
+
+- [ ] A city is only given a page when there is something local to say
+- [ ] Each page carries a local client or a named person
+- [ ] No page is a find-and-replace of another
+
+---
+
+### WEB-66 · Directory listings and citations
+
+**Type** Task  **Priority** Medium  **Epic** EP-7  **Component** Marketing
+**Needs** Nyasha
+
+Clutch, GoodFirms, Calgary Economic Development, Edmonton Global, Alberta
+Innovates, the Johannesburg, Cape and Durban chambers of commerce, South
+African tech directories and Women in Tech community pages. Also worth asking
+clients for a "technology partner" link from their own site.
+
+**Acceptance criteria**
+
+- [ ] Listed on at least five, with consistent NAP across all of them
+- [ ] Blocked on WEB-07, since the details have to be right before they are
+      copied across the internet
+
+---
+
+### WEB-67 · Content cadence with buyer-question articles
+
+**Type** Story  **Priority** Medium  **Epic** EP-5  **Component** Content
+**Needs** Nyasha
+
+Pairs with WEB-30, which asks for a cadence. This supplies the first five
+titles, each aimed at a question a buyer actually types:
+
+- How much does a custom ERP cost in Alberta?
+- ERP versus a custom operations platform for construction companies
+- What process mapping actually involves, and what it should cost
+- POPIA-compliant automation: what to check before you start
+- Bookkeeping for Alberta physicians: what can be automated
+
+Two a month. Each one has a client engagement behind it already, which is
+what makes them writable rather than generic.
+
+---
+
+### WEB-68 · Image format and dimensions discipline
+
+**Type** Task  **Priority** Low  **Epic** EP-6  **Component** Frontend
+**Needs** Frontend
+
+The handover asks for WebP or AVIF with explicit width and height on every
+photograph. Already true here: `astro:assets` emits AVIF and WebP at four
+widths with intrinsic dimensions set. Raised so it can be closed as done
+rather than rediscovered as a gap.
+
+---
+
+## Also closed by this round
+
+| Ticket | Status |
+|---|---|
+| WEB-12 | **Partly done.** Enquiries now carry region and topic, so investor enquiries are distinguishable at the point of arrival. Routing them to a different inbox is still open. |

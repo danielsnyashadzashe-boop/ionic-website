@@ -108,6 +108,24 @@ $name    = clean((string)($_POST['name'] ?? ''), 100);
 $email   = clean((string)($_POST['email'] ?? ''), 150);
 $company = clean((string)($_POST['company'] ?? ''), 150);
 $source  = clean((string)($_POST['source'] ?? ''), 100);
+
+/**
+ * Region and topic come from <select>s, so they are validated against the
+ * allowed values rather than merely cleaned. A select is trivially forged;
+ * anything unrecognised is recorded as not given rather than echoed into
+ * the mail body, which is also where header injection would start.
+ */
+$REGIONS = ['za' => 'South Africa', 'ca' => 'Canada', 'other' => 'Elsewhere'];
+$TOPICS  = [
+    'consulting' => 'A transformation or automation project',
+    'demo'       => 'A Process Genesis demo',
+    'compass'    => 'A process mapped on the site',
+    'build'      => 'An ERP, platform or app build',
+    'investor'   => 'An investor enquiry',
+    'other'      => 'Something else',
+];
+$region = $REGIONS[(string)($_POST['region'] ?? '')] ?? '(not given)';
+$topic  = $TOPICS[(string)($_POST['topic'] ?? '')] ?? '(not given)';
 $message = trim(mb_substr((string)($_POST['message'] ?? ''), 0, 5000));
 
 if ($name === '' || $email === '' || $message === '') {
@@ -128,6 +146,8 @@ $body = "New contact form enquiry\n"
     . "Name:    {$name}\n"
     . "Email:   {$email}\n"
     . "Company: " . ($company !== '' ? $company : '(not given)') . "\n"
+    . "Region:  {$region}\n"
+    . "About:   {$topic}\n"
     . "Page:    " . ($source !== '' ? $source : 'Unknown') . "\n"
     . "Sent:    " . gmdate('Y-m-d H:i:s') . " UTC\n"
     . "IP:      " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n"

@@ -221,6 +221,86 @@ const schema = [
     </div>
   </section>
 
+  <!-- ══ JOURNEY ═══════════════════════════════════════════════════════ -->
+  {/* Capabilities say what the platform contains. This says what happens to
+      your process, in order, which is the thing a buyer follows. */}
+  {
+    d.journey.length > 0 && (
+      <section id="journey" class="border-t border-line scroll-mt-20">
+        <div class="shell py-32 md:py-44">
+          <SectionHead
+            marker="What it does"
+            title="The whole journey,"
+            titleAccent="in one place."
+            lede="Most programmes stitch this together from workshops, a deck, a mapping tool, a requirements tool and a project tracker. Each handover is somewhere meaning gets lost."
+          />
+
+          <ol class="mt-20 space-y-0">
+            {d.journey.map((j, i) => (
+              <li
+                class="rise group grid gap-5 border-b border-line py-8 transition-colors duration-500 hover:border-primary md:grid-cols-[0.14fr_0.3fr_1fr] md:gap-10"
+                style={`--step:${i}`}
+              >
+                <span class="figure text-xs text-primary">{String(i + 1).padStart(2, '0')}</span>
+                <span class="mono-label self-baseline">{j.stage}</span>
+                <div>
+                  <h3 class="font-display text-lg text-fg">{j.name}</h3>
+                  <p class="mt-2.5 text-[0.9375rem] leading-relaxed text-fg-3">{j.detail}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ══ AUDIENCES ═════════════════════════════════════════════════════ -->
+  {
+    d.audiences.length > 0 && (
+      <section class="border-t border-line">
+        <div class="shell py-32 md:py-44">
+          <SectionHead marker="Who it is for" title="Business and IT, working from the same picture" />
+
+          <div class="mt-20 grid gap-px overflow-hidden border border-line bg-line-strong md:grid-cols-3">
+            {d.audiences.map((a, i) => (
+              <article class="rise bg-base p-8 md:p-10" style={`--step:${i}`}>
+                <p class="mono-label">{a.who}</p>
+                <h3 class="mt-5 font-display text-xl leading-snug text-fg">{a.name}</h3>
+                <p class="mt-3.5 text-sm leading-relaxed text-fg-3">{a.detail}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ══ DEMO VIDEO ════════════════════════════════════════════════════ -->
+  {/* Reserved rather than rendered: an empty frame that says what it is
+      waiting for is honest, and it stops the slot being forgotten. The
+      VideoObject schema goes in alongside the file. */}
+  {
+    d.video && (
+      <section id="video" class="band-alt seam scroll-mt-20">
+        <div class="shell py-32 md:py-44">
+          <SectionHead marker="See it work" title={`${d.name} walkthrough`} />
+
+          <div class="mt-16 flex aspect-video w-full items-center justify-center border border-dashed border-line-strong bg-raised/40">
+            <div class="px-6 text-center">
+              <p class="mono-label">Walkthrough to follow</p>
+              <p class="measure mx-auto mt-4 text-[0.9375rem] leading-relaxed text-fg-3">
+                A recorded run through {d.name} on a real process. Until it is here, the
+                Compass below gives you the short version on one of your own.
+              </p>
+              <a href="#compass" class="link-u mt-6 inline-block text-sm">Take a reading instead →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   <!-- ══ NARRATIVE (Markdown body) ═════════════════════════════════════ -->
   <section class="border-t border-line">
     <div class="shell py-32 md:py-44">

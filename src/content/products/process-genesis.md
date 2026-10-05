@@ -22,6 +22,56 @@ showMetrics: true
 photo: aiInterface
 homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
 compass: true
+video: true
+journey:
+  - stage: Capture
+    name: Bring in what people know
+    detail: >-
+      Interviews, documents, SOPs and recordings go in. The platform pulls out
+      the steps, the roles, the systems and the rules that were never written
+      down anywhere.
+  - stage: Map
+    name: See the work as it runs
+    detail: >-
+      As-is process maps in standard BPMN, ready for review by the people who
+      actually do the work rather than by an analyst who interviewed them.
+  - stage: Improve
+    name: Find what to change
+    detail: >-
+      Bottlenecks, rework and manual effort identified and quantified, with
+      to-be designs grounded in Lean and Six Sigma practice.
+  - stage: Justify
+    name: Make the case
+    detail: >-
+      Business cases, risks and change impacts, so the decision to proceed
+      rests on evidence rather than on whoever argued hardest.
+  - stage: Specify
+    name: Hand over clean requirements
+    detail: >-
+      Requirements, user stories and solution designs a delivery team builds
+      from directly, with no translation step in between.
+  - stage: Deliver
+    name: Track it to done
+    detail: >-
+      Project and portfolio tracking, quality checks and a development
+      workspace for the teams building the solution.
+audiences:
+  - who: Business teams
+    name: Keep doing what you are best at
+    detail: >-
+      Nobody has to learn modelling notation or write a specification. People
+      explain their work, the platform does the translation, and they review
+      what comes back.
+  - who: Delivery and IT
+    name: Build from requirements that hold up
+    detail: >-
+      Requirements arrive traceable to the process step they came from, so
+      when a developer asks why a rule exists the answer is attached to it.
+  - who: Leadership
+    name: See every initiative in one view
+    detail: >-
+      Each initiative carries its process, its business case and its progress,
+      so you can see what is moving and what it is worth.
 faqs:
   - q: Do our people need technical skills to use Process Genesis?
     a: >-
