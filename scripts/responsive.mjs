@@ -50,18 +50,11 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(PORT, r));
 
 const WIDTHS = [320, 375, 414, 640, 768, 1024, 1280, 1440, 1920];
+/** Same note as statictext.mjs: this list had stopped tracking the site. */
 const PAGES = [
-  '/compass/',
-  '/',
-  '/process-genesis/',
-  '/ionic-grc/',
-  '/case-studies/',
-  '/case-studies/old-mutual/',
-  '/insights/',
-  '/insights/integration-not-capability/',
-  '/contact/',
-  '/privacy/',
-  '/404.html',
+  '/', '/about/', '/services/', '/ca/', '/za/',
+  '/process-genesis/', '/ionic-grc/', '/case-studies/',
+  '/case-studies/sirago/', '/insights/', '/contact/', '/privacy/',
 ];
 
 const audit = () => {

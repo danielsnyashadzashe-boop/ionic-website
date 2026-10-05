@@ -92,31 +92,30 @@ const schema = [
     <div class="shell relative pb-20 pt-14 md:pb-28">
       <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: region.country }]} />
 
-      <div class="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
-       <div>
+      <div class="mt-12 grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+        <div>
+          <p class="marker" style="animation:rise 0.9s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:60ms">
+            Ionic in {region.country}
+          </p>
 
-      <p class="marker mt-12" style="animation:rise 0.9s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:60ms">
-        Ionic in {region.country}
-      </p>
+          <h1
+            class="mt-6 max-w-4xl font-display"
+            style="font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.06;animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:150ms"
+          >
+            {region.title}
+          </h1>
 
-      <h1
-        class="mt-6 max-w-4xl font-display"
-        style="font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.06;animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:150ms"
-      >
-        {region.title}
-      </h1>
+          <div class="rule mt-9 w-28" style="animation-delay:300ms"></div>
 
-      <div class="rule mt-9 w-28" style="animation-delay:300ms"></div>
+          <p class="t-lede measure mt-9 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:360ms">
+            {region.lede}
+          </p>
 
-      <p class="t-lede measure mt-9 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:360ms">
-        {region.lede}
-      </p>
-
-      <div class="mt-11 flex flex-wrap items-center gap-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:500ms">
-        <a href="#contact" class="btn"><span>Book a consult</span></a>
-        <a href="/process-genesis/#compass" class="link-u px-1 text-sm">Try the Process Compass</a>
-      </div>
-       </div>
+          <div class="mt-11 flex flex-wrap items-center gap-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:500ms">
+            <a href="#contact" class="btn"><span>Book a consult</span></a>
+            <a href="/process-genesis/#compass" class="link-u px-1 text-sm">Try the Process Compass</a>
+          </div>
+        </div>
 
         <div class="rise hidden lg:block" style="--step:2">
           <Glyph kind="map" class="glyph-hero ml-auto" />

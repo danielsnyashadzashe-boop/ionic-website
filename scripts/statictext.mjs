@@ -37,8 +37,17 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(PORT, r));
 
+/**
+ * Every page that renders its own composition. `/compass/` was in this list
+ * long after it stopped being a page and became a redirect stub, and every
+ * page added since was missing, so the audit had been narrowing while the
+ * site grew.
+ */
 const PAGES = [
-  '/', '/compass/', '/process-genesis/', '/case-studies/', '/insights/', '/contact/',
+  '/', '/about/', '/services/', '/ca/', '/za/',
+  '/process-genesis/', '/tippa/', '/ionic-grc/',
+  '/case-studies/', '/case-studies/sirago/', '/case-studies/kruse-group/',
+  '/insights/', '/contact/', '/privacy/',
 ];
 
 const CHECK = () => {

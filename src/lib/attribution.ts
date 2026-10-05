@@ -33,8 +33,6 @@ export interface Attribution {
   landing: string;
   /** The full referrer host, kept separately from `source` for honesty. */
   referrer: string;
-  /** When the visit started, to the hour. Enough to group, too coarse to track. */
-  at: string;
 }
 
 const KEY = 'ionic.attribution';
@@ -47,17 +45,36 @@ const KEY = 'ionic.attribution';
 const SEARCH = /(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\./i;
 const SOCIAL = /(^|\.)(linkedin|facebook|instagram|twitter|x|t|threads|youtube|reddit|whatsapp)\.(com|co|me|net)$/i;
 
+/**
+ * Link shorteners that belong to a platform. Without these, a click from a
+ * LinkedIn post arrives as `lnkd.in` and is filed as a generic referral,
+ * which would understate the one channel we are most likely to be using.
+ */
+const SHORTENERS: Record<string, string> = {
+  'lnkd.in': 'social',
+  'fb.me': 'social',
+  'youtu.be': 'social',
+};
+
 function classify(host: string): string {
   if (!host) return 'direct';
+  const short = SHORTENERS[host.replace(/^www\./, '').toLowerCase()];
+  if (short) return short;
   if (SEARCH.test(host)) return 'search';
   if (SOCIAL.test(host)) return 'social';
   return 'referral';
 }
 
-/** Read a safe, short query value. Campaign tags are attacker-controlled text. */
+/**
+ * Read a safe, short query value. Campaign tags are attacker-controlled text.
+ *
+ * The pipe is excluded deliberately: it is the separator in the line these
+ * values end up in, so letting one through would let a crafted `utm_campaign`
+ * forge extra fields in the enquiry email.
+ */
 function param(q: URLSearchParams, name: string): string {
   const raw = q.get(name) ?? '';
-  return raw.replace(/[^\w .\-/|]/g, '').slice(0, 60);
+  return raw.replace(/[^\w .\-/]/g, '').slice(0, 60);
 }
 
 function capture(): Attribution {
@@ -84,7 +101,6 @@ function capture(): Attribution {
     campaign: param(q, 'utm_campaign'),
     landing: window.location.pathname,
     referrer: referrerHost,
-    at: new Date().toISOString().slice(0, 13) + ':00Z',
   };
 }
 

@@ -78,7 +78,11 @@ const src = host ? `${host}/taster.html?book=message` : '';
            */
           window.addEventListener('pg-taster:book', function () {
             try {
-              window.sessionStorage.setItem('ionic.taster', 'book');
+              // Leaving details is the stronger signal and happens first, so
+              // clicking through afterwards must not overwrite it.
+              if (window.sessionStorage.getItem('ionic.taster') !== 'lead') {
+                window.sessionStorage.setItem('ionic.taster', 'book');
+              }
             } catch (e) {
               /* storage is optional */
             }

@@ -95,7 +95,7 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
                 title={r.title}
                 aria-current={isActive(r.href) ? 'page' : undefined}
                 class:list={[
-                  'px-2 py-1 font-mono text-[0.625rem] uppercase tracking-[0.1em] transition-colors',
+                  'flex min-h-[1.75rem] items-center px-2.5 py-1.5 font-mono text-[0.625rem] uppercase tracking-[0.1em] transition-colors',
                   isActive(r.href) ? 'bg-raised text-primary' : 'text-fg-4 hover:bg-raised hover:text-fg-2',
                 ]}
               >

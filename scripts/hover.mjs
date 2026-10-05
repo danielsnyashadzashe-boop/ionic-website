@@ -41,10 +41,11 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(PORT, r));
 
+/** Same note as statictext.mjs: this list had stopped tracking the site. */
 const PAGES = [
-  '/compass/',
-  '/', '/process-genesis/', '/ionic-grc/', '/case-studies/',
-  '/case-studies/old-mutual/', '/insights/', '/contact/', '/404.html',
+  '/', '/about/', '/services/', '/ca/', '/za/',
+  '/process-genesis/', '/ionic-grc/', '/case-studies/',
+  '/case-studies/sirago/', '/insights/', '/contact/', '/404.html',
 ];
 
 /** Injected: contrast helpers + a screen-space colour resolver. */
