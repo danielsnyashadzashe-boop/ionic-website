@@ -10,12 +10,13 @@ interface Props {
   description: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
+  hreflang?: boolean;
 }
 
-const { title, description, schema, noindex } = Astro.props;
+const { title, description, schema, noindex, hreflang } = Astro.props;
 ---
 
-<BaseLayout {title} {description} {schema} {noindex}>
+<BaseLayout {title} {description} {schema} {noindex} {hreflang}>
   <TelemetryBar />
   <Header />
   <main id="main" class="relative z-10">

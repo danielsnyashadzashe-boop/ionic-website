@@ -22,6 +22,35 @@ showMetrics: true
 photo: aiInterface
 homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
 compass: true
+faqs:
+  - q: Do our people need technical skills to use Process Genesis?
+    a: >-
+      No. It is built for the people who know the business. They describe how
+      the work runs in plain language and the platform produces the maps, the
+      analysis and the requirements. Using it also teaches process thinking
+      along the way, which is the part that stays after the engagement ends.
+  - q: Is this an RPA or automation tool?
+    a: >-
+      It works before and around automation rather than instead of it. It
+      establishes what should change and why, then produces what is needed to
+      build it, whether that turns out to be RPA, a workflow tool, custom
+      software or a simpler fix that needs no software at all.
+  - q: Can we use it without a consulting engagement?
+    a: >-
+      Yes. Some organisations license it directly and run it themselves.
+      Others start with a guided engagement and take it over. Genric, the
+      group company that builds Sirago's systems, runs the development module
+      as its own delivery tooling.
+  - q: Is it only for large enterprises?
+    a: >-
+      No. It is sized and priced so a small business can use it as well as a
+      group of companies. Licensing is per organisation and we quote against
+      your scope rather than per seat.
+  - q: How is our data protected?
+    a: >-
+      We work within POPIA in South Africa, and PIPEDA and applicable
+      provincial law in Canada. Hosting and data residency are agreed with you
+      before anything is loaded, not decided afterwards.
 capabilities:
   - name: Process discovery
     detail: >-

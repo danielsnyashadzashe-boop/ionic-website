@@ -7,7 +7,7 @@ tone: d4
 sector: Sports technology
 region: South Africa
 stage: Production
-order: 7
+order: 10
 featured: true
 summary: >-
   An athlete monitoring platform with AI coaching, underpinning race timing at a

@@ -7,7 +7,7 @@ tone: d3
 sector: Media & retail
 region: South Africa · Canada
 stage: Production
-order: 6
+order: 9
 featured: true
 summary: >-
   ExpenseFlow deployed across a 50-employee South African business, with

@@ -9,7 +9,7 @@ import ContactSection from '@/components/ContactSection.astro';
 import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import Compass from '@/components/Compass.astro';
 import CompassPreview from '@/components/CompassPreview.astro';
-import { site, metrics } from '@/data/site';
+import { site, metrics, metricsNote } from '@/data/site';
 
 /**
  * One template for every product. Adding a fifth platform is a Markdown
@@ -79,6 +79,19 @@ const schema = [
     ],
   },
   ...(d.compass ? [compassSchema] : []),
+  ...(d.faqs.length > 0
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: d.faqs.map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        },
+      ]
+    : []),
 ];
 ---
 
@@ -176,6 +189,10 @@ const schema = [
             ))}
             <span class="font-mono text-[0.625rem] text-fg-4">As reported by clients</span>
           </div>
+
+          {/* The basis travels with the number. A percentage with no stated
+              comparison is the first thing questioned in procurement. */}
+          <p class="measure mt-5 font-mono text-[0.625rem] leading-relaxed text-fg-4">{metricsNote}</p>
         </div>
       </div>
     )
@@ -289,6 +306,31 @@ const schema = [
     )
   }
 
+  <!-- ══ FAQ ═══════════════════════════════════════════════════════════ -->
+  {
+    d.faqs.length > 0 && (
+      <section id="faqs" class="border-t border-line scroll-mt-20">
+        <div class="shell py-32 md:py-44">
+          <SectionHead marker="Questions" title={`Common questions about ${d.name}`} />
+
+          <div class="mt-16 border-t border-line">
+            {d.faqs.map((f, i) => (
+              <details class="faq-row rise group border-b border-line" style={`--step:${i}`}>
+                <summary class="flex cursor-pointer list-none items-baseline justify-between gap-6 py-6 text-left">
+                  <span class="font-display text-[1.0625rem] leading-snug text-fg">{f.q}</span>
+                  <span class="faq-mark shrink-0 font-mono text-sm text-fg-4" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
+                <p class="measure pb-7 text-[0.9375rem] leading-relaxed text-fg-3">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   <!-- ══ CONTACT ═══════════════════════════════════════════════════════ -->
   <ContactSection
     source={`${d.name} page`}
@@ -297,3 +339,10 @@ const schema = [
     lede={`Tell us how your operations run today and we'll show you what ${d.name} changes. We reply within one business day.`}
   />
 </PageLayout>
+
+<style>
+  .faq-row summary::-webkit-details-marker { display: none; }
+  .faq-row .faq-mark { transition: transform 0.35s var(--ease-out-soft), color 0.35s; }
+  .faq-row[open] .faq-mark { transform: rotate(45deg); color: var(--primary); }
+  .faq-row summary:hover .faq-mark { color: var(--primary); }
+</style>

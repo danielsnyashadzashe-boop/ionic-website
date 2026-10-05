@@ -1,0 +1,261 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import { site, leadership, offices, compliance } from '@/data/site';
+
+/**
+ * About.
+ *
+ * The site ran without a single named person on it, which for a consultancy
+ * is a strange thing to leave out: the people are what is being bought. This
+ * is also the page a buyer opens second, after the homepage.
+ *
+ * Photographs are still outstanding, so each portrait falls back to initials
+ * rather than rendering an empty frame or a stock face.
+ */
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: `About ${site.legalName}`,
+    url: new URL('/about/', site.domain).href,
+    mainEntity: { '@id': `${site.domain}/#org` },
+  },
+  ...leadership.map((p) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: p.name,
+    jobTitle: p.role,
+    worksFor: { '@type': 'Organization', name: site.legalName, url: site.domain },
+    ...(p.linkedin ? { sameAs: [p.linkedin] } : {}),
+  })),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site.domain + '/' },
+      { '@type': 'ListItem', position: 2, name: 'About', item: new URL('/about/', site.domain).href },
+    ],
+  },
+];
+
+/** What we hold to. Stated as commitments, each one falsifiable. */
+const principles = [
+  {
+    name: 'Technology-agnostic',
+    detail:
+      'We have no reseller targets. We recommend what fits, including tools we did not build and fixes that need no software at all.',
+  },
+  {
+    name: 'Business-owned',
+    detail:
+      'The people who do the work shape the change. Transformation the business owns is the kind that survives once we leave.',
+  },
+  {
+    name: 'Understand before building',
+    detail:
+      'We map how work actually happens before configuring anything. Automating a misunderstood process only produces wrong answers faster.',
+  },
+  {
+    name: 'Open to every size',
+    detail: 'The same thinking is available to a ten-person business and a listed group, priced for each.',
+  },
+  {
+    name: 'Teach as we go',
+    detail:
+      'Every engagement leaves people with process skills they keep. Process Genesis is built to teach while it works.',
+  },
+  {
+    name: 'Say what we do not know',
+    detail:
+      'If a number is an estimate, we label it. If something is not a fit for us, we say so and point you elsewhere.',
+  },
+];
+---
+
+<PageLayout
+  title={`About ${site.legalName}: who we are and how we work | ${site.name}`}
+  description="Ionic Innovate was founded by Reneil Harilall to make technology-agnostic, business-owned transformation affordable at every size, with delivery led from Alberta and South Africa."
+  schema={schema}
+>
+  <!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+  <section class="relative overflow-hidden">
+    <div class="shell relative pb-20 pt-14 md:pb-28">
+      <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
+
+      <p class="marker mt-12" style="animation:rise 0.9s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:60ms">
+        Who we are
+      </p>
+
+      <h1
+        class="mt-6 max-w-4xl font-display"
+        style="font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.06;animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:150ms"
+      >
+        We built the consultancy we wanted to hire.
+      </h1>
+
+      <div class="rule mt-9 w-28" style="animation-delay:300ms"></div>
+
+      <p class="t-lede measure mt-9 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:360ms">
+        Every business is different. Transformation should respect what makes yours work, and it
+        should not only be affordable for the largest companies.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ LEADERSHIP ════════════════════════════════════════════════════ -->
+  <section id="leadership" class="border-t border-line scroll-mt-20">
+    <div class="shell py-32 md:py-44">
+      <SectionHead
+        marker="Leadership"
+        title="The people who"
+        titleAccent="do the work."
+        lede="You speak to senior people who have delivered this kind of work before, not to an account manager who hands you on."
+      />
+
+      <div class="mt-20 space-y-20">
+        {
+          leadership.map((p, i) => (
+            <article class="rise grid gap-10 lg:grid-cols-[0.32fr_1fr] lg:gap-16" style={`--step:${i}`}>
+              <div class="lg:sticky lg:top-28 lg:self-start">
+                {/* Initials until a photograph exists. An empty frame reads as
+                    a broken image; a stock face would be a lie. */}
+                <div
+                  class="flex aspect-[4/5] w-full max-w-[13rem] items-center justify-center border border-line bg-raised"
+                  aria-hidden="true"
+                >
+                  <span class="figure text-[2.5rem] text-fg-4">{p.initials}</span>
+                </div>
+
+                <h2 class="mt-6 font-display text-[1.375rem] leading-snug text-fg">{p.name}</h2>
+                <p class="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-primary">{p.role}</p>
+                <p class="mt-1.5 text-sm text-fg-4">{p.base}</p>
+
+                {p.linkedin && (
+                  <a class="link-u mt-4 inline-block text-sm" href={p.linkedin} rel="noopener">
+                    LinkedIn ↗
+                  </a>
+                )}
+              </div>
+
+              <div>
+                <p class="t-lede measure text-fg-2">{p.lede}</p>
+                <div class="prose-tech mt-8">
+                  {p.bio.map((para) => (
+                    <p>{para}</p>
+                  ))}
+                  {'qualification' in p && p.qualification && (
+                    <p class="text-sm text-fg-4">{p.qualification}</p>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PRINCIPLES ════════════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <SectionHead marker="What we hold to" title="How we work with clients" />
+
+      <div class="mt-20 grid gap-px overflow-hidden border border-line bg-line-strong sm:grid-cols-2 lg:grid-cols-3">
+        {
+          principles.map((pr, i) => (
+            <article class="rise group relative bg-base p-8 transition-colors duration-500 hover:bg-raised md:p-10" style={`--step:${i}`}>
+              <span class="figure text-xs text-primary">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-5 font-display text-xl leading-snug text-fg">{pr.name}</h3>
+              <p class="mt-3.5 text-sm leading-relaxed text-fg-3">{pr.detail}</p>
+              <span class="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-primary transition-transform duration-700 ease-out group-hover:scale-x-100" />
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ WHERE WE WORK ═════════════════════════════════════════════════ -->
+  <section class="band-alt seam">
+    <div class="shell py-32 md:py-44">
+      <SectionHead
+        marker="Where we work"
+        title="Two home markets,"
+        titleAccent="clients anywhere."
+      />
+
+      <div class="mt-20 grid gap-px overflow-hidden border border-line bg-line-strong md:grid-cols-2">
+        {
+          offices.map((o, i) => (
+            <a href={`/${o.code.toLowerCase()}/`} class="rise group bg-base p-8 transition-colors duration-500 hover:bg-raised md:p-10" style={`--step:${i}`}>
+              <p class="mono-label">{o.region}</p>
+              <h3 class="mt-4 font-display text-2xl text-fg">{o.heading}</h3>
+              <p class="mt-3 text-[0.9375rem] leading-relaxed text-fg-3">{o.detail}</p>
+
+              <ul class="mt-6 flex flex-wrap gap-2">
+                {o.cities.map((c) => (
+                  <li class="chip !py-1 !text-[0.6875rem]">{c}</li>
+                ))}
+              </ul>
+
+              <span class="link-u mt-7 inline-block text-sm">Ionic in {o.region} →</span>
+            </a>
+          ))
+        }
+      </div>
+
+      <p class="mt-10 font-mono text-[0.6875rem] leading-relaxed text-fg-4">
+        We work within {compliance.map((c) => `${c.law} in ${c.region}`).join(' and ')}, and agree hosting
+        and data residency with you before anything is loaded.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ COMMUNITY ═════════════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <div class="grid gap-14 lg:grid-cols-[1fr_0.42fr] lg:gap-20">
+        <div>
+          <SectionHead marker="Community" title="Making digital skills accessible" />
+          <div class="prose-tech rise mt-10">
+            <p>
+              Transformation should not be limited to companies with large budgets, and digital
+              careers should not be limited to people who already have a way in.
+            </p>
+            <p>
+              We support women in technology, youth development and programmes in underprivileged
+              communities, in both South Africa and Canada. The aim is straightforward: help more
+              people gain the skills to take part in the digital economy, and give smaller
+              organisations access to tools usually priced for the few.
+            </p>
+          </div>
+        </div>
+
+        <aside class="rise lg:pt-20" style="--step:1">
+          <div class="surface p-8">
+            <p class="mono-label">Programmes</p>
+            <ul class="mt-5 space-y-3 text-[0.9375rem] text-fg-2">
+              <li class="border-b border-line pb-3">Women in tech mentorship</li>
+              <li class="border-b border-line pb-3">Youth digital skills</li>
+              <li>Community outreach</li>
+            </ul>
+            <p class="mt-5 font-mono text-[0.625rem] leading-relaxed text-fg-4">
+              Named partners and programmes to follow.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <ContactSection
+    source="About page"
+    returnPath="/about/"
+    title="Talk to the people who will do the work"
+    lede="Thirty minutes with someone who has done this at enterprise scale. You leave with a clearer view of where to start, whether or not we work together."
+  />
+</PageLayout>

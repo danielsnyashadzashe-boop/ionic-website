@@ -8,7 +8,7 @@ tone: d3
 sector: Digital payments
 region: South Africa
 stage: Production
-order: 1
+order: 4
 featured: true
 summary: >-
   A tipping and payments platform for car guards, live at 10 malls and centres:

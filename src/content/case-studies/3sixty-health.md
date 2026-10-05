@@ -7,7 +7,7 @@ tone: d6
 sector: Healthcare administration
 region: South Africa
 stage: Production
-order: 5
+order: 8
 featured: true
 summary: >-
   A fraud, waste and abuse monitoring system deployed to proactively detect and

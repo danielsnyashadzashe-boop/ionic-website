@@ -66,6 +66,17 @@ const products = defineCollection({
      * nothing about which platform is which.
      */
     compass: z.boolean().default(false),
+    /**
+     * Questions buyers actually ask about this platform.
+     *
+     * Rendered on the page and emitted as FAQPage structured data, so an
+     * answer can surface in search without the reader opening the site. The
+     * answers are the content, not SEO filler: a question nobody asks does
+     * not belong here.
+     */
+    faqs: z
+      .array(z.object({ q: z.string(), a: z.string() }))
+      .default([]),
   }),
 });
 

@@ -1,12 +1,28 @@
 ---
 import { getCollection } from 'astro:content';
 import { projectStats } from '@/data/projects';
+import { regions } from '@/data/regions';
 
 /**
  * Counted, not typed. This said 4 while the collection held five, which is
  * the sort of thing nobody notices until a reader does.
  */
 const platformCount = (await getCollection('products')).length;
+
+/**
+ * Regions and sectors, counted rather than typed.
+ *
+ * These two said 5 and 6 while the published work covered two regions and
+ * seven sectors. Every other figure in this bar was already derived, which is
+ * why they stayed wrong for so long: nothing contradicted them.
+ *
+ * Regions come from the markets we actually publish a page for. Sectors come
+ * from the case studies, because a sector with no delivered work behind it is
+ * not a sector we serve.
+ */
+const studies = await getCollection('caseStudies');
+const sectorCount = new Set(studies.map((s) => s.data.sector)).size;
+const regionCount = regions.length;
 
 /**
  * Slim status strip above the header.
@@ -20,10 +36,10 @@ const platformCount = (await getCollection('products')).length;
 const items = [
   { k: 'Engagements', v: String(projectStats.total) },
   { k: 'In production', v: String(projectStats.live) },
-  { k: 'Regions', v: '5' },
+  { k: 'Regions', v: String(regionCount) },
   { k: 'Platforms', v: String(platformCount) },
   { k: 'Reply time', v: '< 1 business day' },
-  { k: 'Sectors', v: '6' },
+  { k: 'Sectors', v: String(sectorCount) },
   { k: 'Faster processing', v: '85%' },
   { k: 'Cost reduction', v: '60%' },
   { k: 'Accuracy', v: '99%+' },

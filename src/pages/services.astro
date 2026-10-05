@@ -1,0 +1,180 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import { site } from '@/data/site';
+import { services, servicesByPillar, pillars } from '@/data/services';
+
+/**
+ * Services.
+ *
+ * The three cards on the homepage had no page behind them, so a visitor who
+ * wanted to know what "Consulting" actually means had nowhere to go. Seven
+ * anchored sections across two pillars, each naming what is delivered and,
+ * where there is one, the engagement that evidences it.
+ */
+
+const url = new URL('/services/', site.domain).href;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `Services | ${site.legalName}`,
+    url,
+    hasPart: services.map((s) => ({
+      '@type': 'Service',
+      name: s.name,
+      description: s.summary,
+      url: `${url}#${s.slug}`,
+      provider: { '@type': 'Organization', name: site.legalName, url: site.domain },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site.domain + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Services', item: url },
+    ],
+  },
+];
+
+const groups = [
+  { key: 'business' as const, ...pillars.business, items: servicesByPillar.business },
+  { key: 'digital' as const, ...pillars.digital, items: servicesByPillar.digital },
+];
+---
+
+<PageLayout
+  title={`Services: business and digital transformation | ${site.name}`}
+  description="Seven services across two pillars. Strategy, process redesign and change management on the business side; ERP, custom software, data and AI, and managed operations on the digital side."
+  schema={schema}
+>
+  <!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+  <section class="relative overflow-hidden">
+    <div class="shell relative pb-20 pt-14 md:pb-28">
+      <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Services' }]} />
+
+      <p class="marker mt-12" style="animation:rise 0.9s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:60ms">
+        What we do
+      </p>
+
+      <h1
+        class="mt-6 max-w-4xl font-display"
+        style="font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.06;animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:150ms"
+      >
+        Business and digital transformation, with one team.
+      </h1>
+
+      <div class="rule mt-9 w-28" style="animation-delay:300ms"></div>
+
+      <p class="t-lede measure mt-9 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:360ms">
+        Most firms do one or the other. Strategy consultancies stop at the recommendation. Software
+        houses start at the specification. The gap between those two points is where programmes are
+        lost, so we cover both and nothing has to survive a handover.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ INDEX ═════════════════════════════════════════════════════════ -->
+  <div class="border-t border-line">
+    <div class="shell py-10">
+      <div class="flex flex-wrap gap-x-7 gap-y-3">
+        {
+          services.map((s, i) => (
+            <a href={`#${s.slug}`} class="rise link-u text-sm text-fg-3" style={`--step:${i}`}>
+              {s.name}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PILLARS ═══════════════════════════════════════════════════════ -->
+  {
+    groups.map((g, gi) => (
+      <section class:list={[gi === 1 ? 'band-alt seam' : 'border-t border-line']}>
+        <div class="shell py-32 md:py-44">
+          <SectionHead marker={g.label} title={g.heading} lede={g.lede} />
+
+          <div class="mt-20 space-y-0">
+            {g.items.map((s, i) => (
+              <article id={s.slug} class="rise scroll-mt-20 border-t border-line py-12 md:py-16" style={`--step:${i}`}>
+                <div class="grid gap-8 lg:grid-cols-[0.38fr_1fr] lg:gap-16">
+                  <div>
+                    <span class="figure text-xs text-primary">{String(services.indexOf(s) + 1).padStart(2, '0')}</span>
+                    <h3 class="mt-4 font-display text-[1.5rem] leading-snug text-fg">{s.name}</h3>
+                  </div>
+
+                  <div>
+                    <p class="t-lede measure text-fg-2">{s.summary}</p>
+
+                    <ul class="mt-8 grid gap-x-10 gap-y-3 sm:grid-cols-2">
+                      {s.includes.map((inc) => (
+                        <li class="flex items-baseline gap-3 border-b border-line pb-3 text-[0.9375rem] text-fg-3">
+                          <span class="h-1 w-1 shrink-0 translate-y-[-0.2em] rounded-full bg-primary" aria-hidden="true" />
+                          {inc}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {s.evidence && (
+                      <p class="mt-7">
+                        <a href={s.evidence.href} class="link-u text-sm">
+                          Delivered: {s.evidence.label} →
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- ══ THE THREAD ════════════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <SectionHead
+        marker="How the two connect"
+        title="Process Genesis is"
+        titleAccent="the bridge."
+        lede="Business knowledge goes in one side. Build-ready requirements come out the other. That is the translation step most programmes lose things in, and it is the reason our work moves faster and costs less."
+      />
+
+      <div class="mt-20 grid gap-px overflow-hidden border border-line bg-line-strong md:grid-cols-3">
+        {
+          [
+            { n: '01', h: 'Business knowledge', p: 'The people who do the work describe how it actually runs, in their own words.' },
+            { n: '02', h: 'Process Genesis', p: 'Maps, improvements, the business case and the requirements, produced from what they said.' },
+            { n: '03', h: 'Digital delivery', p: 'Developers build from requirements traceable back to the process step they came from.' },
+          ].map((step, i) => (
+            <div class="rise bg-base p-8 md:p-10" style={`--step:${i}`}>
+              <span class="figure text-xs text-primary">{step.n}</span>
+              <h3 class="mt-5 font-display text-xl text-fg">{step.h}</h3>
+              <p class="mt-3.5 text-sm leading-relaxed text-fg-3">{step.p}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="mt-10 text-[0.9375rem] text-fg-4">
+        We do not resell anyone's licences. If a better form, a spreadsheet or an off-the-shelf tool
+        is the right answer, that is what we will recommend.
+      </p>
+    </div>
+  </section>
+
+  <ContactSection
+    source="Services page"
+    returnPath="/services/"
+    title="Not sure which of these you need"
+    lede="Most people are not, at the start. Tell us the one process you would fix first and we will tell you honestly how we would approach it."
+  />
+</PageLayout>

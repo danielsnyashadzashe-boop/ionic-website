@@ -1283,3 +1283,156 @@ rather than on engineering, so start chasing them now and build around them.
 early even though they are not blocking.
 
 **Decide at the next review:** the whole of section H.
+
+---
+
+## I. Reconciliation against the parallel build
+
+On 5 October a second, independently built static site arrived as
+`ionic-website.zip`. It is a nine-page hand-written build whose handover notes
+cite Reneil directly as the source of fact. Much of its content has now been
+merged into this site. These tickets cover what it contradicted rather than
+what it added.
+
+**None of these can be closed from the code. Each one needs Reneil.**
+
+---
+
+### WEB-57 · Old Mutual is named directly here and as Sirago and Genric there
+
+**Type** Bug  **Priority** Blocker  **Epic** EP-5  **Component** Content
+**Needs** Reneil
+
+Our ledger carries `Old Mutual`, described as "group-wide process automation
+across all business units" with a five-year agreement, and a case study to
+match. The parallel build names **Sirago**, an underwriting manager within the
+Old Mutual Group, and **Genric**, the group company that builds Sirago's
+systems. Its handover says the logo tile carries a "Group companies" caption
+specifically because the work was done for those two.
+
+The Sirago case study has now been written and leads the site. The existing
+Old Mutual entry has deliberately **not** been deleted, because removing a
+client claim is not a call to make from a zip file. But the site currently
+publishes both, and if they describe the same engagement we are naming the
+parent group for work done for two subsidiaries.
+
+**Acceptance criteria**
+
+- [ ] Confirm whether Old Mutual and Sirago and Genric are one engagement
+- [ ] If one, remove or rewrite the Old Mutual entry and its case study
+- [ ] If separate, confirm the group-wide claim is accurate and permitted
+- [ ] Confirm brand approval for using the Old Mutual name at all
+
+**Where** `src/data/projects.ts`, `src/content/case-studies/old-mutual.md`,
+`src/content/case-studies/sirago.md`
+
+---
+
+### WEB-58 · Four clients appear only on our side
+
+**Type** Task  **Priority** Blocker  **Epic** EP-5  **Component** Content
+**Needs** Reneil
+
+Fidelity, Bidvest Group, 3Sixty Health and Split Time are published here with
+case studies and headline figures. None of them appears anywhere in the
+parallel build, which otherwise lists thirteen clients including several we
+had never recorded.
+
+Ours were reconstructed from one-line testimonials on the previous site, which
+is already flagged in WEB-06. This is the second independent reason to check
+them.
+
+**Acceptance criteria**
+
+- [ ] Each of the four confirmed as real, current and permitted, or removed
+- [ ] Headline figures confirmed against something other than the old site
+
+---
+
+### WEB-59 · National Video Vision is described two different ways
+
+**Type** Bug  **Priority** High  **Epic** EP-5  **Component** Content
+**Needs** Reneil
+
+Our ledger: "Expense automation across a 50-person business, two currencies."
+The parallel build: a full ERP for scheduling, events, finance, operations,
+logistics, assets and inventory, plus a gifting catalogue, in events and
+gifting.
+
+Those are not variations on a description. They are different engagements, or
+one engagement one of us has wrong.
+
+**Where** `src/data/projects.ts`,
+`src/content/case-studies/national-video-vision.md`
+
+---
+
+### WEB-60 · Ionic ERP and Ionic GRC do not exist in the parallel build
+
+**Type** Task  **Priority** Blocker  **Epic** EP-5  **Component** Product
+**Needs** Reneil
+
+We publish four proprietary platforms. The parallel build publishes one
+platform, Process Genesis, and one product, ExpenseFlow. There is no Ionic ERP
+and no Ionic GRC anywhere in it. The ERP work appears there as bespoke client
+builds, for Depot in Durban and for NVV, rather than as a product.
+
+Either two real products were omitted there, or bespoke client work has been
+productised into platform pages here. WEB-03 already needs every capability
+verified and WEB-31 already notes that Ionic GRC rests on a single reference,
+so this is the third signal pointing the same way.
+
+**Acceptance criteria**
+
+- [ ] Confirm whether Ionic ERP and Ionic GRC are products we sell
+- [ ] If they are bespoke builds, restructure them as case studies
+- [ ] If they are products, confirm their capability lists against WEB-03
+
+---
+
+### WEB-61 · Australia is still listed as planned for 2026
+
+**Type** Task  **Priority** Medium  **Epic** EP-5  **Component** Content
+**Needs** Reneil
+
+`locations` lists Australia with `status: 'planned', from: '2026'`, so the site
+renders "Australia (2026)". It is now October 2026, which makes that read as a
+plan that did not happen.
+
+The parallel build describes two home markets, Canada and South Africa, and
+mentions Australia only as somewhere the founder has worked. Left in place for
+now because withdrawing a market claim is a business decision.
+
+**Where** `src/data/site.ts`, `locations`
+
+---
+
+### WEB-62 · Preview deployments should not be indexable
+
+**Type** Task  **Priority** High  **Epic** EP-3  **Component** Infrastructure
+**Needs** Backend
+
+Raised by the parallel build's handover and not previously on this list. Vercel
+preview URLs are currently indexable, so a preview can compete with the live
+domain in search and split the ranking.
+
+**Acceptance criteria**
+
+- [ ] Preview deployments send `X-Robots-Tag: noindex`
+- [ ] Production is unaffected
+- [ ] Verified by requesting a preview URL and reading the response headers
+
+---
+
+## Closed by the merge
+
+| Ticket | Status |
+|---|---|
+| WEB-05, WEB-22 | **Done.** Regions and sectors are now counted from content. The bar reads 2 regions and 10 sectors, both derived. |
+| WEB-09 | **Done.** `/about/` is live with Reneil and Rabind, named, with real background and `Person` structured data. |
+| WEB-17 | **Mostly done.** Thirteen FAQ entries with `FAQPage` data across `/ca/`, `/za/` and `/process-genesis/`. A standalone `/faqs/` page is no longer needed. |
+| WEB-19 | **Partly done.** POPIA and PIPEDA are now named on the regional pages and in the platform FAQ. A full security page is still open. |
+| WEB-20 | **Done.** `/services/` carries seven anchored services across two pillars, each with `Service` structured data and, where one exists, the engagement that evidences it. |
+| WEB-16 | **Superseded.** Regional pages now carry sector lists with real work behind them. Per-industry pages remain worth doing, but are no longer the gap they were. |
+| WEB-07 | **Partly done.** Alberta head office and the South African city list are published. Phone numbers and street addresses are still outstanding. |
+| WEB-04 | **Partly done.** The metrics now carry their basis wherever they appear. Attribution to a named engagement is still outstanding. |

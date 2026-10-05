@@ -8,9 +8,27 @@ interface Props {
   description: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
+  /** Emit en-CA / en-ZA / x-default alternates. Home and regional pages only. */
+  hreflang?: boolean;
 }
 
-const { title, description, schema, noindex = false } = Astro.props;
+const { title, description, schema, noindex = false, hreflang = false } = Astro.props;
+
+/**
+ * Regional alternates.
+ *
+ * Opt-in rather than automatic: only the global home and the two regional
+ * landing pages are genuine alternates of each other. Emitting these on every
+ * page would tell search engines that a case study has a Canadian and a South
+ * African version, which it does not.
+ */
+const alternates = hreflang
+  ? [
+      { lang: 'en-CA', href: new URL('/ca/', site.domain).href },
+      { lang: 'en-ZA', href: new URL('/za/', site.domain).href },
+      { lang: 'x-default', href: new URL('/', site.domain).href },
+    ]
+  : [];
 
 const canonical = new URL(Astro.url.pathname, site.domain).href;
 const ogImage = new URL('/og-default.png', site.domain).href;
@@ -31,6 +49,9 @@ const schemaList = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => (
+      <link rel="alternate" hreflang={a.lang} href={a.href} />
+    ))}
     <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
     <link
       rel="icon"

@@ -83,6 +83,26 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
               </a>
             ))
           }
+
+          {/* Region switch. A pair of codes rather than two more nav items,
+              because they are alternates of each other rather than separate
+              destinations, and the bar is already carrying six links. */}
+          <span class="ml-1.5 flex items-center gap-px overflow-hidden rounded-md border border-line-strong" aria-label="Region">
+            {nav.regions.map((r) => (
+              <a
+                href={r.href}
+                hreflang={`en-${r.label}`}
+                title={r.title}
+                aria-current={isActive(r.href) ? 'page' : undefined}
+                class:list={[
+                  'px-2 py-1 font-mono text-[0.625rem] uppercase tracking-[0.1em] transition-colors',
+                  isActive(r.href) ? 'bg-raised text-primary' : 'text-fg-4 hover:bg-raised hover:text-fg-2',
+                ]}
+              >
+                {r.label}
+              </a>
+            ))}
+          </span>
         </nav>
       </div>
 
@@ -197,6 +217,9 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
               ))
             }
           </div>
+          <a href="/services/" class="link-u mt-4 mr-5 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3">
+            All services →
+          </a>
           <a href="/case-studies/" class="link-u mt-4 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3">
             All case studies →
           </a>
@@ -225,6 +248,15 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
       </svg>
       <span class="text-[0.9375rem] text-fg-2">Process Compass</span>
     </a>
+    <p class="mono-label px-5 pb-2 pt-6">Where we work</p>
+    {
+      nav.regions.map((r, i) => (
+        <a href={r.href} class="mob flex items-center justify-between border-b border-line px-5 py-4" style={`--i:${i + 6}`}>
+          <span class="text-[0.9375rem] text-fg-2">Ionic in {r.title}</span>
+          <span class="font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">{r.label}</span>
+        </a>
+      ))
+    }
     <p class="mono-label px-5 pb-2 pt-6">Company</p>
     {
       [...links, { label: 'Contact', href: '/contact/' }].map((l, i) => (

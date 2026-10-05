@@ -1,0 +1,259 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import PageLayout from '@/layouts/PageLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import CaseStudyCard from '@/components/CaseStudyCard.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import { site, leadership } from '@/data/site';
+import { regions, type Region } from '@/data/regions';
+
+/**
+ * Regional landing pages.
+ *
+ * One template, two markets, the same arrangement the platforms use. These
+ * and the global home are the only pages that carry hreflang, because they
+ * are the only ones that are alternates of one another.
+ *
+ * The `ProfessionalService` schema here is what a regional search result is
+ * built from, and `areaServed` names only cities we can actually claim. Thin,
+ * duplicated city pages are discounted by search engines and are worse than
+ * not having them.
+ */
+export const getStaticPaths: GetStaticPaths = async () =>
+  regions.map((region) => ({ params: { region: region.slug }, props: { region } }));
+
+interface Props {
+  region: Region;
+}
+
+const { region } = Astro.props;
+const url = new URL(`/${region.slug}/`, site.domain).href;
+
+const lead = leadership.find((p) => p.name === region.leadName);
+
+const all = await getCollection('caseStudies');
+const studies = region.studies
+  .map((slug) => all.find((s) => s.id === slug))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s));
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': `${url}#service`,
+    name: `${site.legalName} ${region.country}`,
+    url,
+    parentOrganization: { '@type': 'Organization', name: site.legalName, url: site.domain },
+    description: region.seoDescription,
+    areaServed: [
+      { '@type': 'Country', name: region.country },
+      ...region.cities.map((c) => ({ '@type': 'City', name: c })),
+    ],
+    knowsAbout: region.sectors,
+    ...(lead
+      ? { employee: { '@type': 'Person', name: lead.name, jobTitle: lead.role } }
+      : {}),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: region.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site.domain + '/' },
+      { '@type': 'ListItem', position: 2, name: region.country, item: url },
+    ],
+  },
+];
+---
+
+<PageLayout
+  title={`${region.seoTitle} | ${site.name}`}
+  description={region.seoDescription}
+  schema={schema}
+  hreflang
+>
+  <!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+  <section class="relative overflow-hidden">
+    <div class="shell relative pb-20 pt-14 md:pb-28">
+      <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: region.country }]} />
+
+      <p class="marker mt-12" style="animation:rise 0.9s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:60ms">
+        Ionic in {region.country}
+      </p>
+
+      <h1
+        class="mt-6 max-w-4xl font-display"
+        style="font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.06;animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:150ms"
+      >
+        {region.title}
+      </h1>
+
+      <div class="rule mt-9 w-28" style="animation-delay:300ms"></div>
+
+      <p class="t-lede measure mt-9 text-fg-3" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:360ms">
+        {region.lede}
+      </p>
+
+      <div class="mt-11 flex flex-wrap items-center gap-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:500ms">
+        <a href="#contact" class="btn"><span>Book a consult</span></a>
+        <a href="/process-genesis/#compass" class="link-u px-1 text-sm">Try the Process Compass</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FACT STRIP ════════════════════════════════════════════════════ -->
+  <div class="border-t border-line">
+    <div class="shell">
+      <dl class="grid grid-cols-2 gap-x-8 gap-y-7 py-10 sm:grid-cols-4">
+        <div class="rise">
+          <dt class="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-fg-4">Led by</dt>
+          <dd class="mt-2 text-sm text-fg">{region.leadName}</dd>
+        </div>
+        <div class="rise" style="--step:1">
+          <dt class="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-fg-4">Cities</dt>
+          <dd class="mt-2 text-sm text-fg">{region.cities.join(', ')}</dd>
+        </div>
+        <div class="rise" style="--step:2">
+          <dt class="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-fg-4">Sectors delivered</dt>
+          <dd class="mt-2 text-sm text-fg">{region.sectors.length}</dd>
+        </div>
+        <div class="rise" style="--step:3">
+          <dt class="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-fg-4">Data protection</dt>
+          <dd class="mt-2 text-sm text-fg">{region.law}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- ══ NARRATIVE + LEAD ══════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <div class="grid gap-14 lg:grid-cols-[1fr_0.42fr] lg:gap-20">
+        <div class="prose-tech rise">
+          {region.body.map((para) => <p>{para}</p>)}
+        </div>
+
+        {
+          lead && (
+            <aside class="rise lg:sticky lg:top-28 lg:self-start" style="--step:1">
+              <div class="surface p-8">
+                <div class="flex items-center gap-4">
+                  <span
+                    class="flex h-14 w-14 shrink-0 items-center justify-center border border-line bg-raised font-mono text-sm text-fg-4"
+                    aria-hidden="true"
+                  >
+                    {lead.initials}
+                  </span>
+                  <div>
+                    <p class="font-display text-[1.0625rem] text-fg">{lead.name}</p>
+                    <p class="mt-0.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-primary">
+                      {region.leadLine}
+                    </p>
+                  </div>
+                </div>
+
+                <p class="mt-6 border-t border-line pt-5 text-[0.9375rem] leading-relaxed text-fg-2">{lead.lede}</p>
+
+                <a class="link-u mt-5 inline-block text-sm" href="/about/#leadership">Read the full background →</a>
+              </div>
+
+              <p class="mt-5 font-mono text-[0.625rem] leading-relaxed text-fg-4">
+                We work within {region.lawFull}, and agree hosting and data residency before anything is loaded.
+              </p>
+            </aside>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTORS ═══════════════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <SectionHead
+        marker="Sectors"
+        title="Where we have"
+        titleAccent="delivered here."
+        lede="Listed only where there is real delivered work behind the name, not as a list of industries we would accept."
+      />
+
+      <div class="mt-16 flex flex-wrap gap-2.5">
+        {region.sectors.map((s, i) => <span class="chip rise" style={`--step:${i}`}>{s}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ WORK ══════════════════════════════════════════════════════════ -->
+  {
+    studies.length > 0 && (
+      <section class="band-alt seam">
+        <div class="shell py-32 md:py-44">
+          <SectionHead marker="Client stories" title={`Work running in ${region.country}`} />
+
+          <div class="mt-20 grid gap-5 md:grid-cols-3">
+            {studies.map((s, i) => (
+              <CaseStudyCard study={s} index={i} compact />
+            ))}
+          </div>
+
+          {region.alsoHere.length > 0 && (
+            <div class="mt-16 border-t border-line pt-10">
+              <p class="mono-label">Also delivered here</p>
+              <ul class="mt-5 flex flex-wrap gap-x-7 gap-y-3">
+                {region.alsoHere.map((c) => (
+                  <li class="text-[0.9375rem] text-fg-2">{c}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ══ FAQ ═══════════════════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <SectionHead marker="Questions" title={`Working with us in ${region.country}`} />
+
+      <div class="mt-16 border-t border-line">
+        {
+          region.faqs.map((f, i) => (
+            <details class="faq-row rise group border-b border-line" style={`--step:${i}`}>
+              <summary class="flex cursor-pointer list-none items-baseline justify-between gap-6 py-6 text-left">
+                <span class="font-display text-[1.0625rem] leading-snug text-fg">{f.q}</span>
+                <span class="faq-mark shrink-0 font-mono text-sm text-fg-4" aria-hidden="true">+</span>
+              </summary>
+              <p class="measure pb-7 text-[0.9375rem] leading-relaxed text-fg-3">{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <ContactSection
+    source={`${region.country} page`}
+    returnPath={`/${region.slug}/`}
+    title={`Talk to us in ${region.country}`}
+    lede={`Tell us what you are trying to change. We reply ${site.responseTime}.`}
+  />
+</PageLayout>
+
+<style>
+  /* The marker turns without needing a script: details[open] does the work. */
+  .faq-row summary::-webkit-details-marker { display: none; }
+  .faq-row .faq-mark { transition: transform 0.35s var(--ease-out-soft), color 0.35s; }
+  .faq-row[open] .faq-mark { transform: rotate(45deg); color: var(--primary); }
+  .faq-row summary:hover .faq-mark { color: var(--primary); }
+</style>
