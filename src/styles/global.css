@@ -94,13 +94,24 @@
   --grad-b: #dce5e8;
   --grad-c: #9fafb4;
 
-  /* Data hues. Matched perceived weight so a legend reads as one set. */
-  --d1: oklch(0.78 0.14 220);
-  --d2: oklch(0.80 0.145 196);
-  --d3: oklch(0.80 0.14 158);
-  --d4: oklch(0.83 0.135 92);
-  --d5: oklch(0.75 0.155 32);
-  --d6: oklch(0.72 0.15 320);
+  /* Data hues.
+   *
+   * These used to sit at chroma 0.135 to 0.155 against a ground built at
+   * almost none, so six saturated hues were the loudest thing on a page
+   * that is otherwise grey and one amber. The product cards in particular
+   * read as a stock template rather than as this site.
+   *
+   * Chroma is now roughly half, and lightness varies across the set rather
+   * than sitting flat near 0.80. That second change matters more than the
+   * first: six muted hues at one lightness are hard to tell apart, and
+   * impossible for anyone with a colour vision deficiency. Varying value
+   * keeps them separable without shouting. */
+  --d1: oklch(0.84 0.075 225);
+  --d2: oklch(0.76 0.070 198);
+  --d3: oklch(0.88 0.062 165);
+  --d4: oklch(0.81 0.095 92);
+  --d5: oklch(0.71 0.080 35);
+  --d6: oklch(0.67 0.065 310);
 
   --ok: oklch(0.80 0.14 158);
   --warn: oklch(0.83 0.135 92);
@@ -148,12 +159,17 @@
   --grad-b: #334246;
   --grad-c: #55666b;
 
-  --d1: oklch(0.52 0.16 258);
-  --d2: oklch(0.52 0.135 214);
-  --d3: oklch(0.50 0.115 160);
-  --d4: oklch(0.50 0.125 78);
-  --d5: oklch(0.55 0.17 30);
-  --d6: oklch(0.50 0.17 320);
+  /* Same treatment on light, with one extra constraint: these also colour
+     small text here (a status chip, a metric unit), so every one has to
+     clear 4.5:1 on a near-white ground. That caps lightness around 0.50,
+     so separation on this theme leans on hue more than on value. Raising
+     d2 and d4 for contrast with each other dropped both below AA. */
+  --d1: oklch(0.44 0.080 240);
+  --d2: oklch(0.48 0.070 205);
+  --d3: oklch(0.40 0.055 168);
+  --d4: oklch(0.45 0.085 85);
+  --d5: oklch(0.47 0.085 32);
+  --d6: oklch(0.35 0.070 312);
 
   --ok: oklch(0.50 0.115 160);
   --warn: oklch(0.50 0.125 78);

@@ -28,3 +28,6 @@ pnpm-debug.log*
 
 # Documents published as artifacts (content-audit.html and friends)
 .artifact/
+
+# One-off audit scripts written at the project root while checking something.
+.*.mjs

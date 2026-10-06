@@ -52,7 +52,13 @@ const facts = [
             Tell us what you are trying to change. A no-obligation discovery call, and a real
             person replies {site.responseTime}.
           </p>
-          <a href={`mailto:${contact.email}`} class="btn-ghost mt-8 inline-flex">
+          {/* Points at the form below, which is in this same section, rather
+              than at mailto:. Sending someone to their mail client when the
+              form is four hundred pixels down works against the form we
+              built, and a mailto: does nothing at all for anyone without a
+              mail client configured. The address is still right there in the
+              list beneath, with a copy button. */}
+          <a href="#enquiry" class="btn-ghost mt-8 inline-flex">
             <span>Book a discovery call</span>
             <span aria-hidden="true">→</span>
           </a>
@@ -66,7 +72,7 @@ const facts = [
   <div class="shell relative py-32 md:py-44">
     <SectionHead {n} marker="Contact" {title} {titleAccent} {lede} />
 
-    <div class="mt-20 grid gap-6 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
+    <div id="enquiry" class="mt-20 grid scroll-mt-24 gap-6 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
       <dl class="surface divide-y divide-line overflow-hidden">
         {
           facts.map((f, i) => (
