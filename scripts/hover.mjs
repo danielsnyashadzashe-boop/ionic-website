@@ -41,11 +41,14 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(PORT, r));
 
-/** Same note as statictext.mjs: this list had stopped tracking the site. */
+/* Every route the site builds. Case studies and insights are parked
+   under src/pages/_case-studies and _insights, so visiting them here
+   would audit a 404. Add them back when the folders come back. */
 const PAGES = [
   '/', '/about/', '/services/', '/ca/', '/za/',
-  '/process-genesis/', '/ionic-grc/', '/case-studies/',
-  '/case-studies/sirago/', '/insights/', '/contact/', '/404.html',
+  '/process-genesis/', '/tippa/', '/ionic-grc/', '/ionic-erp/',
+  '/expenseflow/', '/contact/', '/privacy/',
+  '/404.html',
 ];
 
 /** Injected: contrast helpers + a screen-space colour resolver. */

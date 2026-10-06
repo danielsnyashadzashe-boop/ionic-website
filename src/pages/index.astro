@@ -7,7 +7,7 @@ import WhatWeDo from '@/components/WhatWeDo.astro';
 import Figure from '@/components/Figure.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import ProductCard from '@/components/ProductCard.astro';
-import CaseStudyCard from '@/components/CaseStudyCard.astro';
+// import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import ImpactSection from '@/components/ImpactSection.astro';
 import ProjectsSection from '@/components/ProjectsSection.astro';
 import Testimonials from '@/components/Testimonials.astro';
@@ -27,10 +27,11 @@ const platformWord = WORDS[products.length] ?? String(products.length);
 const flagship = products.find((p) => p.data.flagship);
 const rest = products.filter((p) => !p.data.flagship);
 
-const studies = (await getCollection('caseStudies'))
-  .filter((s) => s.data.featured)
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);
+// Fed the featured case-study cards, parked with src/pages/_case-studies.
+// const studies = (await getCollection('caseStudies'))
+//   .filter((s) => s.data.featured)
+//   .sort((a, b) => a.data.order - b.data.order)
+//   .slice(0, 3);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -193,9 +194,12 @@ const method = [
           titleAccent="built and running."
           lede="Each solves a problem we kept meeting in consulting engagements. Each is deployed."
         />
+        {/* See them in the field, to /case-studies/, parked with that route. */}
+        {/*
         <a href="/case-studies/" class="link-u rise font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-3" style="--step:3">
           See them in the field →
         </a>
+        */}
       </div>
 
       {/* Two up, not four. Four products across a 4-column grid with the

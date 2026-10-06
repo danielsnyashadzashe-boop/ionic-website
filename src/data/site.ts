@@ -203,10 +203,13 @@ export const nav = {
   primary: [
     { label: 'Platforms', href: '/#platforms', children: true },
     { label: 'Services', href: '/services/' },
-    { label: 'Case studies', href: '/case-studies/' },
+    // Case studies and insights are off the site for now; their routes
+    // are parked under src/pages/_case-studies and _insights. Put these
+    // two back at the same time as the folders.
+    // { label: 'Case studies', href: '/case-studies/' },
     { label: 'Testimonials', href: '/#testimonials' },
     { label: 'About', href: '/about/' },
-    { label: 'Insights', href: '/insights/' },
+    // { label: 'Insights', href: '/insights/' },
   ],
   /** The two home markets. Rendered as a compact switch, not as nav items. */
   regions: [
@@ -220,8 +223,8 @@ export const nav = {
     { label: 'Services', href: '/services/' },
     { label: 'Platforms', href: '/#platforms' },
     { label: 'Engagement ledger', href: '/#work' },
-    { label: 'Case studies', href: '/case-studies/' },
-    { label: 'Insights', href: '/insights/' },
+    // { label: 'Case studies', href: '/case-studies/' },
+    // { label: 'Insights', href: '/insights/' },
     { label: 'Privacy', href: '/privacy/' },
     { label: 'Contact', href: '/contact/' },
   ],

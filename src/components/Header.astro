@@ -5,7 +5,9 @@ import { getCollection } from 'astro:content';
 import { nav } from '@/data/site';
 
 const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
-const studies = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+// Case studies are off the site for now; the engagements column in the
+// mega panel went with them. Restore both together.
+// const studies = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
 
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
@@ -148,7 +150,8 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
   <!-- Mega panel, full-bleed under the bar -->
   <div id="mm-panel" class="invisible absolute inset-x-0 top-full opacity-0" aria-hidden="true">
     <div class="border-b border-line bg-base/95 backdrop-blur-2xl shadow-[0_28px_60px_-30px_rgba(0,0,0,0.7)]">
-      <div class="shell grid gap-8 py-8 lg:grid-cols-[1.6fr_1fr]">
+      {/* Was lg:grid-cols-[1.6fr_1fr] with engagements on the right. */}
+      <div class="shell grid gap-8 py-8">
         <div>
           <p class="mono-label mb-4">Platforms</p>
           <div class="grid gap-2.5 sm:grid-cols-2">
@@ -176,6 +179,7 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
           </div>
         </div>
 
+        {/*
         <div class="lg:border-l lg:border-line lg:pl-8">
           <p class="mono-label mb-4">Recent engagements</p>
           <div class="space-y-1">
@@ -202,6 +206,7 @@ const onProduct = products.some((p) => path === `/${p.data.slug}/`);
             All case studies →
           </a>
         </div>
+        */}
       </div>
     </div>
   </div>

@@ -4,7 +4,9 @@ import { getCollection } from 'astro:content';
 import PageLayout from '@/layouts/PageLayout.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import SectionHead from '@/components/SectionHead.astro';
-import CaseStudyCard from '@/components/CaseStudyCard.astro';
+// Case studies are off the site for now; their routes are parked under
+// src/pages/_case-studies. Restore this together with that folder.
+// import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import Glyph from '@/components/Glyph.astro';
 import { site, leadership, industries, priorExperience } from '@/data/site';
@@ -38,6 +40,9 @@ const all = await getCollection('caseStudies');
 const studies = region.studies
   .map((slug) => all.find((s) => s.id === slug))
   .filter((s): s is NonNullable<typeof s> => Boolean(s));
+/* The card grid is parked, so the flagship clients join the plain list
+   below rather than disappearing from the region page entirely. */
+const deliveredHere = [...studies.map((s) => s.data.client), ...region.alsoHere];
 
 const schema = [
   {
@@ -229,22 +234,24 @@ const schema = [
 
   <!-- ══ WORK ══════════════════════════════════════════════════════════ -->
   {
-    studies.length > 0 && (
+    deliveredHere.length > 0 && (
       <section class="band-alt seam">
         <div class="shell py-32 md:py-44">
-          <SectionHead marker="Client stories" title={`Work running in ${region.country}`} />
+          <SectionHead marker="Clients" title={`Work running in ${region.country}`} />
 
-          <div class="mt-20 grid gap-5 md:grid-cols-3">
-            {studies.map((s, i) => (
-              <CaseStudyCard study={s} index={i} compact />
-            ))}
-          </div>
+          {/* Card grid, parked with src/pages/_case-studies.
+            <div class="mt-20 grid gap-5 md:grid-cols-3">
+              {studies.map((s, i) => (
+                <CaseStudyCard study={s} index={i} compact />
+              ))}
+            </div>
+          */}
 
-          {region.alsoHere.length > 0 && (
-            <div class="mt-16 border-t border-line pt-10">
-              <p class="mono-label">Also delivered here</p>
+          {deliveredHere.length > 0 && (
+            <div class="mt-14">
+              <p class="mono-label">Delivered here</p>
               <ul class="mt-5 flex flex-wrap gap-x-7 gap-y-3">
-                {region.alsoHere.map((c) => (
+                {deliveredHere.map((c) => (
                   <li class="text-[0.9375rem] text-fg-2">{c}</li>
                 ))}
               </ul>

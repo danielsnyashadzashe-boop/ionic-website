@@ -52,9 +52,13 @@ const pages = [
   ['home', '/'],
   ['product', '/process-genesis/'],
   ['product-grc', '/ionic-grc/'],
-  ['case-studies', '/case-studies/'],
-  ['case-study', '/case-studies/old-mutual/'],
-  ['insights', '/insights/'],
+  // Case studies and insights are parked under src/pages/_case-studies
+  // and _insights. Shoot them again when the folders come back.
+  // ['case-studies', '/case-studies/'],
+  // ['case-study', '/case-studies/sirago/'],
+  // ['insights', '/insights/'],
+  ['services', '/services/'],
+  ['about', '/about/'],
   ['contact', '/contact/'],
 ];
 

@@ -70,12 +70,13 @@ const split = (attr: string) => {
           marker="In their words"
           title="What clients say when"
           titleAccent="the work is done."
-          lede="Taken from the engagements themselves. Every quote links to the write-up it came from, so you can read the whole story rather than the flattering sentence."
+          lede="Taken from the engagements themselves, in the words the client used at the time. Nothing here has been tightened up for the website."
         />
 
         {/* ── Lead quote ───────────────────────────────────────────── */}
-        <a
-          href={`/case-studies/${lead.id}/`}
+        {/* A div, not a link to `/case-studies/${lead.id}/`, for the
+            same reason as the cards below. */}
+        <div
           class="group rise relative mt-20 block"
           style="--step:0"
         >
@@ -144,15 +145,16 @@ const split = (attr: string) => {
               aria-hidden="true"
             />
           </div>
-        </a>
+        </div>
 
         {/* ── Supporting quotes ────────────────────────────────────── */}
         <div class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {rest.map((s, i) => {
             const { person, org } = split(s.data.quoteAttribution);
+            // A div, not a link to `/case-studies/${s.id}/`: the write-ups
+            // are parked under src/pages/_case-studies.
             return (
-              <a
-                href={`/case-studies/${s.id}/`}
+              <div
                 class="surface card-i rise group relative flex flex-col overflow-hidden p-7 md:p-8"
                 style={`--step:${i + 1}`}
               >
@@ -185,20 +187,15 @@ const split = (attr: string) => {
                       {person ? `${org} · ${s.data.sector}` : s.data.sector}
                     </span>
                   </span>
-                  <span
-                    class="shrink-0 font-mono text-[0.625rem] text-fg-4 transition-transform duration-300 group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  >
-                    →
-                  </span>
+                  {/* The → offered a write-up to open. Parked with it. */}
                 </div>
-              </a>
+              </div>
             );
           })}
         </div>
 
         <p class="rise mt-12 text-center text-[0.8125rem] text-fg-4" style="--step:7">
-          Every quote above is attributed and links to the engagement it describes.
+          Every quote above is attributed to the engagement it came from.
         </p>
       </div>
     </section>

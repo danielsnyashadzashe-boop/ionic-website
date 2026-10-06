@@ -44,8 +44,8 @@ const products = (await getCollection('products')).sort((a, b) => a.data.order -
 
       <div class="mt-20 flex flex-wrap items-center gap-6">
         <a href="/" class="btn"><span>Back to home</span></a>
-        <a href="/case-studies/" class="link-u text-sm">Case studies</a>
-        <a href="/insights/" class="link-u text-sm">Insights</a>
+        {/* <a href="/case-studies/" class="link-u text-sm">Case studies</a> */}
+        {/* <a href="/insights/" class="link-u text-sm">Insights</a> */}
         <a href={`mailto:${contact.email}`} class="link-u font-mono text-xs">{contact.email}</a>
       </div>
     </div>

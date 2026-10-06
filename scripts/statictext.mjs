@@ -43,11 +43,13 @@ await new Promise((r) => server.listen(PORT, r));
  * page added since was missing, so the audit had been narrowing while the
  * site grew.
  */
+/* Every route the site builds. Case studies and insights are parked
+   under src/pages/_case-studies and _insights, so visiting them here
+   would audit a 404. Add them back when the folders come back. */
 const PAGES = [
   '/', '/about/', '/services/', '/ca/', '/za/',
-  '/process-genesis/', '/tippa/', '/ionic-grc/',
-  '/case-studies/', '/case-studies/sirago/', '/case-studies/kruse-group/',
-  '/insights/', '/contact/', '/privacy/',
+  '/process-genesis/', '/tippa/', '/ionic-grc/', '/ionic-erp/',
+  '/expenseflow/', '/contact/', '/privacy/',
 ];
 
 const CHECK = () => {

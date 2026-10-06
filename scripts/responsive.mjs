@@ -50,11 +50,13 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(PORT, r));
 
 const WIDTHS = [320, 375, 414, 640, 768, 1024, 1280, 1440, 1920];
-/** Same note as statictext.mjs: this list had stopped tracking the site. */
+/* Every route the site builds. Case studies and insights are parked
+   under src/pages/_case-studies and _insights, so visiting them here
+   would audit a 404. Add them back when the folders come back. */
 const PAGES = [
   '/', '/about/', '/services/', '/ca/', '/za/',
-  '/process-genesis/', '/ionic-grc/', '/case-studies/',
-  '/case-studies/sirago/', '/insights/', '/contact/', '/privacy/',
+  '/process-genesis/', '/tippa/', '/ionic-grc/', '/ionic-erp/',
+  '/expenseflow/', '/contact/', '/privacy/',
 ];
 
 const audit = () => {

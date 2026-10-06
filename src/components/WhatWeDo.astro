@@ -36,15 +36,19 @@ const areas: Area[] = [
     title: 'Software development',
     body: 'Custom platforms where the requirements are genuinely specific, and our own products where they genuinely fit.',
     photo: 'codeReview',
-    href: '/work/',
+    // There has never been a /work/ page; the engagement ledger is a
+    // section of the homepage, which is how the footer already links it.
+    href: '/#work',
     cta: 'See the work',
   },
   {
     title: 'Consulting',
     body: 'Discovery, target operating model and change management. The half that decides whether the software gets adopted.',
     photo: 'analyticsBriefing',
-    href: '/case-studies/',
-    cta: 'Case studies',
+    // Was '/case-studies/' with cta 'Case studies'; services is where
+    // the consulting work is described while that route is parked.
+    href: '/services/',
+    cta: 'See services',
   },
 ];
 ---

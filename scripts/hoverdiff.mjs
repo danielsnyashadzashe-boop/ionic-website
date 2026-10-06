@@ -35,7 +35,7 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(PORT, r));
 
-const PAGES = ['/', '/process-genesis/', '/case-studies/', '/insights/', '/contact/', '/404.html'];
+const PAGES = ['/', '/process-genesis/', '/services/', '/about/', '/contact/', '/404.html'];
 
 /** Fraction of pixels that differ by more than a just-noticeable amount. */
 const diffRatio = async (a, b) => {

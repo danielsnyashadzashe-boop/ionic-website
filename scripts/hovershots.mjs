@@ -21,7 +21,7 @@ const CASES=[
   ['case-card','/', 'a.flood.border', 'crop'],
   ['btn','/', 'a.btn', 'self'],
   ['btn-line','/', 'a.btn-line', 'self'],
-  ['nav-link','/', 'nav a[href="/case-studies/"]', 'header'],
+  ['nav-link','/', 'nav a[href="/services/"]', 'header'],
   ['header-cta','/', 'a[href="/contact/"].hidden', 'header'],
   ['dropdown','/', '#dd-trigger', 'header'],
   ['filter-chip','/', '.chip-f:nth-of-type(2)', 'crop'],

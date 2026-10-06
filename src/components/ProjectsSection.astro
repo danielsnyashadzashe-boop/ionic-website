@@ -67,11 +67,13 @@ const statusTone: Record<string, string> = {
       <ul id="ledger">
         {
           projects.map((p, i) => {
-            const Tag = p.study ? 'a' : 'div';
+            // Was `p.study ? 'a' : 'div'`, linking to /case-studies/<slug>/.
+            // Those routes are parked under src/pages/_case-studies, so every
+            // row is a plain row until they come back.
+            const Tag = 'div';
             return (
               <li class="prow border-b border-line last:border-b-0" data-discipline={p.discipline} style={`--step:${i % 8}`}>
                 <Tag
-                  {...(p.study ? { href: `/case-studies/${p.study}/` } : {})}
                   class="group grid grid-cols-1 items-center gap-x-5 gap-y-2 px-5 py-4 transition-colors duration-300 hover:bg-panel md:grid-cols-[2rem_minmax(0,13rem)_minmax(0,1fr)_8.5rem_6.5rem_5rem]"
                 >
                   <span class="figure hidden text-[0.625rem] text-fg-4 md:block">

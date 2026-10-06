@@ -6,7 +6,9 @@ import SectionHead from '@/components/SectionHead.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import Figure from '@/components/Figure.astro';
 import ContactSection from '@/components/ContactSection.astro';
-import CaseStudyCard from '@/components/CaseStudyCard.astro';
+// Case studies are off the site for now; their routes are parked under
+// src/pages/_case-studies. Restore these together with that folder.
+// import CaseStudyCard from '@/components/CaseStudyCard.astro';
 import WhereToStart from '@/components/WhereToStart.astro';
 import { site, metrics, metricsNote } from '@/data/site';
 import VideoFigure from '@/components/VideoFigure.astro';
@@ -35,9 +37,9 @@ const d = product.data;
 const { Content } = await render(product);
 
 // Case studies that name this product.
-const related = (await getCollection('caseStudies'))
-  .filter((s) => s.data.products.includes(d.name))
-  .sort((a, b) => a.data.order - b.data.order);
+// const related = (await getCollection('caseStudies'))
+//   .filter((s) => s.data.products.includes(d.name))
+//   .sort((a, b) => a.data.order - b.data.order);
 
 const schema = [
   {
@@ -353,18 +355,20 @@ const schema = [
         }
       </div>
 
-      {
-        related.length > 0 && (
-          <div class="mt-20">
-            <p class="marker rise">Read the engagements</p>
-            <div class="mt-8 grid gap-5 md:grid-cols-3">
-              {related.slice(0, 3).map((s, i) => (
-                <CaseStudyCard study={s} index={i} compact />
-              ))}
-            </div>
-          </div>
-        )
-      }
+      {/* Read the engagements. Parked with src/pages/_case-studies.
+          {
+            related.length > 0 && (
+              <div class="mt-20">
+                <p class="marker rise">Read the engagements</p>
+                <div class="mt-8 grid gap-5 md:grid-cols-3">
+                  {related.slice(0, 3).map((s, i) => (
+                    <CaseStudyCard study={s} index={i} compact />
+                  ))}
+                </div>
+              </div>
+            )
+          }
+      */}
     </div>
   </section>
 

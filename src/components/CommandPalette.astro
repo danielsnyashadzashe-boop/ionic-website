@@ -11,20 +11,22 @@ import { projects } from '@/data/projects';
  */
 
 const products = await getCollection('products');
-const studies = await getCollection('caseStudies');
-const posts = await getCollection('insights', ({ data }) => !data.draft);
+// Case studies and insights are off the site for now, so the palette
+// must not offer routes that no longer build.
+// const studies = await getCollection('caseStudies');
+// const posts = await getCollection('insights', ({ data }) => !data.draft);
 
 type Item = { t: string; s: string; h: string; g: string };
 
 const items: Item[] = [
   { t: 'Home', s: 'Overview', h: '/', g: 'Pages' },
-  { t: 'Case studies', s: 'All engagements', h: '/case-studies/', g: 'Pages' },
-  { t: 'Insights', s: 'Writing', h: '/insights/', g: 'Pages' },
+  // { t: 'Case studies', s: 'All engagements', h: '/case-studies/', g: 'Pages' },
+  // { t: 'Insights', s: 'Writing', h: '/insights/', g: 'Pages' },
   { t: 'Contact', s: 'Start a conversation', h: '/contact/', g: 'Pages' },
   { t: 'Privacy', s: 'POPIA · PIPEDA', h: '/privacy/', g: 'Pages' },
   ...products.map((p) => ({ t: p.data.name, s: p.data.kicker, h: `/${p.data.slug}/`, g: 'Platforms' })),
-  ...studies.map((s) => ({ t: s.data.client, s: s.data.engagement, h: `/case-studies/${s.id}/`, g: 'Engagements' })),
-  ...posts.map((p) => ({ t: p.data.title, s: `${p.data.readingMinutes} min read`, h: `/insights/${p.id}/`, g: 'Insights' })),
+  // ...studies.map((s) => ({ t: s.data.client, s: s.data.engagement, h: `/case-studies/${s.id}/`, g: 'Engagements' })),
+  // ...posts.map((p) => ({ t: p.data.title, s: `${p.data.readingMinutes} min read`, h: `/insights/${p.id}/`, g: 'Insights' })),
   ...projects
     .filter((p) => !p.study)
     .map((p) => ({ t: p.client, s: p.deliverable, h: '/#work', g: 'Engagements' })),

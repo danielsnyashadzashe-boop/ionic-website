@@ -20,7 +20,13 @@ export interface Service {
   pillar: 'business' | 'digital';
   name: string;
   summary: string;
-  /** Clients this has been delivered for. Named, not described. */
+  /**
+   * Clients this has been delivered for. Named, not described.
+   *
+   * These used to link to the write-up. Case studies are off the site
+   * for now (src/pages/_case-studies), so the names stand alone; `href`
+   * stays on the type for when they come back.
+   */
   seenIn: { label: string; href?: string }[];
 }
 
@@ -45,7 +51,7 @@ export const services: Service[] = [
     name: 'Strategy and roadmap',
     summary:
       'Digital and operating strategy tied to what the business is trying to achieve, and a roadmap that sequences the work by value and effort. Includes operating model and organisation design where structure is part of the problem.',
-    seenIn: [{ label: 'Sirago', href: '/case-studies/sirago/' }],
+    seenIn: [{ label: 'Sirago' }],
   },
   {
     slug: 'process',
@@ -55,8 +61,8 @@ export const services: Service[] = [
     summary:
       'We map how work really runs with Process Genesis, find the bottlenecks, rework and manual effort, then redesign. What is worth automating gets automated; the rest gets simpler.',
     seenIn: [
-      { label: 'Sirago', href: '/case-studies/sirago/' },
-      { label: 'Kruse Group', href: '/case-studies/kruse-group/' },
+      { label: 'Sirago' },
+      { label: 'Kruse Group' },
     ],
   },
   {
@@ -67,8 +73,8 @@ export const services: Service[] = [
     summary:
       'Adoption planning, communication and hands-on training, so people actually use what has been built. Process Genesis teaches process thinking along the way, which leaves skills behind when we step back.',
     seenIn: [
-      { label: 'Tippa', href: '/case-studies/tippa/' },
-      { label: 'Genric', href: '/case-studies/sirago/' },
+      { label: 'Tippa' },
+      { label: 'Genric' },
     ],
   },
   {
@@ -79,9 +85,9 @@ export const services: Service[] = [
     summary:
       'ERP selection, implementation and replacement, or a custom operations platform when off-the-shelf will not fit how you work. Finance, operations, logistics, jobs, assets, people and reporting in one place.',
     seenIn: [
-      { label: 'Kruse Group', href: '/case-studies/kruse-group/' },
-      { label: 'Depot in Durban', href: '/case-studies/depot-durban/' },
-      { label: 'NVV', href: '/case-studies/national-video-vision/' },
+      { label: 'Kruse Group' },
+      { label: 'Depot in Durban' },
+      { label: 'NVV' },
     ],
   },
   {
@@ -93,7 +99,7 @@ export const services: Service[] = [
       'Web platforms, mobile apps and customer portals, connected to the systems you already run, including SAP, SharePoint and banking partners.',
     seenIn: [
       { label: 'Sappi' },
-      { label: 'Tippa', href: '/case-studies/tippa/' },
+      { label: 'Tippa' },
       { label: 'Tradeway' },
     ],
   },
@@ -113,7 +119,7 @@ export const services: Service[] = [
     name: 'Managed operations and support',
     summary:
       'Support and maintenance after go-live, IT stabilisation when internal support falls away, and embedded people to run operations where you need them.',
-    seenIn: [{ label: 'Nogada Security' }, { label: 'Tippa', href: '/case-studies/tippa/' }],
+    seenIn: [{ label: 'Nogada Security' }, { label: 'Tippa' }],
   },
 ];
 
