@@ -41,15 +41,13 @@ export const photos = {
   processGenesisKey: {
     src: processGenesisKey,
     /**
-     * The alt carries the words in the picture, not a description of it.
-     * This is an image OF TEXT: the product name, six named pillars and a
-     * three-part line. Someone who cannot see it needs the words, and
-     * "a diagram of six icons" gives them nothing.
+     * The alt is the words on the card, because that is all the card is:
+     * a wordmark and a product name. Describing the gradient behind them
+     * would tell a screen reader nothing it can use.
      */
-    alt:
-      'Process Genesis key visual. The Ionic Innovate mark sits above the product name, ringed by six stages: Strategy, Processes, Systems, Infrastructure, People and Value. Screens around it show a rising chart, a process map, a checklist and cloud infrastructure. The line beneath reads: see your whole business, change it, prove it.',
+    alt: 'Ionic Innovate: Process Genesis.',
     caption:
-      'Six stages on one thread: strategy through to proven value, with the process map as the thing that joins them.',
+      'The platform behind the engagements on this page, and the one Sirago now runs itself.',
     illustrative: false,
     brand: true,
   },

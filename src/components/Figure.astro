@@ -125,7 +125,7 @@ const specks = [
     style={`aspect-ratio: ${frameRatio}`}
   >
   <div
-    class="notch surface absolute inset-0 overflow-hidden"
+    class:list={['notch surface absolute inset-0 overflow-hidden', isBrand && 'plate']}
     style={`--nx: ${nxPct}%; --ny: ${nyPct.toFixed(3)}%`}
   >
     <Image
@@ -135,8 +135,17 @@ const specks = [
       widths={[480, 800, 1200, 1800]}
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
-      class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+      class:list={[
+        'h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        isBrand ? 'group-hover:scale-[1.012]' : 'group-hover:scale-[1.03]',
+      ]}
     />
+
+    {/* A single specular pass, as light crosses something lacquered. Only on
+        brand plates: on a photograph it reads as a lens flare someone left
+        in, but on a flat dark card it is the thing that makes it feel like
+        an object rather than a rectangle of colour. */}
+    {isBrand && <span class="sheen pointer-events-none absolute inset-0" aria-hidden="true" />}
 
     {/* Scrim: sinks stock photography toward the palette so it does not sit
         on the page as a bright rectangle. */}
@@ -187,3 +196,47 @@ const specks = [
     )
   }
 </figure>
+
+<style>
+  /* ── Brand plate ──────────────────────────────────────────────────
+     A title card is flat, dark and nearly all ground, so it needs its own
+     light rather than borrowing the page's. The sheen is a single pass
+     across the diagonal, slow enough to read as a reflection rather than
+     as a loading shimmer, and it runs only on hover or keyboard focus so
+     nothing on the page moves by itself. */
+  .plate .sheen {
+    background: linear-gradient(
+      100deg,
+      transparent 38%,
+      color-mix(in oklch, #ffffff 9%, transparent) 47%,
+      color-mix(in oklch, #ffc20e 11%, transparent) 52%,
+      transparent 62%
+    );
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s;
+  }
+  .group:hover .plate .sheen,
+  .group:focus-within .plate .sheen {
+    transform: translateX(120%);
+    opacity: 1;
+  }
+
+  /* The edge warms with it, so the hover is felt at the frame as well as
+     across the face. */
+  .plate {
+    transition: box-shadow 0.6s var(--ease-out-soft), border-color 0.6s var(--ease-out-soft);
+  }
+  .group:hover .plate,
+  .group:focus-within .plate {
+    border-color: color-mix(in oklch, #ffc20e 38%, var(--line));
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, #ffc20e 16%, transparent),
+      0 26px 60px -28px rgb(0 0 0 / 0.65);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plate .sheen { display: none; }
+    .plate { transition: none; }
+  }
+</style>
