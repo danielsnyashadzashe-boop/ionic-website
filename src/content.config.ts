@@ -88,8 +88,27 @@ const products = defineCollection({
     audiences: z
       .array(z.object({ who: z.string(), name: z.string(), detail: z.string() }))
       .default([]),
-    /** Set where a product demo video should appear. */
-    video: z.boolean().default(false),
+    /**
+     * The explainer video for this platform, where one exists.
+     *
+     * Dimensions and duration are recorded rather than read at runtime: the
+     * frame has to reserve its space before anything loads, and the
+     * VideoObject structured data needs a real duration.
+     */
+    video: z
+      .object({
+        src: z.string(),
+        poster: z.string(),
+        durationSeconds: z.number(),
+        width: z.number(),
+        height: z.number(),
+        title: z.string(),
+        description: z.string(),
+        uploadDate: z.string(),
+        /** WebVTT track. Absent is surfaced on the page, not hidden. */
+        captions: z.string().optional(),
+      })
+      .optional(),
     faqs: z
       .array(z.object({ q: z.string(), a: z.string() }))
       .default([]),

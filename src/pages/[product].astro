@@ -12,6 +12,7 @@ import CompassPreview from '@/components/CompassPreview.astro';
 import TasterEmbed from '@/components/TasterEmbed.astro';
 import { taster } from '@/data/site';
 import { site, metrics, metricsNote } from '@/data/site';
+import VideoFigure from '@/components/VideoFigure.astro';
 
 /**
  * One template for every product. Adding a fifth platform is a Markdown
@@ -81,6 +82,23 @@ const schema = [
     ],
   },
   ...(d.compass ? [compassSchema] : []),
+  ...(d.video
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'VideoObject',
+          name: d.video.title,
+          description: d.video.description,
+          thumbnailUrl: new URL(d.video.poster, site.domain).href,
+          contentUrl: new URL(d.video.src, site.domain).href,
+          uploadDate: d.video.uploadDate,
+          duration: `PT${Math.floor(d.video.durationSeconds / 60)}M${d.video.durationSeconds % 60}S`,
+          width: d.video.width,
+          height: d.video.height,
+          publisher: { '@type': 'Organization', name: site.name, url: site.domain },
+        },
+      ]
+    : []),
   ...(d.faqs.length > 0
     ? [
         {
@@ -278,24 +296,38 @@ const schema = [
     )
   }
 
-  <!-- ══ DEMO VIDEO ════════════════════════════════════════════════════ -->
-  {/* Reserved rather than rendered: an empty frame that says what it is
-      waiting for is honest, and it stops the slot being forgotten. The
-      VideoObject schema goes in alongside the file. */}
+  <!-- ══ EXPLAINER VIDEO ═══════════════════════════════════════════════ -->
+  {/* Placed before the narrative and the Compass: two and a half minutes of
+      someone explaining it is a lower-effort entry point than either, and a
+      reader who watches it arrives at the rest already oriented. */}
   {
     d.video && (
       <section id="video" class="band-alt seam scroll-mt-20">
         <div class="shell py-32 md:py-44">
-          <SectionHead marker="See it work" title={`${d.name} walkthrough`} />
-
-          <div class="mt-16 flex aspect-video w-full items-center justify-center border border-dashed border-line-strong bg-raised/40">
-            <div class="px-6 text-center">
-              <p class="mono-label">Walkthrough to follow</p>
-              <p class="measure mx-auto mt-4 text-[0.9375rem] leading-relaxed text-fg-3">
-                A recorded run through {d.name} on a real process. Until it is here, the
-                Compass below gives you the short version on one of your own.
+          <div class="grid gap-12 lg:grid-cols-[0.42fr_1fr] lg:gap-16">
+            <div class="lg:sticky lg:top-28 lg:self-start">
+              <SectionHead
+                marker="See it work"
+                title="Two and a half minutes,"
+                titleAccent="start to finish."
+              />
+              <p class="measure mt-8 text-[0.9375rem] leading-relaxed text-fg-3">
+                {d.video.description}
               </p>
-              <a href="#compass" class="link-u mt-6 inline-block text-sm">Take a reading instead →</a>
+              <p class="mt-8">
+                <a href="#compass" class="link-u text-sm">Or try it on your own process →</a>
+              </p>
+            </div>
+
+            <div class="rise" style="--step:1">
+              <VideoFigure
+                src={d.video.src}
+                poster={d.video.poster}
+                durationSeconds={d.video.durationSeconds}
+                title={d.video.title}
+                captions={d.video.captions}
+                ratio={`${d.video.width} / ${d.video.height}`}
+              />
             </div>
           </div>
         </div>

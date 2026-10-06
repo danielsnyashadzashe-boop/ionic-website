@@ -1719,3 +1719,32 @@ route inventory. About 25 files instead of 300.
 - [ ] The 8 taster commits land on a branch cut from current main
 - [ ] That branch is the pull request
 - [ ] The rest of `website/pg-taster` is reviewed separately or abandoned
+
+---
+
+### WEB-75 · Captions and a transcript for the explainer video
+
+**Type** Task  **Priority** High  **Epic** EP-6  **Component** Content
+**Needs** Whoever has the script
+
+The Process Genesis explainer is now on the platform page: two minutes
+twenty-eight, 1280x720, served from `public/media/`. It has no captions,
+so it is closed to anyone who cannot hear it, and the page says so rather
+than leaving the gap silent.
+
+The player already supports a WebVTT track: add `captions: /media/...vtt`
+to the `video` block in `src/content/products/process-genesis.md` and it
+renders, with the standing notice disappearing by itself.
+
+A transcript on the page is worth having alongside. It serves the same
+people, and it is the only part of a two and a half minute video a search
+engine can read.
+
+**Acceptance criteria**
+
+- [ ] A WebVTT caption file, checked against what is actually said
+- [ ] Wired into the content entry and verified in the player
+- [ ] A decision on publishing the transcript on the page
+
+**Where** `src/content/products/process-genesis.md`,
+`src/components/VideoFigure.astro`
