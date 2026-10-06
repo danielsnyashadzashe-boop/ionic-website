@@ -170,7 +170,10 @@ const schema = [
           {
             d.photo && (
               <div class="mb-8">
-                <Figure photo={d.photo} sizes="(min-width: 1024px) 30rem, 100vw" ratio="16 / 10" eager />
+                {/* No ratio: Figure gives photography the 16/10 crop and leaves brand
+                    artwork at its own shape, which this one needs because its
+                    strapline runs close to the bottom edge. */}
+                <Figure photo={d.photo} sizes="(min-width: 1024px) 30rem, 100vw" eager />
               </div>
             )
           }

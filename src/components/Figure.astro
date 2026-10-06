@@ -43,7 +43,21 @@ const {
 
 const p = photos[photo];
 const isPortrait = p.src.height > p.src.width;
-const frameRatio = ratio ?? (isPortrait ? '3 / 4' : '16 / 10');
+/**
+ * Our own artwork, as opposed to stock photography.
+ *
+ * Read with `in` rather than `p.brand`, because the registry is a literal
+ * object and only the entries that set the flag carry the property at all.
+ */
+const isBrand = 'brand' in p && p.brand === true;
+
+/**
+ * Brand artwork keeps its own shape unless told otherwise. A key visual
+ * carries text close to its edges, and the 16/10 photographic crop would
+ * take a slice off the top and bottom, which on this one is the strapline.
+ */
+const nativeRatio = `${p.src.width} / ${p.src.height}`;
+const frameRatio = ratio ?? (isBrand ? nativeRatio : isPortrait ? '3 / 4' : '16 / 10');
 
 /**
  * The traced outline is an SVG polygon rather than a border, because a
@@ -126,7 +140,12 @@ const specks = [
 
     {/* Scrim: sinks stock photography toward the palette so it does not sit
         on the page as a bright rectangle. */}
-    <span class="pointer-events-none absolute inset-0 bg-base/35 mix-blend-multiply" aria-hidden="true"></span>
+    {/* The scrim stops borrowed photography fighting the palette. Artwork
+        we drew ourselves is already in the palette, so multiplying it by
+        the ground only dulls it. */}
+    {!isBrand && (
+      <span class="pointer-events-none absolute inset-0 bg-base/35 mix-blend-multiply" aria-hidden="true" />
+    )}
     <span
       class="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/70 via-transparent to-transparent"
       aria-hidden="true"></span>

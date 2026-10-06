@@ -19,7 +19,7 @@ seoDescription: >-
   decision engine and analytics in one integrated solution. Deployed at Old
   Mutual, Bidvest, Fidelity and 3Sixty Health.
 showMetrics: true
-photo: aiInterface
+photo: processGenesisKey
 homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
 compass: true
 video:

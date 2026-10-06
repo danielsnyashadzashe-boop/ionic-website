@@ -9,6 +9,7 @@ import deliveryTeam from '@/assets/photos/delivery-team.jpg';
 import programmeDelivery from '@/assets/photos/programme-delivery.jpg';
 import qrTip from '@/assets/photos/qr-tip.jpg';
 import customerMoment from '@/assets/photos/customer-moment.jpg';
+import processGenesisKey from '@/assets/photos/process-genesis-key.png';
 
 /**
  * Photography registry.
@@ -16,20 +17,42 @@ import customerMoment from '@/assets/photos/customer-moment.jpg';
  * `alt` is written for a screen reader: what is in the frame, not what we
  * want it to mean. `caption` is the editorial line shown under the image.
  *
- * `illustrative: true` on every entry is deliberate and load-bearing. These
- * are stock photographs. They are not Ionic staff, not client premises, and
- * not any named engagement. Captioning them as though they were would be
- * fabricating evidence on a page clients read, so `Figure.astro` renders a
- * quiet "Illustrative" marker and nothing here claims otherwise.
+ * `illustrative: true` marks a stock photograph: not Ionic staff, not client
+ * premises, not any named engagement. Captioning one as though it were would
+ * be fabricating evidence on a page clients read, so `Figure.astro` renders a
+ * quiet "Illustrative" marker and nothing here claims otherwise. Every
+ * photograph in this registry is stock and carries it.
+ *
+ * `brand: true` is the exception: artwork we made, already drawn in our own
+ * palette. It gets no marker, because there is nothing to disclaim, and no
+ * tint scrim, because the scrim exists to stop borrowed photography fighting
+ * the page and would only dull something that already belongs to it.
  */
 export interface Photo {
   src: ImageMetadata;
   alt: string;
   caption: string;
   illustrative: boolean;
+  /** Our own artwork: no Illustrative marker, no tint. */
+  brand?: boolean;
 }
 
 export const photos = {
+  processGenesisKey: {
+    src: processGenesisKey,
+    /**
+     * The alt carries the words in the picture, not a description of it.
+     * This is an image OF TEXT: the product name, six named pillars and a
+     * three-part line. Someone who cannot see it needs the words, and
+     * "a diagram of six icons" gives them nothing.
+     */
+    alt:
+      'Process Genesis key visual. The Ionic Innovate mark sits above the product name, ringed by six stages: Strategy, Processes, Systems, Infrastructure, People and Value. Screens around it show a rising chart, a process map, a checklist and cloud infrastructure. The line beneath reads: see your whole business, change it, prove it.',
+    caption:
+      'Six stages on one thread: strategy through to proven value, with the process map as the thing that joins them.',
+    illustrative: false,
+    brand: true,
+  },
   nightEngineering: {
     src: nightEngineering,
     alt: 'An engineer wearing headphones works at a desk in a darkened office, facing a monitor of source code, with further code and terminal output projected on the wall behind.',
