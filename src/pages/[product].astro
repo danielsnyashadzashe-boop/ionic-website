@@ -7,6 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import Figure from '@/components/Figure.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import CaseStudyCard from '@/components/CaseStudyCard.astro';
+import WhereToStart from '@/components/WhereToStart.astro';
 import { site, metrics, metricsNote } from '@/data/site';
 import VideoFigure from '@/components/VideoFigure.astro';
 
@@ -366,6 +367,30 @@ const schema = [
       }
     </div>
   </section>
+
+  <!-- ══ WHERE TO START ════════════════════════════════════════════════ -->
+  {/* After traction and before the FAQ on purpose: you read what the
+      platform does, see it has run somewhere real, then try the questions
+      on a process of your own, and contacting us is the next step rather
+      than an interruption. */}
+  {
+    d.whereToStart && (
+      <section id="where-to-start" class="band-alt seam scroll-mt-20">
+        <div class="shell py-32 md:py-44">
+          <SectionHead
+            marker="Try it yourself"
+            title="Where should your process"
+            titleAccent="go next?"
+            lede={`Every ${d.name} engagement opens with discovery: we map how the work actually runs before anything is configured. These are five of the questions we ask, run on one of your own processes. Five clicks, nothing is sent anywhere, nothing is stored.`}
+          />
+
+          <div class="mt-16 max-w-[52rem]">
+            <WhereToStart />
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <!-- ══ FAQ ═══════════════════════════════════════════════════════════ -->
   {

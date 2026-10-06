@@ -53,6 +53,13 @@ const products = defineCollection({
       ),
     }),
     showMetrics: z.boolean().default(false),
+    /**
+     * Show the five-question "where should this process go next"
+     * section. Only the platform the questions are about should carry
+     * it; on anything else it would be a quiz with no bearing on the
+     * page it sits in.
+     */
+    whereToStart: z.boolean().default(false),
     homeProof: z.string(),
     photo: photo.optional(),
     /**

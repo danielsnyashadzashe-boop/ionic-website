@@ -2,7 +2,7 @@
  * Shared controller for staged flows.
  *
  * Every multi-step thing on the site runs through this: the contact brief,
- * the contact brief, and whatever comes next. A visitor should learn the
+ * the five questions on the Process Genesis page, and whatever comes next. A visitor should learn the
  * interaction once. If each flow shipped its own rail, transition and
  * keyboard handling they would read as separate products stitched together,
  * which is exactly the inconsistency this exists to prevent.
