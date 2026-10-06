@@ -1,0 +1,119 @@
+---
+import { taster } from '@/data/site';
+
+/**
+ * The Process Genesis taster, embedded.
+ *
+ * The taster lives in the Process Genesis repository on `website/pg-taster`.
+ * It is an iframe served by the PG deployment, so there is nothing to build
+ * here: this component is the socket it plugs into, plus the two things we
+ * need it to do differently.
+ *
+ * **No calendar.** The taster's own call to action is "Book a 30-minute
+ * walkthrough", which opens a booking URL in a new tab. We do not want a
+ * calendar on the site: people should write to us and we call them back. So
+ * the frame is loaded with `?book=message`, which stops it opening anything
+ * and makes it post an event instead. We catch that event and take the
+ * visitor to our contact form with the topic already set.
+ *
+ * That only half solves it. The button inside the frame still reads "Book a
+ * 30-minute walkthrough" next to a calendar icon, and no query parameter
+ * changes its label. Relabelling it is a change in the PG repository, and it
+ * is listed in docs/jira-backlog.md as WEB-71.
+ *
+ * **Attribution.** Reaching the taster is a strong signal, so it is recorded
+ * against the visit. If the person then uses our own form, the enquiry
+ * arrives already marked as having come through the taster.
+ *
+ * Until `taster.host` is set this renders nothing at all. An iframe pointed
+ * at an unset host is a broken box on a live page, and a placeholder that
+ * says "coming soon" is worse than silence.
+ */
+
+interface Props {
+  /** Where the fallback link sends people when the taster is not connected. */
+  contactPath?: string;
+}
+
+const { contactPath = '/contact/?topic=demo' } = Astro.props;
+
+const host = taster.host.replace(/\/+$/, '');
+const src = host ? `${host}/taster.html?book=message` : '';
+---
+
+{
+  src && (
+    <div data-taster>
+      <iframe
+        data-pg-taster
+        src={src}
+        title="Try Process Genesis"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        style="width:100%;border:0;min-height:640px"
+      />
+
+      <noscript>
+        <p class="measure mt-6 text-[0.9375rem] leading-relaxed text-fg-3">
+          The taster needs JavaScript. <a class="link-u" href={contactPath}>Write to us instead</a> and we
+          will walk you through it on a call.
+        </p>
+      </noscript>
+
+      <p class="mt-6 font-mono text-[0.625rem] leading-relaxed text-fg-4">
+        Runs on our Process Genesis deployment. Nothing you type is stored in your browser, and the
+        preview it generates is never saved.
+      </p>
+
+      <script is:inline define:vars={{ host, contactPath }}>
+        /**
+         * Inline rather than bundled: the embed helper is served by the PG
+         * host and loaded below, and these listeners have to be attached
+         * before it starts relaying.
+         */
+        (function () {
+          /**
+           * The taster asked to book. We have no calendar, so this becomes a
+           * conversation instead: go to the contact form with the topic set.
+           */
+          window.addEventListener('pg-taster:book', function () {
+            try {
+              // Leaving details is the stronger signal and happens first, so
+              // clicking through afterwards must not overwrite it.
+              if (window.sessionStorage.getItem('ionic.taster') !== 'lead') {
+                window.sessionStorage.setItem('ionic.taster', 'book');
+              }
+            } catch (e) {
+              /* storage is optional */
+            }
+            window.location.href = contactPath;
+          });
+
+          /**
+           * A lead left their details inside the taster. Record it so a
+           * later enquiry through our own form is not counted twice as a
+           * fresh one. The event carries nothing the visitor typed.
+           */
+          window.addEventListener('pg-taster:lead', function () {
+            try {
+              window.sessionStorage.setItem('ionic.taster', 'lead');
+            } catch (e) {
+              /* storage is optional */
+            }
+          });
+
+          window.addEventListener('pg-taster:stage', function (e) {
+            try {
+              var stage = (e && e.detail && e.detail.stage) || '';
+              if (stage) window.sessionStorage.setItem('ionic.taster.stage', stage);
+            } catch (err) {
+              /* storage is optional */
+            }
+          });
+        })();
+      </script>
+
+      <script is:inline defer src={`${host}/taster-embed.js`} />
+    </div>
+  )
+}

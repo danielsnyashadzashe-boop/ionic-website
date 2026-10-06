@@ -1,0 +1,511 @@
+---
+/**
+ * What the Compass asks, shown rather than described.
+ *
+ * The Compass itself reveals one stage at a time, which is right once you
+ * have started it but means the page at rest showed a single intro panel and
+ * a button. Everything that makes the tool worth using was behind a click,
+ * so a visitor had no reason to take it.
+ *
+ * This band puts all five instruments on the page, moving, before anything
+ * is clicked, and adds the four things a real discovery pass looks at that
+ * a two-minute tool cannot. Nothing here is interactive except the jump: the
+ * animations are decoration over the real instruments below.
+ */
+
+/** The five readings the Compass actually takes. Each jumps into its stage. */
+const questions = [
+  {
+    stage: 'q1',
+    n: '01',
+    marker: 'Maturity',
+    title: 'How settled is the process today?',
+    line: 'Improvised on every run, or written down, followed and measured.',
+  },
+  {
+    stage: 'q2',
+    n: '02',
+    marker: 'Automation',
+    title: 'How much runs without a person?',
+    line: 'The share of steps with nobody typing, copying or forwarding.',
+  },
+  {
+    stage: 'q3',
+    n: '03',
+    marker: 'Frequency',
+    title: 'How often does it run?',
+    line: 'Once a quarter and never stopping deserve different fixes.',
+  },
+  {
+    stage: 'q4',
+    n: '04',
+    marker: 'Handoffs',
+    title: 'How many hands touch it?',
+    line: 'Every pass between people is somewhere delay can get in.',
+  },
+  {
+    stage: 'q5',
+    n: '05',
+    marker: 'Priority',
+    title: 'What hurts most right now?',
+    line: 'The one thing you would fix tomorrow if you could.',
+  },
+];
+
+/**
+ * The four the Compass cannot ask. These are deliberately not questions: they
+ * are measured from your systems during a discovery engagement, and each one
+ * maps to a capability on this page rather than to a slider.
+ */
+const discovery = [
+  {
+    marker: 'Cycle time',
+    title: 'Where the time actually goes',
+    line: 'Process mining timestamps every step, so the bottleneck is found rather than guessed at.',
+    cap: 'Process discovery',
+  },
+  {
+    marker: 'Exceptions',
+    title: 'The routes nobody documented',
+    line: 'The happy path is the one people describe. The branches around it are where the cost sits.',
+    cap: 'Workflow engine',
+  },
+  {
+    marker: 'Documents',
+    title: 'What the paperwork is hiding',
+    line: 'Invoices, contracts and claims read and validated, including the unstructured parts.',
+    cap: 'Document processing',
+  },
+  {
+    marker: 'Systems',
+    title: 'Every boundary work crosses',
+    line: 'Each hop between systems is a place data is retyped, delayed or quietly dropped.',
+    cap: 'Integration hub',
+  },
+];
+---
+
+<div data-cpv>
+  <!-- ══ THE FIVE READINGS ═══════════════════════════════════════════════ -->
+  <div class="flex flex-wrap items-baseline justify-between gap-4">
+    <p class="marker"><b>01</b><span>What it asks</span></p>
+    <p class="font-mono text-[0.6875rem] text-fg-4">Five readings · about two minutes</p>
+  </div>
+
+  <div class="mt-8 grid gap-px overflow-hidden border border-line bg-line-strong sm:grid-cols-2 lg:grid-cols-5">
+    {
+      questions.map((q, i) => (
+        <button
+          type="button"
+          class="cpv-card group bg-base p-6 text-left"
+          data-jump={q.stage}
+          style={`--i:${i}`}
+        >
+          <div class="cpv-art">
+            {q.stage === 'q1' && (
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                <path d="M24 96 A76 76 0 0 1 176 96" fill="none" stroke="var(--line-strong)" stroke-width="2" />
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((t) => {
+                  const a = Math.PI - (t / 8) * Math.PI;
+                  return (
+                    <line
+                      x1={100 + Math.cos(a) * 68}
+                      y1={96 - Math.sin(a) * 68}
+                      x2={100 + Math.cos(a) * 60}
+                      y2={96 - Math.sin(a) * 60}
+                      stroke="var(--fg-4)"
+                      stroke-width="1.5"
+                      opacity="0.55"
+                    />
+                  );
+                })}
+                <line class="cpv-needle" x1="100" y1="96" x2="100" y2="34" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" />
+                <circle cx="100" cy="96" r="5" fill="var(--accent-warm)" />
+              </svg>
+            )}
+
+            {q.stage === 'q2' && (
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                <defs>
+                  <clipPath id="cpv-tank"><rect x="66" y="10" width="68" height="98" rx="14" /></clipPath>
+                </defs>
+                <rect x="66" y="10" width="68" height="98" rx="14" fill="none" stroke="var(--line-strong)" stroke-width="2" />
+                <g clip-path="url(#cpv-tank)">
+                  <g class="cpv-fill">
+                    <path
+                      class="cpv-wave"
+                      fill="var(--primary)"
+                      opacity="0.5"
+                      d="M60 40 C74 33 88 47 102 40 C116 33 130 47 144 40 C158 33 172 47 186 40 C200 33 214 47 228 40 L228 200 L60 200 Z"
+                    />
+                  </g>
+                </g>
+                {[34, 59, 84].map((y) => (
+                  <line x1="66" y1={y} x2="80" y2={y} stroke="var(--fg-4)" stroke-width="1.5" opacity="0.6" />
+                ))}
+              </svg>
+            )}
+
+            {q.stage === 'q3' && (
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                <path
+                  d="M76 108 L92 18 Q100 14 108 18 L124 108 Q100 113 76 108 Z"
+                  fill="var(--panel)"
+                  stroke="var(--line-strong)"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                />
+                <g class="cpv-arm">
+                  <line x1="100" y1="100" x2="100" y2="26" stroke="var(--fg-2)" stroke-width="2.5" stroke-linecap="round" />
+                  <rect x="93" y="52" width="14" height="10" rx="2.5" fill="var(--primary)" />
+                </g>
+                <circle cx="100" cy="100" r="5" fill="var(--accent-warm)" />
+              </svg>
+            )}
+
+            {q.stage === 'q4' && (
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                <line x1="30" y1="59" x2="170" y2="59" stroke="var(--fg-4)" stroke-width="2" stroke-dasharray="4 5" opacity="0.7" />
+                {[30, 65, 100, 135, 170].map((x, n) => (
+                  <circle class="cpv-node" cx={x} cy="59" r="8" fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" style={`--n:${n}`} />
+                ))}
+                <circle class="cpv-runner" cx="30" cy="59" r="4" fill="var(--accent-warm)" />
+              </svg>
+            )}
+
+            {q.stage === 'q5' && (
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                {[
+                  [44, 20],
+                  [108, 20],
+                  [44, 66],
+                  [108, 66],
+                ].map(([x, y], n) => (
+                  <rect
+                    class="cpv-tile"
+                    x={x}
+                    y={y}
+                    width="48"
+                    height="32"
+                    rx="7"
+                    fill="var(--panel)"
+                    stroke="var(--line-strong)"
+                    stroke-width="2"
+                    style={`--n:${n}`}
+                  />
+                ))}
+              </svg>
+            )}
+          </div>
+
+          <p class="marker mt-5"><b>{q.n}</b><span>{q.marker}</span></p>
+          <h3 class="mt-3 font-display text-[1.0625rem] leading-snug text-fg">{q.title}</h3>
+          <p class="mt-2.5 text-[0.8125rem] leading-relaxed text-fg-3">{q.line}</p>
+          <span class="cpv-go cpv-foot mt-4 inline-flex items-center gap-1.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
+            Open this reading
+            <span aria-hidden="true">→</span>
+          </span>
+        </button>
+      ))
+    }
+  </div>
+
+  <!-- ══ WHAT DISCOVERY ADDS ═════════════════════════════════════════════ -->
+  <div class="mt-20 flex flex-wrap items-baseline justify-between gap-4">
+    <p class="marker"><b>02</b><span>What it cannot ask</span></p>
+    <p class="font-mono text-[0.6875rem] text-fg-4">Measured from your systems, not from a slider</p>
+  </div>
+
+  <p class="measure mt-6 text-[0.9375rem] leading-relaxed text-fg-3">
+    Five sliders can place a process. They cannot tell you where the hours are going, and a
+    recommendation built only on what you already believe is worth exactly what you put into it.
+    These four are read from the systems themselves during a discovery engagement.
+  </p>
+
+  <div class="mt-10 grid gap-px overflow-hidden border border-line bg-line-strong sm:grid-cols-2 lg:grid-cols-4">
+    {
+      discovery.map((d, i) => (
+        <article class="cpv-card is-static bg-base p-6" style={`--i:${i}`}>
+          <div class="cpv-art">
+            {i === 0 && (
+              /* Cycle time: work crossing three stations, piling at the middle one. */
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                {[34, 100, 166].map((x) => (
+                  <rect x={x - 17} y="46" width="34" height="34" rx="8" fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" />
+                ))}
+                <line x1="51" y1="63" x2="83" y2="63" stroke="var(--fg-4)" stroke-width="1.5" stroke-dasharray="3 4" />
+                <line x1="117" y1="63" x2="149" y2="63" stroke="var(--fg-4)" stroke-width="1.5" stroke-dasharray="3 4" />
+                {[0, 1, 2].map((n) => (
+                  <rect class="cpv-item" x="28" y="57" width="12" height="12" rx="3" fill="var(--primary)" style={`--n:${n}`} />
+                ))}
+                {/* The queue that builds at the slow station. */}
+                {[0, 1, 2].map((n) => (
+                  <rect class="cpv-queue" x={88 + n * 8} y="94" width="6" height="10" rx="2" fill="var(--accent-warm)" style={`--n:${n}`} />
+                ))}
+                <text x="100" y="26" text-anchor="middle" class="cpv-cap">Bottleneck</text>
+              </svg>
+            )}
+
+            {i === 1 && (
+              /* Exceptions: the documented path, and the branches around it. */
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                <path d="M20 59 H180" fill="none" stroke="var(--line-strong)" stroke-width="2" />
+                <path class="cpv-branch" d="M74 59 C96 59 96 24 124 24" fill="none" stroke="var(--accent-warm)" stroke-width="2" stroke-dasharray="3 4" style="--n:0" />
+                <path class="cpv-branch" d="M74 59 C96 59 96 94 124 94" fill="none" stroke="var(--accent-warm)" stroke-width="2" stroke-dasharray="3 4" style="--n:1" />
+                <circle cx="74" cy="59" r="6" fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" />
+                <circle class="cpv-runner2" cx="20" cy="59" r="4.5" fill="var(--primary)" />
+                {[124, 124, 180].map((x, n) => (
+                  <circle cx={x} cy={[24, 94, 59][n]} r="5" fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" />
+                ))}
+              </svg>
+            )}
+
+            {i === 2 && (
+              /* Documents: fields lifted off the page into a structured record. */
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                <rect x="26" y="16" width="62" height="86" rx="7" fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" />
+                {[0, 1, 2, 3].map((n) => (
+                  <rect class="cpv-line" x="36" y={32 + n * 17} width={n === 3 ? 26 : 42} height="5" rx="2.5" fill="var(--fg-4)" style={`--n:${n}`} />
+                ))}
+                <path class="cpv-scan" d="M26 22 H88" stroke="var(--accent-warm)" stroke-width="2" opacity="0.9" />
+                {[0, 1, 2].map((n) => (
+                  <g class="cpv-field" style={`--n:${n}`}>
+                    <rect x="116" y={30 + n * 22} width="58" height="14" rx="4" fill="none" stroke="var(--primary)" stroke-width="1.8" />
+                    <rect x="122" y={35 + n * 22} width={[34, 22, 40][n]} height="4" rx="2" fill="var(--primary)" opacity="0.75" />
+                  </g>
+                ))}
+              </svg>
+            )}
+
+            {i === 3 && (
+              /* Systems: packets hopping a boundary, one of them dropping. */
+              <svg viewBox="0 0 200 118" aria-hidden="true">
+                <rect x="14" y="34" width="54" height="50" rx="9" fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" />
+                <rect x="132" y="34" width="54" height="50" rx="9" fill="var(--panel)" stroke="var(--line-strong)" stroke-width="2" />
+                <line x1="100" y1="16" x2="100" y2="102" stroke="var(--fg-4)" stroke-width="1.5" stroke-dasharray="4 5" opacity="0.7" />
+                <path d="M68 59 H132" stroke="var(--line-strong)" stroke-width="2" />
+                {[0, 1].map((n) => (
+                  <circle class="cpv-packet" cx="68" cy="59" r="4.5" fill="var(--primary)" style={`--n:${n}`} />
+                ))}
+                {/* The one that does not make it across. */}
+                <circle class="cpv-drop" cx="100" cy="59" r="4.5" fill="var(--accent-warm)" />
+                <text x="41" y="26" text-anchor="middle" class="cpv-cap">ERP</text>
+                <text x="159" y="26" text-anchor="middle" class="cpv-cap">CRM</text>
+              </svg>
+            )}
+          </div>
+
+          <p class="marker mt-5"><b>{String(i + 1).padStart(2, '0')}</b><span>{d.marker}</span></p>
+          <h3 class="mt-3 font-display text-[1.0625rem] leading-snug text-fg">{d.title}</h3>
+          <p class="mt-2.5 text-[0.8125rem] leading-relaxed text-fg-3">{d.line}</p>
+          <p class="cpv-foot mt-4 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">{d.cap}</p>
+        </article>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* ── Card shell ──────────────────────────────────────────────────────── */
+  /* A stretched <button> centres its own content box in Chrome, so the cards
+     with a one-line title floated 12px lower than the ones that wrapped and
+     no two markers sat on the same line. A real flex column overrides that
+     and top-packs every card. */
+  [data-cpv] .cpv-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    transition: background-color 0.45s var(--ease-out-soft);
+  }
+  /* Titles wrap to different depths, so the footers are pinned to the card
+     floor rather than left to land wherever the text stops. */
+  [data-cpv] .cpv-foot { margin-top: auto; padding-top: 1rem; }
+  [data-cpv] button.cpv-card { cursor: pointer; }
+  [data-cpv] button.cpv-card:hover,
+  [data-cpv] button.cpv-card:focus-visible { background: var(--raised); }
+  [data-cpv] button.cpv-card:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+
+  [data-cpv] .cpv-go { transition: color 0.35s, gap 0.35s var(--ease-out-soft); }
+  [data-cpv] button.cpv-card:hover .cpv-go { color: var(--primary); gap: 0.55rem; }
+
+  [data-cpv] .cpv-art {
+    background: color-mix(in oklch, var(--panel) 60%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+  }
+  [data-cpv] .cpv-art svg { display: block; width: 100%; height: auto; }
+  [data-cpv] .cpv-cap {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    fill: var(--fg-4);
+  }
+
+  /* ── 01 Maturity: the needle sweeps its range ────────────────────────── */
+  [data-cpv] .cpv-needle {
+    transform-origin: 100px 96px;
+    animation: cpv-sweep 5.5s ease-in-out infinite alternate;
+  }
+  @keyframes cpv-sweep { from { transform: rotate(-58deg); } to { transform: rotate(52deg); } }
+
+  /* ── 02 Automation: the tank fills, and the surface never stops moving ─ */
+  [data-cpv] .cpv-fill { animation: cpv-level 7s ease-in-out infinite alternate; }
+  @keyframes cpv-level { from { transform: translateY(46px); } to { transform: translateY(-4px); } }
+  /* 84 is one whole period of the wave path, so the loop seams invisibly. */
+  [data-cpv] .cpv-wave { animation: cpv-drift 3.4s linear infinite; }
+  @keyframes cpv-drift { to { transform: translateX(-84px); } }
+
+  /* ── 03 Frequency: a metronome keeping time ──────────────────────────── */
+  [data-cpv] .cpv-arm {
+    transform-origin: 100px 100px;
+    animation: cpv-tick 1.35s ease-in-out infinite alternate;
+  }
+  @keyframes cpv-tick { from { transform: rotate(-19deg); } to { transform: rotate(19deg); } }
+
+  /* ── 04 Handoffs: work travelling the chain, each node lighting as it
+        passes. The node delays are the runner's timing, split five ways. ── */
+  [data-cpv] .cpv-runner { animation: cpv-run 4s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+  @keyframes cpv-run {
+    0%, 6% { transform: translateX(0); }
+    22% { transform: translateX(35px); }
+    44% { transform: translateX(70px); }
+    66% { transform: translateX(105px); }
+    88%, 100% { transform: translateX(140px); }
+  }
+  [data-cpv] .cpv-node {
+    animation: cpv-lit 4s linear infinite;
+    animation-delay: calc(var(--n) * 0.88s - 0.2s);
+  }
+  @keyframes cpv-lit {
+    0%, 8% { stroke: var(--primary); r: 9.5; }
+    18%, 100% { stroke: var(--line-strong); r: 8; }
+  }
+
+  /* ── 05 Priority: the choice moving between four options ─────────────── */
+  [data-cpv] .cpv-tile {
+    animation: cpv-pick 5.2s linear infinite;
+    animation-delay: calc(var(--n) * 1.3s);
+  }
+  @keyframes cpv-pick {
+    0%, 20% { stroke: var(--primary); fill: color-mix(in oklch, var(--primary) 12%, var(--panel)); }
+    26%, 100% { stroke: var(--line-strong); fill: var(--panel); }
+  }
+
+  /* ── Cycle time: items crossing, and the queue that builds behind ────── */
+  [data-cpv] .cpv-item {
+    animation: cpv-travel 4.2s linear infinite;
+    animation-delay: calc(var(--n) * 1.4s);
+  }
+  @keyframes cpv-travel {
+    0% { transform: translateX(0); opacity: 0; }
+    8% { opacity: 1; }
+    36% { transform: translateX(66px); }
+    /* The pause at the middle station is the whole point of the picture. */
+    60% { transform: translateX(66px); }
+    92% { transform: translateX(132px); opacity: 1; }
+    100% { transform: translateX(132px); opacity: 0; }
+  }
+  [data-cpv] .cpv-queue {
+    animation: cpv-stack 4.2s ease-out infinite;
+    animation-delay: calc(var(--n) * 0.5s);
+  }
+  @keyframes cpv-stack {
+    0%, 30% { opacity: 0; transform: translateY(6px); }
+    45%, 80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(0); }
+  }
+
+  /* ── Exceptions: the branches drawing themselves off the main line ───── */
+  [data-cpv] .cpv-branch {
+    stroke-dashoffset: 0;
+    animation: cpv-crawl 2.4s linear infinite, cpv-fade 4.8s ease-in-out infinite;
+    animation-delay: 0s, calc(var(--n) * 2.4s);
+  }
+  @keyframes cpv-crawl { to { stroke-dashoffset: -14; } }
+  @keyframes cpv-fade { 0%, 45% { opacity: 1; } 55%, 100% { opacity: 0.28; } }
+  [data-cpv] .cpv-runner2 { animation: cpv-along 3.6s ease-in-out infinite; }
+  @keyframes cpv-along {
+    0% { transform: translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { transform: translateX(160px); opacity: 1; }
+    100% { transform: translateX(160px); opacity: 0; }
+  }
+
+  /* ── Documents: a scan pass, then the fields landing in the record ───── */
+  [data-cpv] .cpv-scan { animation: cpv-scanline 3.6s ease-in-out infinite; }
+  @keyframes cpv-scanline {
+    0%, 4% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    62% { transform: translateY(80px); opacity: 1; }
+    70%, 100% { transform: translateY(80px); opacity: 0; }
+  }
+  [data-cpv] .cpv-line {
+    animation: cpv-read 3.6s ease-out infinite;
+    animation-delay: calc(var(--n) * 0.42s);
+  }
+  @keyframes cpv-read {
+    0%, 12% { fill: var(--fg-4); }
+    22%, 74% { fill: var(--accent-warm); }
+    84%, 100% { fill: var(--fg-4); }
+  }
+  [data-cpv] .cpv-field {
+    animation: cpv-land 3.6s var(--ease-out-soft) infinite;
+    animation-delay: calc(var(--n) * 0.42s + 0.3s);
+  }
+  @keyframes cpv-land {
+    0%, 16% { opacity: 0; transform: translateX(-14px); }
+    30%, 82% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(0); }
+  }
+
+  /* ── Systems: packets across the boundary, and one that never arrives ── */
+  [data-cpv] .cpv-packet {
+    animation: cpv-hop 3.2s ease-in-out infinite;
+    animation-delay: calc(var(--n) * 1.6s);
+  }
+  @keyframes cpv-hop {
+    0% { transform: translateX(0); opacity: 0; }
+    12% { opacity: 1; }
+    88% { transform: translateX(64px); opacity: 1; }
+    100% { transform: translateX(64px); opacity: 0; }
+  }
+  [data-cpv] .cpv-drop { animation: cpv-lost 3.2s ease-in infinite; animation-delay: 0.8s; }
+  @keyframes cpv-lost {
+    0%, 40% { opacity: 0; transform: translateY(0); }
+    52% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(30px); }
+  }
+
+  /* One switch for the lot. The pictures still read as diagrams when still,
+     which is why every element has a sensible resting position above. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-cpv] .cpv-needle, [data-cpv] .cpv-fill, [data-cpv] .cpv-wave,
+    [data-cpv] .cpv-arm, [data-cpv] .cpv-runner, [data-cpv] .cpv-node,
+    [data-cpv] .cpv-tile, [data-cpv] .cpv-item, [data-cpv] .cpv-queue,
+    [data-cpv] .cpv-branch, [data-cpv] .cpv-runner2, [data-cpv] .cpv-scan,
+    [data-cpv] .cpv-line, [data-cpv] .cpv-field, [data-cpv] .cpv-packet,
+    [data-cpv] .cpv-drop {
+      animation: none !important;
+    }
+    [data-cpv] .cpv-fill { transform: translateY(20px); }
+  }
+</style>
+
+<script>
+  /**
+   * The preview cards open a stage in the Compass below. They sit outside its
+   * root, so they ask for it by event rather than reaching for the controller.
+   */
+  document.querySelectorAll<HTMLElement>('[data-cpv] [data-jump]').forEach((card) => {
+    card.addEventListener('click', () => {
+      const compass = document.querySelector<HTMLElement>('[data-compass]');
+      if (!compass) return;
+      compass.dispatchEvent(
+        new CustomEvent('stages:goto', { detail: { stage: card.dataset.jump } }),
+      );
+    });
+  });
+</script>

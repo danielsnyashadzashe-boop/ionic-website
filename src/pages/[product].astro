@@ -9,7 +9,10 @@ import ContactSection from '@/components/ContactSection.astro';
 // Case studies are off the site for now; their routes are parked under
 // src/pages/_case-studies. Restore these together with that folder.
 // import CaseStudyCard from '@/components/CaseStudyCard.astro';
-import WhereToStart from '@/components/WhereToStart.astro';
+import Compass from '@/components/Compass.astro';
+import CompassPreview from '@/components/CompassPreview.astro';
+import TasterEmbed from '@/components/TasterEmbed.astro';
+import { taster } from '@/data/site';
 import { site, metrics, metricsNote } from '@/data/site';
 import VideoFigure from '@/components/VideoFigure.astro';
 
@@ -41,6 +44,27 @@ const { Content } = await render(product);
 //   .filter((s) => s.data.products.includes(d.name))
 //   .sort((a, b) => a.data.order - b.data.order);
 
+
+/**
+ * The Compass is a real, free, in-browser tool, so it gets its own
+ * WebApplication entry rather than being folded into the platform's. It
+ * carried this schema on the page it used to have; dropping it on the move
+ * would have quietly cost the structured data.
+ */
+const compassSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Process Compass',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  url: new URL(`/${d.slug}/#compass`, site.domain).href,
+  publisher: { '@type': 'Organization', name: site.name },
+  isPartOf: { '@type': 'SoftwareApplication', name: d.name },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description:
+    'Five questions about one of your processes, answered by moving instruments rather than filling in a form, and one recommendation for what to do first.',
+};
+
 const schema = [
   {
     '@context': 'https://schema.org',
@@ -60,6 +84,7 @@ const schema = [
       { '@type': 'ListItem', position: 2, name: d.name, item: new URL(`/${d.slug}/`, site.domain).href },
     ],
   },
+  ...(d.compass ? [compassSchema] : []),
   ...d.videos.map((v) => ({
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
@@ -129,7 +154,13 @@ const schema = [
 
           <div class="mt-11 flex flex-wrap items-center gap-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:500ms">
             <a href="#contact" class="btn"><span>Request a demo</span></a>
-            <a href="#capabilities" class="link-u px-1 text-sm">See capabilities</a>
+            {
+              d.compass ? (
+                <a href="#compass" class="link-u px-1 text-sm">Try the Process Compass</a>
+              ) : (
+                <a href="#capabilities" class="link-u px-1 text-sm">See capabilities</a>
+              )
+            }
           </div>
 
           {/* The five questions sit well down the page, and something you
@@ -137,12 +168,12 @@ const schema = [
               Offered here, at the top, with enough of an explanation to
               know whether it is worth a minute. */}
           {
-            d.whereToStart && (
+            d.compass && (
               <div
                 class="mt-10 border-l-2 border-primary/50 pl-5"
                 style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:620ms"
               >
-                <a href="#where-to-start" class="group inline-flex items-baseline gap-2 font-display text-[1.0625rem] leading-snug text-fg">
+                <a href="#compass" class="group inline-flex items-baseline gap-2 font-display text-[1.0625rem] leading-snug text-fg">
                   <span class="link-u">Where should your process go next?</span>
                   <span
                     class="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
@@ -253,6 +284,14 @@ const schema = [
             <div class:list={[!d.videos[0].compact && 'lg:sticky lg:top-28 lg:self-start']}>
               <SectionHead marker="See it work" title="Two and a half minutes," titleAccent="start to finish." />
               <p class="measure mt-8 text-[0.9375rem] leading-relaxed text-fg-3">{d.videos[0].description}</p>
+              {/* Gated, which the original was not: back then this was the
+                  only platform with a film, so an ungated link could not
+                  reach a page without the Compass on it. */}
+              {d.compass && (
+                <p class="mt-8">
+                  <a href="#compass" class="link-u text-sm">Or try it on your own process →</a>
+                </p>
+              )}
             </div>
             <div class="rise" style="--step:1">
               {/* The section head already carries the length and what the
@@ -398,24 +437,58 @@ const schema = [
     </div>
   </section>
 
-  <!-- ══ WHERE TO START ════════════════════════════════════════════════ -->
-  {/* After traction and before the FAQ on purpose: you read what the
-      platform does, see it has run somewhere real, then try the questions
-      on a process of your own, and contacting us is the next step rather
-      than an interruption. */}
+  {/* Placed after traction and before contact on purpose: you read what the
+      platform does, see that it has run somewhere real, then try the thing
+      yourself, and the contact form is the next step rather than an
+      interruption. */}
   {
-    d.whereToStart && (
-      <section id="where-to-start" class="band-alt seam scroll-mt-20">
+    d.compass && (
+      <section id="compass" class="band-alt seam scroll-mt-20">
         <div class="shell py-32 md:py-44">
           <SectionHead
             marker="Try it yourself"
-            title="Where should your process"
-            titleAccent="go next?"
-            lede={`Every ${d.name} engagement opens with discovery: we map how the work actually runs before anything is configured. These are five of the questions we ask, run on one of your own processes. Five clicks, nothing is sent anywhere, nothing is stored.`}
+            title="A discovery pass,"
+            titleAccent="in about two minutes."
+            lede={`Every ${d.name} engagement opens with discovery: we map how the work actually runs before a single thing is configured. The Compass is that first conversation in miniature, run on one of your own processes. Nothing is sent anywhere and nothing is stored, so you can answer honestly.`}
           />
 
-          <div class="mt-16 max-w-[52rem]">
-            <WhereToStart />
+          {/* The instruments, shown before anything is clicked. The Compass
+              itself reveals one stage at a time, so at rest the section was
+              an intro panel and a button, and the questions it asks were
+              invisible to anyone who did not start it. */}
+          <div class="mt-20">
+            <CompassPreview />
+          </div>
+
+          <div class="mt-24 border-t border-line pt-24">
+            <div class="mb-12 flex flex-wrap items-baseline justify-between gap-4">
+              <p class="marker"><b>03</b><span>Take the reading</span></p>
+              <p class="font-mono text-[0.6875rem] text-fg-4">Runs in your browser · nothing is stored</p>
+            </div>
+            <Compass />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ══ TASTER ════════════════════════════════════════════════════════ -->
+  {/* The deeper version of the Compass above: the real platform, running on
+      your own process, rather than our rule of thumb about it. Renders
+      nothing at all until the PG host is configured. */}
+  {
+    d.compass && taster.host && (
+      <section id="taster" class="border-t border-line scroll-mt-20">
+        <div class="shell py-32 md:py-44">
+          <SectionHead
+            marker="Run the real thing"
+            title="Five questions,"
+            titleAccent="and the platform answers."
+            lede={`The Compass above is our rule of thumb. This is ${d.name} itself: describe one process and it draws how it runs today against the improved flow, then generates a preview of the system behind it. It takes about a minute to think, which is the honest cost of it being real.`}
+          />
+
+          <div class="mt-20">
+            <TasterEmbed contactPath="/contact/?topic=taster" />
           </div>
         </div>
       </section>

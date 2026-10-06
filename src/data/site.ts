@@ -199,6 +199,27 @@ export const marquee = ['Sirago', 'Kruse Group', 'Depot in Durban', 'Sappi', 'Ti
  * `children: true` marks the entry that opens the mega menu rather than
  * being a plain link; the header skips it and renders that markup itself.
  */
+/**
+ * The Process Genesis taster.
+ *
+ * Built in the PG repository on `website/pg-taster`: a five-question, AI-backed
+ * "try it" that draws your process, suggests the improved flow and generates a
+ * one-screen preview of the system behind it.
+ *
+ * `host` is the PG deployment that serves `/taster.html` and `/taster-embed.js`.
+ * While it is empty the component renders nothing, which is deliberate: a live
+ * page should not carry an iframe pointed at a host that does not answer.
+ *
+ * Before this is switched on, three things have to be true on the PG side:
+ * the backend needs `TASTER_ENABLED=true`, it needs a real API-key provider
+ * (their own notes forbid serving the public with the `claude_code` provider),
+ * and the deployment has to be publicly reachable over https.
+ */
+export const taster = {
+  /** TEAM: set to the PG deployment origin, e.g. https://app.ionicinnovate.com */
+  host: '',
+} as const;
+
 export const nav = {
   primary: [
     { label: 'Platforms', href: '/#platforms', children: true },
@@ -225,6 +246,7 @@ export const nav = {
     { label: 'Engagement ledger', href: '/#work' },
     // { label: 'Case studies', href: '/case-studies/' },
     // { label: 'Insights', href: '/insights/' },
+    { label: 'Process Compass', href: '/process-genesis/#compass' },
     { label: 'Privacy', href: '/privacy/' },
     { label: 'Contact', href: '/contact/' },
   ],
