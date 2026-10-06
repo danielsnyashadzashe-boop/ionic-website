@@ -1,4 +1,6 @@
 ---
+# Held back until this client reference is confirmed.
+published: false
 client: Bidvest Group
 title: A tender portal proved in two divisions before going group-wide
 engagement: Tender portal & process automation

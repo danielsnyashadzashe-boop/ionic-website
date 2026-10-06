@@ -26,13 +26,16 @@ export interface Brand {
 
 export const brands: Brand[] = [
   // Clients named on the site.
-  { name: 'Old Mutual', mono: 'OM', tone: 'd1', kind: 'client' },
-  { name: 'Fidelity', mono: 'FD', tone: 'd2', kind: 'client' },
-  { name: 'Bidvest Group', mono: 'BV', tone: 'd3', kind: 'client' },
-  { name: '3Sixty Health', mono: '3S', tone: 'd6', kind: 'client' },
+// Only four client references are published while the rest are being
+// confirmed. The others are commented out rather than deleted; restore
+// them together with the matching entries in data/projects.ts.
+  // { name: 'Old Mutual', mono: 'OM', tone: 'd1', kind: 'client' },
+  // { name: 'Fidelity', mono: 'FD', tone: 'd2', kind: 'client' },
+  // { name: 'Bidvest Group', mono: 'BV', tone: 'd3', kind: 'client' },
+  // { name: '3Sixty Health', mono: '3S', tone: 'd6', kind: 'client' },
   { name: 'National Video Vision', mono: 'NV', tone: 'd3', kind: 'client' },
   { name: 'Split Time', mono: 'ST', tone: 'd5', kind: 'client' },
-  { name: 'Niche Consulting', mono: 'NC', tone: 'd4', kind: 'client' },
+  // { name: 'Niche Consulting', mono: 'NC', tone: 'd4', kind: 'client' },
 
   // Systems the integration hub connects to, per the Process Genesis page.
   { name: 'SAP', mono: 'SA', tone: 'd1', kind: 'system' },

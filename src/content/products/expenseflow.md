@@ -18,7 +18,8 @@ seoDescription: >-
   partnerships.
 showMetrics: false
 photo: modelMonitoring
-homeProof: Active at National Video Vision, a Canadian medical pilot and two resellers
+# homeProof: Active at National Video Vision, a Canadian medical pilot and two resellers
+homeProof: Active at National Video Vision
 capabilities:
   - name: AI receipt extraction
     detail: >-
@@ -41,9 +42,9 @@ traction:
   items:
     - client: National Video Vision
       detail: Deployed across a 50-employee business in South Africa.
-    - client: Canadian medical pilot
-      detail: >-
-        Piloting with a group of 20 Canadian doctors through our Canadian branch.
+    # - client: Canadian medical pilot
+    # detail: >-
+    # Piloting with a group of 20 Canadian doctors through our Canadian branch.
     - client: Reseller partnerships
       detail: >-
         Two large Canadian accounting firms committed to offering ExpenseFlow to

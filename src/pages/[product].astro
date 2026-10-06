@@ -65,6 +65,10 @@ const compassSchema = {
     'Five questions about one of your processes, answered by moving instruments rather than filling in a form, and one recommendation for what to do first.',
 };
 
+/* An entry whose body is only an HTML comment still renders a <Content />,
+   so test the source rather than trusting that it produces nothing. */
+const hasBody = (product.body ?? '').replace(/<!--[\s\S]*?-->/g, '').trim().length > 0;
+
 const schema = [
   {
     '@context': 'https://schema.org',
@@ -387,55 +391,69 @@ const schema = [
   </section>
 
   <!-- ══ NARRATIVE (Markdown body) ═════════════════════════════════════ -->
-  <section class="border-t border-line">
-    <div class="shell py-32 md:py-44">
-      <div class="grid gap-14 lg:grid-cols-[0.32fr_1fr] lg:gap-20">
-        <p class="marker rise lg:pt-3">In depth</p>
-        <div class="prose-tech rise" style="--step:1">
-          <Content />
+  {/* Gated on the body having something in it. Process Genesis's narrative
+      is commented out while its claims are confirmed, and without this the
+      page rendered an "In depth" heading over 8 characters of nothing. */}
+  {
+    hasBody && (
+      <section class="border-t border-line">
+        <div class="shell py-32 md:py-44">
+          <div class="grid gap-14 lg:grid-cols-[0.32fr_1fr] lg:gap-20">
+            <p class="marker rise lg:pt-3">In depth</p>
+            <div class="prose-tech rise" style="--step:1">
+              <Content />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+    )
+  }
 
   <!-- ══ TRACTION ══════════════════════════════════════════════════════ -->
-  <section class="border-t border-line">
-    <div class="shell py-32 md:py-44">
-      <SectionHead marker="Traction" title={d.traction.heading} />
+  {/* Gated on there being something to show. Most of the named clients are
+      held back until their details are confirmed, and a Traction heading
+      over an empty space says less than no section at all. */}
+  {
+    d.traction.items.length > 0 && (
+      <section class="border-t border-line">
+      <div class="shell py-32 md:py-44">
+        <SectionHead marker="Traction" title={d.traction.heading} />
 
-      <div class="mt-16 space-y-0">
-        {
-          d.traction.items.map((item, i) => (
-            <div
-              class="rise group grid gap-4 border-b border-line py-8 transition-colors duration-500 hover:border-primary md:grid-cols-[0.3fr_1fr] md:gap-10"
-              style={`--step:${i}`}
-            >
-              <h3 class="flex items-baseline gap-3 font-display text-lg text-fg">
-                <span class="h-1.5 w-1.5 shrink-0 translate-y-[-0.2em] rounded-full bg-primary transition-transform duration-500 group-hover:scale-150" />
-                {item.client}
-              </h3>
-              <p class="text-[0.9375rem] leading-relaxed text-fg-3">{item.detail}</p>
-            </div>
-          ))
-        }
-      </div>
-
-      {/* Read the engagements. Parked with src/pages/_case-studies.
+        <div class="mt-16 space-y-0">
           {
-            related.length > 0 && (
-              <div class="mt-20">
-                <p class="marker rise">Read the engagements</p>
-                <div class="mt-8 grid gap-5 md:grid-cols-3">
-                  {related.slice(0, 3).map((s, i) => (
-                    <CaseStudyCard study={s} index={i} compact />
-                  ))}
-                </div>
+            d.traction.items.map((item, i) => (
+              <div
+                class="rise group grid gap-4 border-b border-line py-8 transition-colors duration-500 hover:border-primary md:grid-cols-[0.3fr_1fr] md:gap-10"
+                style={`--step:${i}`}
+              >
+                <h3 class="flex items-baseline gap-3 font-display text-lg text-fg">
+                  <span class="h-1.5 w-1.5 shrink-0 translate-y-[-0.2em] rounded-full bg-primary transition-transform duration-500 group-hover:scale-150" />
+                  {item.client}
+                </h3>
+                <p class="text-[0.9375rem] leading-relaxed text-fg-3">{item.detail}</p>
               </div>
-            )
+            ))
           }
-      */}
-    </div>
-  </section>
+        </div>
+
+        {/* Read the engagements. Parked with src/pages/_case-studies.
+            {
+              related.length > 0 && (
+                <div class="mt-20">
+                  <p class="marker rise">Read the engagements</p>
+                  <div class="mt-8 grid gap-5 md:grid-cols-3">
+                    {related.slice(0, 3).map((s, i) => (
+                      <CaseStudyCard study={s} index={i} compact />
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+        */}
+      </div>
+    </section>
+    )
+  }
 
   {/* Placed after traction and before contact on purpose: you read what the
       platform does, see that it has run somewhere real, then try the thing

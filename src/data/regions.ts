@@ -63,13 +63,19 @@ export const regions: Region[] = [
     alsoServing: ['Vancouver', 'Saskatoon', 'Regina', 'Winnipeg', 'Toronto', 'Ottawa', 'Montreal'],
     address: { addressRegion: 'AB', addressCountry: 'CA' },
     proof: [
-      { value: '16 → 1', label: 'Business functions onto one platform at the Kruse Group' },
-      { value: 'Removed', label: 'Vendor lock-in on the Kruse commercial operation' },
+      // Both of these name a held-back client. Restore with data/projects.ts.
+      // { value: '16 → 1', label: 'Business functions onto one platform at the Kruse Group' },
+      // { value: 'Removed', label: 'Vendor lock-in on the Kruse commercial operation' },
       { value: '20', label: 'Doctors in the ExpenseFlow pilot' },
     ],
     sectors: ['Construction and fabrication', 'Professional services', 'Healthcare administration'],
-    studies: ['kruse-group'],
-    alsoHere: ['Canadian medical group', 'Two Canadian accounting firms', 'Niche Consulting'],
+    // Kruse Group is held back with the rest; restore it with data/projects.ts.
+    // studies: ['kruse-group'],
+    studies: [],
+    // National Video Vision runs ExpenseFlow in both markets, so it is named
+    // in both. The others are held back.
+    // alsoHere: ['Canadian medical group', 'Two Canadian accounting firms', 'Niche Consulting'],
+    alsoHere: ['National Video Vision'],
     law: 'PIPEDA',
     lawFull: 'Personal Information Protection and Electronic Documents Act, and applicable provincial law',
   },
@@ -90,9 +96,13 @@ export const regions: Region[] = [
     alsoServing: ['Gqeberha', 'Bloemfontein'],
     address: { addressCountry: 'ZA' },
     proof: [
-      { value: '8 mo → <1', label: 'Analysis per process at Sirago, Old Mutual Group' },
-      { value: '10 days', label: 'To onboard a new client at Depot in Durban' },
-      { value: '50%+', label: 'Below the closest competing quote on that ERP build' },
+      // Held for consistency with the ledger, which shows the four kept
+      // references without figures while they are confirmed. This one is
+      // in the handover brief, so it is the first that can come back.
+      // { value: '8 mo → <1', label: 'Analysis per process at Sirago, Old Mutual Group' },
+      // Both describe the Depot in Durban build, which is held back.
+      // { value: '10 days', label: 'To onboard a new client at Depot in Durban' },
+      // { value: '50%+', label: 'Below the closest competing quote on that ERP build' },
       { value: 'National', label: 'Tippa live countrywide' },
     ],
     sectors: [
@@ -103,8 +113,10 @@ export const regions: Region[] = [
       'Field marketing',
       'Security services',
     ],
-    studies: ['sirago', 'depot-durban', 'tippa'],
-    alsoHere: ['Sappi', 'Tradeway', 'Vision', 'National Video Vision', 'Nogada Security'],
+    // studies: ['sirago', 'depot-durban', 'tippa'],
+    studies: ['sirago', 'tippa', 'split-time'],
+    // alsoHere: ['Sappi', 'Tradeway', 'Vision', 'National Video Vision', 'Nogada Security'],
+    alsoHere: ['National Video Vision'],
     law: 'POPIA',
     lawFull: 'Protection of Personal Information Act',
   },

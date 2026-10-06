@@ -19,7 +19,8 @@ seoDescription: >-
   enterprises.
 showMetrics: false
 photo: programmeDelivery
-homeProof: 'Partner: Niche Consulting (reseller)'
+# homeProof: 'Partner: Niche Consulting (reseller)'
+homeProof: Client references being confirmed
 capabilities:
   - name: Modular architecture
     detail: >-
@@ -39,15 +40,17 @@ capabilities:
       consolidation.
 traction:
   heading: Distribution through partners
-  items:
-    - client: Niche Consulting
-      detail: >-
-        Signed reseller partner, transitioning an established client base onto
-        Ionic ERP.
-    - client: Fidelity
-      detail: >-
-        Evaluating Ionic ERP modules as part of its group-wide digital
-        transformation engagement with Ionic.
+  # Every named client here is held back until its details are
+  # confirmed. Restore them with data/projects.ts.
+  items: []
+    # - client: Niche Consulting
+    # detail: >-
+    # Signed reseller partner, transitioning an established client base onto
+    # Ionic ERP.
+    # - client: Fidelity
+    # detail: >-
+    # Evaluating Ionic ERP modules as part of its group-wide digital
+    # transformation engagement with Ionic.
 ---
 
 ## Modularity as a commercial model, not just an architecture

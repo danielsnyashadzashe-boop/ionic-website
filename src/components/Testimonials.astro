@@ -15,7 +15,7 @@ import SectionHead from './SectionHead.astro';
  * quote real scale makes the row underneath supporting evidence rather than
  * six things competing.
  */
-const all = (await getCollection('caseStudies'))
+const all = (await getCollection('caseStudies', ({ data }) => data.published))
   .filter((s) => s.data.quote && s.data.quote.trim().length > 0)
   .sort((a, b) => a.data.order - b.data.order);
 

@@ -1,4 +1,6 @@
 ---
+# Held back until this client reference is confirmed.
+published: false
 client: Fidelity
 title: A group-wide transformation partner across multiple industries
 engagement: Group-wide digital transformation partner

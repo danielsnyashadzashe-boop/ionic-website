@@ -36,7 +36,7 @@ const url = new URL(`/${region.slug}/`, site.domain).href;
 
 const lead = leadership.find((p) => p.name === region.leadName);
 
-const all = await getCollection('caseStudies');
+const all = (await getCollection('caseStudies', ({ data }) => data.published));
 const studies = region.studies
   .map((slug) => all.find((s) => s.id === slug))
   .filter((s): s is NonNullable<typeof s> => Boolean(s));

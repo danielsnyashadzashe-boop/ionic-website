@@ -16,12 +16,14 @@ seoTitle: "Process Genesis: Enterprise Process Automation Platform"
 seoDescription: >-
   Process Genesis is Ionic's flagship AI-powered process automation platform:
   process discovery, intelligent document processing, no-code workflows,
-  decision engine and analytics in one integrated solution. Deployed at Old
-  Mutual, Bidvest, Fidelity and 3Sixty Health.
+  decision engine and analytics in one integrated solution.
 showMetrics: true
 compass: true
 photo: processGenesisKey
-homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
+# Named clients held back until confirmed. (This field is currently read by
+# nothing; it is corrected rather than left wrong.)
+# homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
+homeProof: Client references being confirmed
 videos:
   - src: /media/process-genesis-explainer.mp4
     poster: /media/process-genesis-poster.jpg
@@ -101,9 +103,9 @@ faqs:
   - q: Can we use it without a consulting engagement?
     a: >-
       Yes. Some organisations license it directly and run it themselves.
-      Others start with a guided engagement and take it over. Genric, the
-      group company that builds Sirago's systems, runs the development module
-      as its own delivery tooling.
+      Others start with a guided engagement and take it over, including the
+      group company that builds Sirago's systems, which runs the development
+      module as its own delivery tooling.
   - q: Is it only for large enterprises?
     a: >-
       No. It is sized and priced so a small business can use it as well as a
@@ -142,22 +144,32 @@ capabilities:
       secured to bank-grade standards.
 traction:
   heading: Proven at enterprise scale
-  items:
-    - client: Old Mutual
-      detail: >-
-        Following a successful pilot, a five-year engagement across all business
-        units for Process Genesis deployment and digital transformation services.
-    - client: Fidelity
-      detail: >-
-        Group-wide digital transformation engagement spanning multiple
-        industries, including Process Genesis implementation.
-    - client: Bidvest Group
-      detail: >-
-        Tender portal deployment for the Execuflora and TopTurf divisions, with
-        group-wide introduction on successful completion.
-    - client: 3Sixty Health
-      detail: Business process discovery and optimisation across core operations.
+  # Every named client here is held back until its details are
+  # confirmed. Restore them with data/projects.ts.
+  items: []
+    # - client: Old Mutual
+    # detail: >-
+    # Following a successful pilot, a five-year engagement across all business
+    # units for Process Genesis deployment and digital transformation services.
+    # - client: Fidelity
+    # detail: >-
+    # Group-wide digital transformation engagement spanning multiple
+    # industries, including Process Genesis implementation.
+    # - client: Bidvest Group
+    # detail: >-
+    # Tender portal deployment for the Execuflora and TopTurf divisions, with
+    # group-wide introduction on successful completion.
+    # - client: 3Sixty Health
+    # detail: Business process discovery and optimisation across core operations.
 ---
+
+<!--
+  Held back. These 218 words appear on neither source: not on the live site
+  at ionicinnovate.com, and not in the handover build. They were written
+  during the rebuild, and they make architecture claims nobody has
+  confirmed, invent a reason for the 60-70% figure that the source states
+  without one, and assert a causal link about two client engagements that
+  are themselves held back.
 
 ## Why one platform instead of six
 
@@ -186,3 +198,4 @@ That order matters. It is why the Old Mutual engagement began as a pilot and
 became a five-year agreement across all business units, and why the Bidvest
 deployment started inside two divisions with group-wide expansion contingent on
 the result.
+-->

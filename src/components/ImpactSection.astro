@@ -23,7 +23,7 @@ import { costComparison } from '@/data/site';
  * impossible to leave blank.
  */
 
-const studies = await getCollection('caseStudies');
+const studies = (await getCollection('caseStudies', ({ data }) => data.published));
 
 const gauges = [
   { label: 'Faster processing', value: 85, display: '85%', tone: 'd2' },

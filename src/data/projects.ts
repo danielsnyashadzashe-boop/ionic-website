@@ -43,14 +43,16 @@ export interface Project {
 const allProjects: Project[] = [
   {
     client: 'Sirago',
-    deliverable: 'Process Genesis rolled out across the business, with Old Mutual Group delivery',
+    deliverable: 'Details being confirmed',
     discipline: 'Process automation',
     platform: 'Process Genesis',
     status: 'Live',
     tone: 'd1',
-    metric: { value: '8 mo → <1', label: 'Analysis per process' },
+    // metric withheld until the figure is confirmed.
+    // metric: { value: '8 mo → <1', label: 'Analysis per process' },
     study: 'sirago',
   },
+  /*
   {
     client: 'Genric',
     deliverable: 'Process Genesis development module adopted to build against Sirago requirements',
@@ -60,6 +62,8 @@ const allProjects: Project[] = [
     tone: 'd1',
     study: 'sirago',
   },
+  */
+  /*
   {
     client: 'Kruse Group',
     deliverable: 'Commercial operations platform across sixteen functions, with a field app',
@@ -70,6 +74,8 @@ const allProjects: Project[] = [
     metric: { value: '16 → 1', label: 'Functions unified' },
     study: 'kruse-group',
   },
+  */
+  /*
   {
     client: 'Depot in Durban',
     deliverable: 'Full ERP across operations, logistics, finance and reporting, with client integrations',
@@ -80,6 +86,8 @@ const allProjects: Project[] = [
     metric: { value: '10 days', label: 'To onboard a new client' },
     study: 'depot-durban',
   },
+  */
+  /*
   {
     client: 'Old Mutual',
     deliverable: 'Group-wide process automation across all business units',
@@ -90,6 +98,8 @@ const allProjects: Project[] = [
     metric: { value: '5 yr', label: 'Agreement' },
     study: 'old-mutual',
   },
+  */
+  /*
   {
     client: 'Fidelity',
     deliverable: 'Group digital transformation programme spanning multiple industries',
@@ -100,6 +110,8 @@ const allProjects: Project[] = [
     metric: { value: 'Group', label: 'Scope' },
     study: 'fidelity',
   },
+  */
+  /*
   {
     client: 'Bidvest Group',
     deliverable: 'Tender portal for the Execuflora and TopTurf divisions',
@@ -110,6 +122,8 @@ const allProjects: Project[] = [
     metric: { value: '2', label: 'Divisions' },
     study: 'bidvest-group',
   },
+  */
+  /*
   {
     client: '3Sixty Health',
     deliverable: 'Fraud, waste and abuse monitoring with process optimisation',
@@ -119,26 +133,30 @@ const allProjects: Project[] = [
     tone: 'd6',
     study: '3sixty-health',
   },
+  */
   {
     client: 'Split Time',
-    deliverable: 'Athlete monitoring and race timing platform with AI coaching',
+    deliverable: 'Details being confirmed',
     discipline: 'Custom platform build',
     platform: 'Bespoke',
     status: 'Live',
     tone: 'd4',
-    metric: { value: '800k+', label: 'Registrations' },
+    // metric withheld until the figure is confirmed.
+    // metric: { value: '800k+', label: 'Registrations' },
     study: 'split-time',
   },
   {
     client: 'National Video Vision',
-    deliverable: 'Expense automation across a 50-person business, two currencies',
+    deliverable: 'Details being confirmed',
     discipline: 'Finance automation',
     platform: 'ExpenseFlow',
     status: 'Live',
     tone: 'd3',
-    metric: { value: '50', label: 'Employees' },
+    // metric withheld until the figure is confirmed.
+    // metric: { value: '50', label: 'Employees' },
     study: 'national-video-vision',
   },
+  /*
   {
     client: 'Canadian medical group',
     deliverable: 'ExpenseFlow pilot with a group of 20 doctors',
@@ -148,6 +166,8 @@ const allProjects: Project[] = [
     tone: 'd3',
     metric: { value: '20', label: 'Practitioners' },
   },
+  */
+  /*
   {
     client: 'Niche Consulting',
     deliverable: 'Reseller partnership, migrating an established client base to Ionic ERP',
@@ -156,6 +176,8 @@ const allProjects: Project[] = [
     status: 'Partner',
     tone: 'd4',
   },
+  */
+  /*
   {
     client: 'Two Canadian accounting firms',
     deliverable: 'Reseller commitments pending trial completion',
@@ -164,17 +186,19 @@ const allProjects: Project[] = [
     status: 'Partner',
     tone: 'd3',
   },
+  */
   {
     client: 'Tippa Payment Solutions',
-    deliverable:
-      'Cashless tipping platform for car guards: customer QR flow, wallet app, operations portal and automated bank reconciliation',
+    deliverable: 'Details being confirmed',
     discipline: 'Custom platform build',
     platform: 'Bespoke',
     status: 'Live',
     tone: 'd3',
-    metric: { value: '10', label: 'Sites live' },
+    // metric withheld until the figure is confirmed.
+    // metric: { value: '10', label: 'Sites live' },
     study: 'tippa',
   },
+  /*
   {
     client: 'Sappi',
     deliverable: 'Contracts platform from drafting to execution, integrated with SharePoint and SAP procurement',
@@ -183,6 +207,8 @@ const allProjects: Project[] = [
     status: 'Live',
     tone: 'd2',
   },
+  */
+  /*
   {
     client: 'Tradeway',
     deliverable: 'Promoter app rebuild for in-store campaigns, with AI-assisted reporting',
@@ -191,6 +217,8 @@ const allProjects: Project[] = [
     status: 'Live',
     tone: 'd6',
   },
+  */
+  /*
   {
     client: 'Vision',
     deliverable: 'The Tradeway promoter app and reporting, rolled out to its sister company',
@@ -199,6 +227,8 @@ const allProjects: Project[] = [
     status: 'Live',
     tone: 'd6',
   },
+  */
+  /*
   {
     client: 'Nogada Security',
     deliverable: 'Business-critical systems stabilised, with a control room and operations platform in delivery',
@@ -207,6 +237,8 @@ const allProjects: Project[] = [
     status: 'Live',
     tone: 'd3',
   },
+  */
+  /*
   {
     client: 'Momentum',
     deliverable: 'GRC platform adoption under evaluation',
@@ -215,6 +247,7 @@ const allProjects: Project[] = [
     status: 'In discussion',
     tone: 'd6',
   },
+  */
 ];
 
 /**

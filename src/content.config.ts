@@ -134,6 +134,15 @@ const products = defineCollection({
 const caseStudies = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/case-studies' }),
   schema: z.object({
+    /**
+     * Whether this client may be named on the site yet.
+     *
+     * Only four references are published while the rest are being
+     * confirmed. The files stay; they are simply not drawn from. Every
+     * consumer filters on this, so a held-back client cannot reach a
+     * page by being read somewhere nobody remembered to check.
+     */
+    published: z.boolean().default(true),
     client: z.string(),
     title: z.string(),
     engagement: z.string(),

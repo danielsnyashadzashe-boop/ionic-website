@@ -18,7 +18,8 @@ seoDescription: >-
   Health for fraud, waste and abuse monitoring.
 showMetrics: false
 photo: codeReview
-homeProof: Deployed at 3Sixty Health for fraud, waste and abuse monitoring
+# homeProof: Deployed at 3Sixty Health for fraud, waste and abuse monitoring
+homeProof: Client references being confirmed
 capabilities:
   - name: Fraud detection & prevention
     detail: >-
@@ -38,12 +39,14 @@ capabilities:
       auditors, regulators and boards.
 traction:
   heading: Proving itself where fraud costs most
-  items:
-    - client: 3Sixty Health
-      detail: >-
-        Fraud, waste and abuse monitoring system deployed to proactively detect
-        and mitigate current and potential losses, alongside business process
-        optimisation.
+  # Every named client here is held back until its details are
+  # confirmed. Restore them with data/projects.ts.
+  items: []
+    # - client: 3Sixty Health
+    # detail: >-
+    # Fraud, waste and abuse monitoring system deployed to proactively detect
+    # and mitigate current and potential losses, alongside business process
+    # optimisation.
 ---
 
 ## Fraud detection belongs inside GRC, not beside it

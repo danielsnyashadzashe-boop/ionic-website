@@ -1,4 +1,6 @@
 ---
+# Held back until this client reference is confirmed.
+published: false
 client: Kruse Group
 title: Sixteen business functions brought onto one operations platform
 engagement: Full business mapping, then a commercial operations platform and a field app

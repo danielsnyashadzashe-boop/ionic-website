@@ -43,6 +43,11 @@ export const pillars = {
   },
 } as const;
 
+/**
+ * Only the four client references that are published while the rest are
+ * being confirmed appear below. The others are commented out in place,
+ * to come back with the matching entries in data/projects.ts.
+ */
 export const services: Service[] = [
   {
     slug: 'strategy',
@@ -62,7 +67,7 @@ export const services: Service[] = [
       'We map how work really runs with Process Genesis, find the bottlenecks, rework and manual effort, then redesign. What is worth automating gets automated; the rest gets simpler.',
     seenIn: [
       { label: 'Sirago' },
-      { label: 'Kruse Group' },
+      // { label: 'Kruse Group' },
     ],
   },
   {
@@ -74,7 +79,7 @@ export const services: Service[] = [
       'Adoption planning, communication and hands-on training, so people actually use what has been built. Process Genesis teaches process thinking along the way, which leaves skills behind when we step back.',
     seenIn: [
       { label: 'Tippa' },
-      { label: 'Genric' },
+      // { label: 'Genric' },
     ],
   },
   {
@@ -85,9 +90,9 @@ export const services: Service[] = [
     summary:
       'ERP selection, implementation and replacement, or a custom operations platform when off-the-shelf will not fit how you work. Finance, operations, logistics, jobs, assets, people and reporting in one place.',
     seenIn: [
-      { label: 'Kruse Group' },
-      { label: 'Depot in Durban' },
-      { label: 'NVV' },
+      // { label: 'Kruse Group' },
+      // { label: 'Depot in Durban' },
+      { label: 'National Video Vision' },
     ],
   },
   {
@@ -98,9 +103,10 @@ export const services: Service[] = [
     summary:
       'Web platforms, mobile apps and customer portals, connected to the systems you already run, including SAP, SharePoint and banking partners.',
     seenIn: [
-      { label: 'Sappi' },
+      // { label: 'Sappi' },
       { label: 'Tippa' },
-      { label: 'Tradeway' },
+      { label: 'Split Time' },
+      // { label: 'Tradeway' },
     ],
   },
   {
@@ -110,7 +116,7 @@ export const services: Service[] = [
     name: 'Data, AI and reporting',
     summary:
       'Dashboards and reporting that build themselves, document reading and classification, and AI assistants built into the process where they save real time. We use AI where it earns its place, not as a label.',
-    seenIn: [{ label: 'Tradeway' }, { label: 'ExpenseFlow', href: '/expenseflow/' }],
+    seenIn: [/* { label: 'Tradeway' }, */ { label: 'ExpenseFlow', href: '/expenseflow/' }],
   },
   {
     slug: 'run',
@@ -119,7 +125,7 @@ export const services: Service[] = [
     name: 'Managed operations and support',
     summary:
       'Support and maintenance after go-live, IT stabilisation when internal support falls away, and embedded people to run operations where you need them.',
-    seenIn: [{ label: 'Nogada Security' }, { label: 'Tippa' }],
+    seenIn: [/* { label: 'Nogada Security' }, */ { label: 'Tippa' }],
   },
 ];
 

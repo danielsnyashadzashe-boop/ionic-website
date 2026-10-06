@@ -1,4 +1,6 @@
 ---
+# Held back until this client reference is confirmed.
+published: false
 client: Depot in Durban
 title: A new client onboarded in ten days, against a six-month quote
 engagement: Full ERP across operations, logistics, finance and reporting, with client integrations

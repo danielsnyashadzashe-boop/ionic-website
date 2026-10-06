@@ -20,7 +20,7 @@ const platformCount = (await getCollection('products')).length;
  * from the case studies, because a sector with no delivered work behind it is
  * not a sector we serve.
  */
-const studies = await getCollection('caseStudies');
+const studies = (await getCollection('caseStudies', ({ data }) => data.published));
 const sectorCount = new Set(studies.map((s) => s.data.sector)).size;
 const regionCount = regions.length;
 

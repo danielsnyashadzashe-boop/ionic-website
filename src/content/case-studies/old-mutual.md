@@ -1,4 +1,6 @@
 ---
+# Held back until this client reference is confirmed.
+published: false
 client: Old Mutual
 title: From pilot to a five-year, group-wide transformation
 engagement: Five-year enterprise agreement across all business units
