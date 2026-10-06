@@ -2,21 +2,29 @@
 /**
  * A video, presented the way the rest of the site presents things.
  *
- * Three decisions worth keeping:
+ * Two modes.
  *
- * **Nothing downloads until someone asks.** The file is 8 MB. A `<video>`
- * element with a poster still fetches metadata on every page load, and on a
- * platform page most visitors never reach the video at all. So the resting
- * state is a poster image and a button; the real element is created on click,
- * which is also a user gesture, so it may autoplay with sound.
+ * `autoplay` runs it muted and looping as soon as it scrolls into view, so
+ * the section shows the product moving rather than a still of it. Browsers
+ * only permit autoplay without sound, and this is an explainer carrying
+ * narration, so the sound control is the loudest thing in the frame rather
+ * than a detail in a corner. Silent, the video is wallpaper.
  *
- * **The frame is ours, the controls are the browser's.** A custom poster and
- * play affordance means the page looks like the page. Once playing, native
- * controls take over, because a hand-built scrubber is a worse scrubber and
- * an accessibility liability.
+ * Without `autoplay` it rests on a poster and builds the player on click.
  *
- * **It reserves its space.** The aspect ratio is set from the real
- * dimensions, so nothing shifts when the poster or the video loads.
+ * Three rules hold in both modes:
+ *
+ * **Nothing downloads until it is nearly on screen.** The file is 8 MB and
+ * most visitors to a platform page never scroll this far. An observer arms
+ * it one viewport out; the click mode fetches nothing at all until asked.
+ *
+ * **It can always be stopped.** Content that moves by itself for more than
+ * five seconds needs a way to stop it (WCAG 2.2.2), so the pause control is
+ * real, visible and keyboard reachable rather than a hover affordance.
+ *
+ * **Reduced motion means no motion.** With that preference set the autoplay
+ * path is abandoned before a source is ever assigned, so nothing moves and
+ * nothing downloads.
  */
 
 interface Props {
@@ -27,6 +35,8 @@ interface Props {
   title: string;
   /** Optional WebVTT track. Absent is stated rather than hidden. */
   captions?: string;
+  /** Play muted and looping once in view, rather than waiting for a click. */
+  autoplay?: boolean;
   ratio?: string;
   class?: string;
 }
@@ -37,6 +47,7 @@ const {
   durationSeconds,
   title,
   captions,
+  autoplay = false,
   ratio = '16 / 9',
   class: className = '',
 } = Astro.props;
@@ -46,45 +57,104 @@ const secs = Math.round(durationSeconds % 60);
 const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
 ---
 
-<figure class:list={['vf', className]} data-video data-src={src} data-captions={captions}>
+<figure
+  class:list={['vf', className]}
+  data-video
+  data-src={src}
+  data-captions={captions}
+  data-autoplay={autoplay ? 'true' : undefined}
+>
   <div class="vf-frame relative overflow-hidden border border-line bg-raised" style={`aspect-ratio:${ratio}`}>
-    {/* The resting state. Replaced wholesale on first play. */}
-    <button type="button" class="vf-start group absolute inset-0 block w-full" data-vf-start aria-label={`Play: ${title}`}>
-      <img
-        src={poster}
-        alt=""
-        width="1280"
-        height="720"
-        loading="lazy"
-        decoding="async"
-        class="vf-poster h-full w-full object-cover"
-      />
+    {
+      autoplay ? (
+        <>
+          {/* Sits underneath until the first frame paints, so the box is
+              never empty and reduced-motion users keep a real image. */}
+          <img
+            src={poster}
+            alt=""
+            width="1280"
+            height="720"
+            loading="lazy"
+            decoding="async"
+            class="vf-under absolute inset-0 h-full w-full object-cover"
+          />
 
-      <span class="vf-scrim absolute inset-0" aria-hidden="true"></span>
+          <video
+            class="vf-el absolute inset-0 h-full w-full"
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-label={title}
+          >
+            {captions && <track kind="captions" src={captions} srclang="en" label="English" default />}
+          </video>
 
-      <span class="vf-play absolute left-1/2 top-1/2 flex items-center justify-center rounded-full" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-          <path d="M8 5.5v13l11-6.5z"></path>
-        </svg>
-      </span>
+          {/* Top, not bottom. This video carries burned-in subtitles across
+              the lower strip of the frame, and a control bar there sat
+              directly on the words. */}
+          <div class="vf-bar absolute left-0 right-0 top-0 flex flex-wrap items-center gap-3 p-4 md:p-5">
+            {/* Sound first and in the accent, because a muted explainer is
+                the failure case and this is the way out of it. */}
+            <button type="button" class="vf-btn vf-btn--loud" data-vf-sound aria-pressed="false">
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="currentColor">
+                <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                <path class="vf-wave" d="M15.5 8.5a4 4 0 0 1 0 7v-7Zm0-4.4a8 8 0 0 1 0 15.8v-2.06a6 6 0 0 0 0-11.68V4.1Z" />
+              </svg>
+              <span data-vf-sound-label>Turn on sound</span>
+            </button>
 
-      <span class="vf-meta absolute bottom-0 left-0 right-0 flex items-end justify-between gap-4 p-5 md:p-7" aria-hidden="true">
-        <span class="vf-title font-display text-[1.0625rem] leading-snug md:text-[1.25rem]">{title}</span>
-        <span class="vf-stamp shrink-0 font-mono text-[0.6875rem] tabular-nums">{stamp}</span>
-      </span>
-    </button>
+            <button type="button" class="vf-btn" data-vf-pause>
+              <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="currentColor">
+                <path class="vf-ico-pause" d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z" />
+                <path class="vf-ico-play" d="M8 5.5v13l11-6.5z" />
+              </svg>
+              <span data-vf-pause-label>Pause</span>
+            </button>
+
+            <span class="vf-stamp ml-auto shrink-0 font-mono text-[0.6875rem] tabular-nums">{stamp}</span>
+          </div>
+        </>
+      ) : (
+        <button type="button" class="vf-start group absolute inset-0 block w-full" data-vf-start aria-label={`Play: ${title}`}>
+          <img
+            src={poster}
+            alt=""
+            width="1280"
+            height="720"
+            loading="lazy"
+            decoding="async"
+            class="vf-poster h-full w-full object-cover"
+          />
+          <span class="vf-scrim absolute inset-0" aria-hidden="true" />
+          <span class="vf-play absolute left-1/2 top-1/2 flex items-center justify-center rounded-full" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M8 5.5v13l11-6.5z" />
+            </svg>
+          </span>
+          <span class="vf-meta absolute bottom-0 left-0 right-0 flex items-end justify-between gap-4 p-5 md:p-7" aria-hidden="true">
+            <span class="vf-title font-display text-[1.0625rem] leading-snug md:text-[1.25rem]">{title}</span>
+            <span class="vf-stamp shrink-0 font-mono text-[0.6875rem] tabular-nums">{stamp}</span>
+          </span>
+        </button>
+      )
+    }
   </div>
 
   <figcaption class="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
     <span class="font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
-      {stamp} · plays here, nothing is sent anywhere
+      {stamp} · {autoplay ? 'loops silently until you turn the sound on' : 'plays here, nothing is sent anywhere'}
     </span>
     {
       !captions && (
-        /* Said out loud rather than quietly missing. An explainer with no
-           captions shuts out anyone who cannot hear it. */
+        /* The film burns its subtitles into the picture, so it is not silent
+           to a deaf viewer. What is still missing is a selectable track,
+           which is what a screen reader, a translation and a reader who
+           wants to change the type size all need. Saying "no captions"
+           would have been wrong; saying nothing would have been worse. */
         <span class="font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
-          Captions to follow
+          Subtitles on screen · selectable track to follow
         </span>
       )
     }
@@ -94,15 +164,55 @@ const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
 <style>
   .vf-frame { border-radius: var(--radius-lg); box-shadow: var(--depth); }
 
+  /* ── Autoplay mode ───────────────────────────────────────────────── */
+  .vf-el { object-fit: cover; background: #000; opacity: 0; transition: opacity 0.7s var(--ease-out-soft); }
+  .vf-el.is-on { opacity: 1; }
+  .vf-under { filter: saturate(0.95); }
+
+  .vf-bar { background: linear-gradient(to bottom, color-mix(in oklch, var(--base) 86%, transparent), transparent); }
+
+  .vf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--base) 78%, transparent);
+    backdrop-filter: blur(8px);
+    color: var(--fg-2);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.3s, border-color 0.3s, background-color 0.3s;
+  }
+  .vf-btn:hover { color: var(--fg); border-color: var(--primary); }
+  .vf-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  .vf-btn--loud { color: #15202b; background: #ffc20e; border-color: #ffc20e; }
+  .vf-btn--loud:hover { color: #15202b; background: #ffcd3a; border-color: #ffcd3a; }
+  /* Once sound is on it stops shouting and becomes an ordinary control. */
+  .vf-btn--loud[aria-pressed='true'] {
+    color: var(--fg-2);
+    background: color-mix(in oklch, var(--base) 78%, transparent);
+    border-color: var(--line-strong);
+  }
+  .vf-wave { opacity: 0; }
+  .vf-btn--loud[aria-pressed='true'] .vf-wave { opacity: 1; }
+
+  .vf-ico-play { display: none; }
+  [data-vf-pause].is-paused .vf-ico-pause { display: none; }
+  [data-vf-pause].is-paused .vf-ico-play { display: inline; }
+
+  /* ── Click-to-play mode ──────────────────────────────────────────── */
   .vf-start { cursor: pointer; }
   .vf-start:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-
   .vf-poster { transition: transform 0.9s var(--ease-out-soft), filter 0.6s; filter: saturate(0.9); }
-  .vf-start:hover .vf-poster,
-  .vf-start:focus-visible .vf-poster { transform: scale(1.02); filter: saturate(1); }
+  .vf-start:hover .vf-poster, .vf-start:focus-visible .vf-poster { transform: scale(1.02); filter: saturate(1); }
 
-  /* The poster is a pale illustration and the site is dark, so the frame
-     needs a floor under the caption or the text sits on near-white. */
   .vf-scrim {
     background: linear-gradient(
       to top,
@@ -116,25 +226,15 @@ const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
     width: 5rem;
     height: 5rem;
     margin: -2.5rem 0 0 -2.5rem;
-    /* The brand amber at full strength, not var(--accent-warm).
-       That token darkens to #7e600e on light grounds so small TEXT stays
-       legible, which is right for a marker and wrong for a filled disc with
-       a dark glyph on it: there the bright value is both higher contrast and
-       more obviously the brand. Fixed in both themes for the same reason. */
     color: #15202b;
     background: #ffc20e;
-    box-shadow:
-      0 0 0 10px rgb(255 194 14 / 0.2),
-      0 14px 40px -12px rgb(0 0 0 / 0.5);
+    box-shadow: 0 0 0 10px rgb(255 194 14 / 0.2), 0 14px 40px -12px rgb(0 0 0 / 0.5);
     transition: transform 0.45s var(--ease-spring), box-shadow 0.4s;
   }
   .vf-play svg { margin-left: 0.15rem; }
-  .vf-start:hover .vf-play,
-  .vf-start:focus-visible .vf-play {
+  .vf-start:hover .vf-play, .vf-start:focus-visible .vf-play {
     transform: scale(1.07);
-    box-shadow:
-      0 0 0 17px rgb(255 194 14 / 0.26),
-      0 14px 40px -12px rgb(0 0 0 / 0.5);
+    box-shadow: 0 0 0 17px rgb(255 194 14 / 0.26), 0 14px 40px -12px rgb(0 0 0 / 0.5);
   }
 
   .vf-title { color: var(--fg); text-shadow: 0 1px 12px color-mix(in oklch, var(--base) 70%, transparent); }
@@ -147,8 +247,7 @@ const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
     border-radius: 999px;
   }
 
-  /* Once playing, the native element fills the frame. */
-  .vf-frame :global(video) {
+  .vf-frame :global(video.vf-full) {
     display: block;
     width: 100%;
     height: 100%;
@@ -157,55 +256,150 @@ const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .vf-poster, .vf-play { transition: none; }
-    .vf-start:hover .vf-poster { transform: none; }
-    .vf-start:hover .vf-play { transform: none; }
+    .vf-poster, .vf-play, .vf-el { transition: none; }
+    .vf-start:hover .vf-poster, .vf-start:hover .vf-play { transform: none; }
   }
 </style>
 
 <script>
-  /**
-   * Swap the poster for a real player on first click.
-   *
-   * Built here rather than rendered with `preload="none"` because Safari
-   * fetches a poster-bearing video's metadata anyway, and because creating
-   * it inside the click handler keeps the user gesture, so `play()` is
-   * allowed to start with sound.
-   */
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
+
   document.querySelectorAll<HTMLElement>('[data-video]').forEach((fig) => {
-    const start = fig.querySelector<HTMLButtonElement>('[data-vf-start]');
     const frame = fig.querySelector<HTMLElement>('.vf-frame');
-    if (!start || !frame) return;
+    if (!frame) return;
 
-    start.addEventListener(
-      'click',
-      () => {
-        const video = document.createElement('video');
-        video.src = fig.dataset.src ?? '';
-        video.controls = true;
-        video.autoplay = true;
-        video.playsInline = true;
-        video.preload = 'auto';
-        video.setAttribute('controlsList', 'nodownload');
+    /* ── Click to play ──────────────────────────────────────────── */
+    const start = fig.querySelector<HTMLButtonElement>('[data-vf-start]');
+    if (start) {
+      start.addEventListener(
+        'click',
+        () => {
+          const video = document.createElement('video');
+          video.className = 'vf-full';
+          video.src = fig.dataset.src ?? '';
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          video.preload = 'auto';
+          video.setAttribute('controlsList', 'nodownload');
+          const vtt = fig.dataset.captions;
+          if (vtt) {
+            const t = document.createElement('track');
+            t.kind = 'captions';
+            t.src = vtt;
+            t.srclang = 'en';
+            t.label = 'English';
+            t.default = true;
+            video.appendChild(t);
+          }
+          frame.replaceChildren(video);
+          video.focus();
+          void video.play().catch(() => {});
+        },
+        { once: true },
+      );
+      return;
+    }
 
-        const vtt = fig.dataset.captions;
-        if (vtt) {
-          const track = document.createElement('track');
-          track.kind = 'captions';
-          track.src = vtt;
-          track.srclang = 'en';
-          track.label = 'English';
-          track.default = true;
-          video.appendChild(track);
-        }
+    /* ── Autoplay, muted and looping ────────────────────────────── */
+    const video = fig.querySelector<HTMLVideoElement>('.vf-el');
+    const sound = fig.querySelector<HTMLButtonElement>('[data-vf-sound]');
+    const soundLabel = fig.querySelector<HTMLElement>('[data-vf-sound-label]');
+    const pauseBtn = fig.querySelector<HTMLButtonElement>('[data-vf-pause]');
+    const pauseLabel = fig.querySelector<HTMLElement>('[data-vf-pause-label]');
+    if (!video) return;
 
-        frame.replaceChildren(video);
-        video.focus();
-        // A refused autoplay is not an error worth surfacing; the controls
-        // are right there.
-        void video.play().catch(() => {});
-      },
-      { once: true },
+    /**
+     * Reduced motion wins outright. No source is ever assigned, so nothing
+     * moves and the 8 MB is never fetched; the poster underneath is what
+     * remains, and controls for a video that will not play would be a lie.
+     */
+    if (REDUCED.matches) {
+      fig.querySelector<HTMLElement>('.vf-bar')?.remove();
+      return;
+    }
+
+    const setPaused = (paused: boolean) => {
+      pauseBtn?.classList.toggle('is-paused', paused);
+      if (pauseLabel) pauseLabel.textContent = paused ? 'Play' : 'Pause';
+    };
+
+    /**
+     * Two observers with one job each, and they must not overlap.
+     *
+     * The first only fetches, one viewport out. The second only plays and
+     * pauses, and only once the thing is actually on screen. An earlier
+     * version had the fetch observer start playback too, so it began one
+     * viewport early and the visibility observer, seeing something not yet
+     * on screen, paused it a frame later. The video never moved.
+     */
+    let loaded = false;
+    /** Set when the visitor pressed pause, so nothing restarts under them. */
+    let heldByUser = false;
+
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      video.src = fig.dataset.src ?? '';
+      video.load();
+    };
+
+    const play = () => {
+      load();
+      void video.play().catch(() => {
+        // Refused even when muted, as some battery-saving modes do. The
+        // poster stays and the control becomes the way in.
+        setPaused(true);
+      });
+    };
+
+    video.addEventListener('playing', () => video.classList.add('is-on'), { once: true });
+
+    const warm = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { load(); warm.disconnect(); } }),
+      { rootMargin: '100% 0px' },
     );
+    warm.observe(fig);
+
+    // A looping video nobody is looking at is a drain on the battery.
+    const onScreen = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) {
+            if (!video.paused) video.pause();
+          } else if (!heldByUser && video.paused) {
+            play();
+          }
+        }),
+      { threshold: 0.15 },
+    );
+    onScreen.observe(fig);
+
+    sound?.addEventListener('click', () => {
+      const turningOn = video.muted;
+      video.muted = !turningOn;
+      if (turningOn) {
+        // Sound means they are watching rather than glancing, so hand over a
+        // scrubber and stop the loop from restarting under them.
+        video.controls = true;
+        video.loop = false;
+        setPaused(false);
+        void video.play().catch(() => {});
+      }
+      sound.setAttribute('aria-pressed', turningOn ? 'true' : 'false');
+      if (soundLabel) soundLabel.textContent = turningOn ? 'Sound on' : 'Turn on sound';
+    });
+
+    pauseBtn?.addEventListener('click', () => {
+      if (video.paused) {
+        heldByUser = false;
+        play();
+        setPaused(false);
+      } else {
+        heldByUser = true;
+        video.pause();
+        setPaused(true);
+      }
+    });
   });
 </script>
