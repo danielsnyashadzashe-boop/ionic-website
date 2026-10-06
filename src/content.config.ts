@@ -97,6 +97,12 @@ const products = defineCollection({
           title: z.string(),
           description: z.string(),
           uploadDate: z.string(),
+          /**
+           * Show as a play control and a line rather than a poster block.
+           * The default for a long film: a 16:9 rectangle is a lot of page
+           * to spend on something most readers will not watch.
+           */
+          compact: z.boolean().default(false),
           /** Muted and looping once in view. One per page at most. */
           autoplay: z.boolean().default(false),
           /** WebVTT track. Absent is surfaced on the page, not hidden. */

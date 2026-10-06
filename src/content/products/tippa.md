@@ -32,6 +32,7 @@ videos:
       platform as it stands. The screens are illustrative and client
       branding has been removed.
     uploadDate: '2026-10-06'
+    compact: true
   - src: /media/tippa-how-to-tip.mp4
     poster: /media/tippa-how-to-tip-poster.jpg
     durationSeconds: 120

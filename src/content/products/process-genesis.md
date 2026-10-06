@@ -34,7 +34,7 @@ videos:
       that into process maps, improvements, a business case and the
       requirements a delivery team builds from.
     uploadDate: '2026-10-06'
-    autoplay: true
+    compact: true
 journey:
   - stage: Capture
     name: Bring in what people know

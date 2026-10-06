@@ -2,7 +2,13 @@
 /**
  * A video, presented the way the rest of the site presents things.
  *
- * Two modes.
+ * Three modes.
+ *
+ * `compact` is the quiet one and the default choice for a long film: no
+ * poster, no frame, just a play control and a line of text. A 16:9 block is
+ * a large thing to spend on something most readers will not watch, and it
+ * crowds the page it sits on. The player is built in place on click, so the
+ * space is only taken by someone who asked for it.
  *
  * `autoplay` runs it muted and looping as soon as it scrolls into view, so
  * the section shows the product moving rather than a still of it. Browsers
@@ -41,6 +47,10 @@ interface Props {
    * whatever the film has burned into its lower strip.
    */
   showTitle?: boolean;
+  /** A play control and a line, rather than a poster block. */
+  compact?: boolean;
+  /** Text beside the play control in compact mode. */
+  compactLabel?: string;
   /** Play muted and looping once in view, rather than waiting for a click. */
   autoplay?: boolean;
   ratio?: string;
@@ -54,6 +64,8 @@ const {
   title,
   captions,
   showTitle = true,
+  compact = false,
+  compactLabel = 'Play to find out more',
   autoplay = false,
   ratio = '16 / 9',
   class: className = '',
@@ -64,115 +76,133 @@ const secs = Math.round(durationSeconds % 60);
 const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
 ---
 
-<figure
-  class:list={['vf', className]}
-  data-video
-  data-src={src}
-  data-captions={captions}
-  data-autoplay={autoplay ? 'true' : undefined}
->
-  <div class="vf-frame relative overflow-hidden border border-line bg-raised" style={`aspect-ratio:${ratio}`}>
-    {
-      autoplay ? (
-        <>
-          {/* Sits underneath until the first frame paints, so the box is
-              never empty and reduced-motion users keep a real image. */}
-          <img
-            src={poster}
-            alt=""
-            width="1280"
-            height="720"
-            loading="lazy"
-            decoding="async"
-            class="vf-under absolute inset-0 h-full w-full object-cover"
-          />
-
-          <video
-            class="vf-el absolute inset-0 h-full w-full"
-            muted
-            loop
-            playsinline
-            preload="none"
-            aria-label={title}
-          >
-            {captions && <track kind="captions" src={captions} srclang="en" label="English" default />}
-          </video>
-
-          {/* Top, not bottom. This video carries burned-in subtitles across
-              the lower strip of the frame, and a control bar there sat
-              directly on the words. */}
-          <div class="vf-bar absolute left-0 right-0 top-0 flex flex-wrap items-center gap-3 p-4 md:p-5">
-            {/* Sound first and in the accent, because a muted explainer is
-                the failure case and this is the way out of it. */}
-            <button type="button" class="vf-btn vf-btn--loud" data-vf-sound aria-pressed="false">
-              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="currentColor">
-                <path d="M4 9v6h4l5 4V5L8 9H4Z" />
-                <path class="vf-wave" d="M15.5 8.5a4 4 0 0 1 0 7v-7Zm0-4.4a8 8 0 0 1 0 15.8v-2.06a6 6 0 0 0 0-11.68V4.1Z" />
-              </svg>
-              <span data-vf-sound-label>Turn on sound</span>
-            </button>
-
-            <button type="button" class="vf-btn" data-vf-pause>
-              <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="currentColor">
-                <path class="vf-ico-pause" d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z" />
-                <path class="vf-ico-play" d="M8 5.5v13l11-6.5z" />
-              </svg>
-              <span data-vf-pause-label>Pause</span>
-            </button>
-
-            <span class="vf-stamp ml-auto shrink-0 font-mono text-[0.6875rem] tabular-nums">{stamp}</span>
-          </div>
-        </>
-      ) : (
-        <button type="button" class="vf-start group absolute inset-0 block w-full" data-vf-start aria-label={`Play: ${title}`}>
-          <img
-            src={poster}
-            alt=""
-            width="1280"
-            height="720"
-            loading="lazy"
-            decoding="async"
-            class="vf-poster h-full w-full object-cover"
-          />
-          <span class="vf-scrim absolute inset-0" aria-hidden="true" />
-          <span class="vf-play absolute left-1/2 top-1/2 flex items-center justify-center rounded-full" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-              <path d="M8 5.5v13l11-6.5z" />
-            </svg>
-          </span>
-          {/* Top, not bottom. Films subtitle themselves across the lower
-              strip, and an overlay there lands on the words. */}
-          <span class="vf-meta absolute left-0 right-0 top-0 flex items-start justify-between gap-4 p-5 md:p-6" aria-hidden="true">
-            {showTitle ? (
-              <span class="vf-title font-display text-[1.0625rem] leading-snug md:text-[1.25rem]">{title}</span>
-            ) : (
-              <span />
-            )}
-            <span class="vf-stamp shrink-0 font-mono text-[0.6875rem] tabular-nums">{stamp}</span>
-          </span>
-        </button>
-      )
-    }
-  </div>
-
-  <figcaption class="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-    <span class="font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
-      {stamp} · {autoplay ? 'loops silently until you turn the sound on' : 'plays here, nothing is sent anywhere'}
-    </span>
-    {
-      !captions && (
-        /* The film burns its subtitles into the picture, so it is not silent
-           to a deaf viewer. What is still missing is a selectable track,
-           which is what a screen reader, a translation and a reader who
-           wants to change the type size all need. Saying "no captions"
-           would have been wrong; saying nothing would have been worse. */
-        <span class="font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
-          Subtitles on screen · selectable track to follow
+{
+  /* Compact: a control and a line. The frame is created on click, at the
+     film's own ratio, so nothing reserves space until someone wants it. */
+  compact ? (
+    <div class:list={['vf', className]} data-video data-src={src} data-captions={captions} data-ratio={ratio}>
+      <button type="button" class="vf-compact" data-vf-compact aria-label={`Play: ${title}`}>
+        <span class="vf-cplay" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M8 5.5v13l11-6.5z" /></svg>
         </span>
-      )
-    }
-  </figcaption>
-</figure>
+        <span class="vf-ctext">
+          <span class="vf-clabel">{compactLabel}</span>
+          <span class="vf-cmeta">{showTitle ? `${stamp} · ${title}` : stamp}</span>
+        </span>
+      </button>
+    </div>
+  ) : (
+    <figure
+      class:list={['vf', className]}
+      data-video
+      data-src={src}
+      data-captions={captions}
+      data-autoplay={autoplay ? 'true' : undefined}
+    >
+      <div class="vf-frame relative overflow-hidden border border-line bg-raised" style={`aspect-ratio:${ratio}`}>
+        {
+          autoplay ? (
+            <>
+              {/* Sits underneath until the first frame paints, so the box is
+                  never empty and reduced-motion users keep a real image. */}
+              <img
+                src={poster}
+                alt=""
+                width="1280"
+                height="720"
+                loading="lazy"
+                decoding="async"
+                class="vf-under absolute inset-0 h-full w-full object-cover"
+              />
+
+              <video
+                class="vf-el absolute inset-0 h-full w-full"
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-label={title}
+              >
+                {captions && <track kind="captions" src={captions} srclang="en" label="English" default />}
+              </video>
+
+              {/* Top, not bottom. This video carries burned-in subtitles across
+                  the lower strip of the frame, and a control bar there sat
+                  directly on the words. */}
+              <div class="vf-bar absolute left-0 right-0 top-0 flex flex-wrap items-center gap-3 p-4 md:p-5">
+                {/* Sound first and in the accent, because a muted explainer is
+                    the failure case and this is the way out of it. */}
+                <button type="button" class="vf-btn vf-btn--loud" data-vf-sound aria-pressed="false">
+                  <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="currentColor">
+                    <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                    <path class="vf-wave" d="M15.5 8.5a4 4 0 0 1 0 7v-7Zm0-4.4a8 8 0 0 1 0 15.8v-2.06a6 6 0 0 0 0-11.68V4.1Z" />
+                  </svg>
+                  <span data-vf-sound-label>Turn on sound</span>
+                </button>
+
+                <button type="button" class="vf-btn" data-vf-pause>
+                  <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="currentColor">
+                    <path class="vf-ico-pause" d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z" />
+                    <path class="vf-ico-play" d="M8 5.5v13l11-6.5z" />
+                  </svg>
+                  <span data-vf-pause-label>Pause</span>
+                </button>
+
+                <span class="vf-stamp ml-auto shrink-0 font-mono text-[0.6875rem] tabular-nums">{stamp}</span>
+              </div>
+            </>
+          ) : (
+            <button type="button" class="vf-start group absolute inset-0 block w-full" data-vf-start aria-label={`Play: ${title}`}>
+              <img
+                src={poster}
+                alt=""
+                width="1280"
+                height="720"
+                loading="lazy"
+                decoding="async"
+                class="vf-poster h-full w-full object-cover"
+              />
+              <span class="vf-scrim absolute inset-0" aria-hidden="true" />
+              <span class="vf-play absolute left-1/2 top-1/2 flex items-center justify-center rounded-full" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                  <path d="M8 5.5v13l11-6.5z" />
+                </svg>
+              </span>
+              {/* Top, not bottom. Films subtitle themselves across the lower
+                  strip, and an overlay there lands on the words. */}
+              <span class="vf-meta absolute left-0 right-0 top-0 flex items-start justify-between gap-4 p-5 md:p-6" aria-hidden="true">
+                {showTitle ? (
+                  <span class="vf-title font-display text-[1.0625rem] leading-snug md:text-[1.25rem]">{title}</span>
+                ) : (
+                  <span />
+                )}
+                <span class="vf-stamp shrink-0 font-mono text-[0.6875rem] tabular-nums">{stamp}</span>
+              </span>
+            </button>
+          )
+        }
+      </div>
+
+      <figcaption class="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+        <span class="font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
+          {stamp} · {autoplay ? 'loops silently until you turn the sound on' : 'plays here, nothing is sent anywhere'}
+        </span>
+        {
+          !captions && (
+            /* The film burns its subtitles into the picture, so it is not silent
+               to a deaf viewer. What is still missing is a selectable track,
+               which is what a screen reader, a translation and a reader who
+               wants to change the type size all need. Saying "no captions"
+               would have been wrong; saying nothing would have been worse. */
+            <span class="font-mono text-[0.625rem] uppercase tracking-[0.12em] text-fg-4">
+              Subtitles on screen · selectable track to follow
+            </span>
+          )
+        }
+      </figcaption>
+    </figure>
+  )
+}
 
 <style>
   .vf-frame { border-radius: var(--radius-lg); box-shadow: var(--depth); }
@@ -272,6 +302,65 @@ const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
     .vf-poster, .vf-play, .vf-el { transition: none; }
     .vf-start:hover .vf-poster, .vf-start:hover .vf-play { transform: none; }
   }
+
+  /* ── Compact ──────────────────────────────────────────────────────
+     A control and a line, nothing reserved. The amber disc is small so it
+     reads as a link with a play on it, not as a hero. */
+  .vf-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.95rem;
+    padding: 0.35rem 0;
+    text-align: left;
+    cursor: pointer;
+  }
+  .vf-compact:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+
+  .vf-cplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    color: #15202b;
+    background: #ffc20e;
+    box-shadow: 0 0 0 0 rgb(255 194 14 / 0.3);
+    transition: transform 0.4s var(--ease-spring), box-shadow 0.4s;
+  }
+  .vf-cplay svg { margin-left: 0.1rem; }
+  .vf-compact:hover .vf-cplay,
+  .vf-compact:focus-visible .vf-cplay {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 8px rgb(255 194 14 / 0.18);
+  }
+
+  .vf-ctext { display: grid; gap: 0.2rem; min-width: 0; }
+  .vf-clabel {
+    font-size: 0.9375rem;
+    color: var(--fg);
+    transition: color 0.3s;
+  }
+  .vf-compact:hover .vf-clabel { color: var(--primary); }
+  .vf-cmeta {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-4);
+  }
+
+  /* Played in place: span whatever grid it sits in, capped. */
+  .vf-playing {
+    grid-column: 1 / -1;
+    max-width: 48rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vf-cplay { transition: none; }
+    .vf-compact:hover .vf-cplay { transform: none; }
+  }
 </style>
 
 <script>
@@ -279,11 +368,52 @@ const stamp = `${mins}:${String(secs).padStart(2, '0')}`;
 
   document.querySelectorAll<HTMLElement>('[data-video]').forEach((fig) => {
     const frame = fig.querySelector<HTMLElement>('.vf-frame');
-    if (!frame) return;
+
+    /* ── Compact: build the frame and the player on click ───────── */
+    const compactBtn = fig.querySelector<HTMLButtonElement>('[data-vf-compact]');
+    if (compactBtn) {
+      compactBtn.addEventListener(
+        'click',
+        () => {
+          const shell = document.createElement('div');
+          shell.className = 'vf-frame relative overflow-hidden border border-line bg-raised';
+          shell.style.aspectRatio = fig.dataset.ratio ?? '16 / 9';
+
+          const video = document.createElement('video');
+          video.className = 'vf-full';
+          video.src = fig.dataset.src ?? '';
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          video.preload = 'auto';
+          video.setAttribute('controlsList', 'nodownload');
+          const vtt = fig.dataset.captions;
+          if (vtt) {
+            const t = document.createElement('track');
+            t.kind = 'captions';
+            t.src = vtt;
+            t.srclang = 'en';
+            t.label = 'English';
+            t.default = true;
+            video.appendChild(t);
+          }
+          shell.appendChild(video);
+          /* The control was a line in a narrow column; the player needs
+             the width of the row, and a ceiling so it does not become
+             the hero the compact mode exists to avoid. */
+          fig.classList.add('vf-playing');
+          fig.replaceChildren(shell);
+          video.focus();
+          void video.play().catch(() => {});
+        },
+        { once: true },
+      );
+      return;
+    }
 
     /* ── Click to play ──────────────────────────────────────────── */
     const start = fig.querySelector<HTMLButtonElement>('[data-vf-start]');
-    if (start) {
+    if (start && frame) {
       start.addEventListener(
         'click',
         () => {

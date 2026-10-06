@@ -203,28 +203,40 @@ const schema = [
       effort way in, and a reader who watches one meets the capability list
       already oriented.
 
-      Two shapes of layout, because two platforms need different things. One
-      film sits beside its own copy. Two or more get a row of their own,
-      each in its native aspect: Tippa has a 16:9 build story and a 9:16
-      phone explainer, and forcing either into the other's frame would mean
-      pillarboxing one of them. The grid is weighted by aspect so the wide
-      one stays wide and the tall one stays a phone. */}
+      A long film does not get a rectangle. Spending a 16:9 block of page
+      on something most readers will not watch is how a page gets busy, so
+      the two long films are a play control and a line, and the page keeps
+      the white space. The short vertical phone explainer keeps its frame:
+      it is small, it is the thing being explained, and a reader should be
+      able to see the screen without committing to a film. */}
   {
     d.videos.length === 1 && (
       <section id="video" class="band-alt seam scroll-mt-20">
         <div class="shell py-32 md:py-44">
-          <div class="grid gap-12 lg:grid-cols-[0.42fr_1fr] lg:gap-16">
-            <div class="lg:sticky lg:top-28 lg:self-start">
+          {/* Compact gets one column and room around it. A poster block
+              earns a second column beside it; a single line does not. */}
+          <div
+            class:list={[
+              'grid gap-12',
+              !d.videos[0].compact && 'lg:grid-cols-[0.42fr_1fr] lg:gap-16',
+            ]}
+          >
+            <div class:list={[!d.videos[0].compact && 'lg:sticky lg:top-28 lg:self-start']}>
               <SectionHead marker="See it work" title="Two and a half minutes," titleAccent="start to finish." />
               <p class="measure mt-8 text-[0.9375rem] leading-relaxed text-fg-3">{d.videos[0].description}</p>
             </div>
             <div class="rise" style="--step:1">
+              {/* The section head already carries the length and what the
+                  film covers, so the compact control does not repeat the
+                  title underneath it. */}
               <VideoFigure
                 src={d.videos[0].src}
                 poster={d.videos[0].poster}
                 durationSeconds={d.videos[0].durationSeconds}
                 title={d.videos[0].title}
                 captions={d.videos[0].captions}
+                compact={d.videos[0].compact}
+                showTitle={!d.videos[0].compact}
                 autoplay={d.videos[0].autoplay}
                 ratio={`${d.videos[0].width} / ${d.videos[0].height}`}
               />
@@ -246,23 +258,35 @@ const schema = [
             lede={`Two films about ${d.name}: one on the work behind it, one on what a customer actually does.`}
           />
 
-          <div class="mt-20 grid items-start gap-10 lg:grid-cols-[1.45fr_0.55fr] lg:gap-14">
+          {/* One row per film, stacked, rather than two columns side by
+             side. A compact film is a single line and a framed one is a
+             tall phone, so a shared row would leave half of it empty.
+             Each row puts the control or the frame on the left and the
+             copy beside it, on one track, so both rows share the same two
+             edges whatever is in the left column. */}
+          <div class="mt-16 grid gap-16 md:gap-20">
             {d.videos.map((v, i) => (
               /* A div, not a nested figure: VideoFigure is already one, and
                  two figcaptions in a row is not a caption, it is a muddle. */
-              <div class="rise" style={`--step:${i}`}>
+              <div
+                class="film-row rise grid items-start gap-6 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-10 lg:gap-14"
+                style={`--step:${i}`}
+              >
                 <VideoFigure
                   src={v.src}
                   poster={v.poster}
                   durationSeconds={v.durationSeconds}
                   title={v.title}
                   captions={v.captions}
+                  compact={v.compact}
                   autoplay={v.autoplay}
                   showTitle={false}
                   ratio={`${v.width} / ${v.height}`}
                 />
-                <h3 class="mt-6 font-display text-[1.125rem] leading-snug text-fg">{v.title}</h3>
-                <p class="measure mt-2.5 text-[0.9375rem] leading-relaxed text-fg-3">{v.description}</p>
+                <div>
+                  <h3 class="font-display text-[1.125rem] leading-snug text-fg">{v.title}</h3>
+                  <p class="measure mt-2.5 text-[0.9375rem] leading-relaxed text-fg-3">{v.description}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -378,6 +402,11 @@ const schema = [
 </PageLayout>
 
 <style>
+  /* A compact control sits in the narrow track, but the player it turns
+     into spans the row. Collapse the row so its copy follows underneath
+     at full width instead of squeezing into the leftover column. */
+  .film-row:has(.vf-playing) { grid-template-columns: 1fr; }
+
   .faq-row summary::-webkit-details-marker { display: none; }
   .faq-row .faq-mark { transition: transform 0.35s var(--ease-out-soft), color 0.35s; }
   .faq-row[open] .faq-mark { transform: rotate(45deg); color: var(--primary); }
