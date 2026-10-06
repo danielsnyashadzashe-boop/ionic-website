@@ -102,7 +102,7 @@ export const photos = {
   },
   qrTip: {
     src: qrTip,
-    alt: 'A hand holds a phone over a printed QR code, the camera framing the code ready to scan.',
+    alt: 'A hand holds a phone running a scan screen up to a payment terminal that is displaying a QR code.',
     caption:
       'A tip takes one scan. No app to download, no account to create, and the payer sees who they are paying before they pay.',
     illustrative: true,
