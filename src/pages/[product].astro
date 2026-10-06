@@ -82,23 +82,19 @@ const schema = [
     ],
   },
   ...(d.compass ? [compassSchema] : []),
-  ...(d.video
-    ? [
-        {
-          '@context': 'https://schema.org',
-          '@type': 'VideoObject',
-          name: d.video.title,
-          description: d.video.description,
-          thumbnailUrl: new URL(d.video.poster, site.domain).href,
-          contentUrl: new URL(d.video.src, site.domain).href,
-          uploadDate: d.video.uploadDate,
-          duration: `PT${Math.floor(d.video.durationSeconds / 60)}M${d.video.durationSeconds % 60}S`,
-          width: d.video.width,
-          height: d.video.height,
-          publisher: { '@type': 'Organization', name: site.name, url: site.domain },
-        },
-      ]
-    : []),
+  ...d.videos.map((v) => ({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: v.title,
+    description: v.description,
+    thumbnailUrl: new URL(v.poster, site.domain).href,
+    contentUrl: new URL(v.src, site.domain).href,
+    uploadDate: v.uploadDate,
+    duration: `PT${Math.floor(v.durationSeconds / 60)}M${v.durationSeconds % 60}S`,
+    width: v.width,
+    height: v.height,
+    publisher: { '@type': 'Organization', name: site.name, url: site.domain },
+  })),
   ...(d.faqs.length > 0
     ? [
         {
@@ -231,42 +227,76 @@ const schema = [
     )
   }
 
-  <!-- ══ EXPLAINER VIDEO ═══════════════════════════════════════════════ -->
-  {/* Second on the page, straight after the figures. Two and a half
-      minutes of someone explaining it is the lowest-effort way in, and a
-      reader who watches it meets the capability list already oriented. It
-      sat sixth for a while, behind three consecutive enumerated sections,
-      which is exactly the fatigue it exists to prevent. */}
+  <!-- ══ FILM ══════════════════════════════════════════════════════════ -->
+  {/* Second on the page, straight after the figures. A film is the lowest-
+      effort way in, and a reader who watches one meets the capability list
+      already oriented.
+
+      Two shapes of layout, because two platforms need different things. One
+      film sits beside its own copy. Two or more get a row of their own,
+      each in its native aspect: Tippa has a 16:9 build story and a 9:16
+      phone explainer, and forcing either into the other's frame would mean
+      pillarboxing one of them. The grid is weighted by aspect so the wide
+      one stays wide and the tall one stays a phone. */}
   {
-    d.video && (
+    d.videos.length === 1 && (
       <section id="video" class="band-alt seam scroll-mt-20">
         <div class="shell py-32 md:py-44">
           <div class="grid gap-12 lg:grid-cols-[0.42fr_1fr] lg:gap-16">
             <div class="lg:sticky lg:top-28 lg:self-start">
-              <SectionHead
-                marker="See it work"
-                title="Two and a half minutes,"
-                titleAccent="start to finish."
-              />
-              <p class="measure mt-8 text-[0.9375rem] leading-relaxed text-fg-3">
-                {d.video.description}
-              </p>
+              <SectionHead marker="See it work" title="Two and a half minutes," titleAccent="start to finish." />
+              <p class="measure mt-8 text-[0.9375rem] leading-relaxed text-fg-3">{d.videos[0].description}</p>
               <p class="mt-8">
                 <a href="#compass" class="link-u text-sm">Or try it on your own process →</a>
               </p>
             </div>
-
             <div class="rise" style="--step:1">
               <VideoFigure
-                src={d.video.src}
-                poster={d.video.poster}
-                durationSeconds={d.video.durationSeconds}
-                title={d.video.title}
-                captions={d.video.captions}
-                ratio={`${d.video.width} / ${d.video.height}`}
-                autoplay
+                src={d.videos[0].src}
+                poster={d.videos[0].poster}
+                durationSeconds={d.videos[0].durationSeconds}
+                title={d.videos[0].title}
+                captions={d.videos[0].captions}
+                autoplay={d.videos[0].autoplay}
+                ratio={`${d.videos[0].width} / ${d.videos[0].height}`}
               />
             </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    d.videos.length > 1 && (
+      <section id="video" class="band-alt seam scroll-mt-20">
+        <div class="shell py-32 md:py-44">
+          <SectionHead
+            marker="See it work"
+            title="How it was built,"
+            titleAccent="and how it is used."
+            lede={`Two films about ${d.name}: one on the work behind it, one on what a customer actually does.`}
+          />
+
+          <div class="mt-20 grid items-start gap-10 lg:grid-cols-[1.45fr_0.55fr] lg:gap-14">
+            {d.videos.map((v, i) => (
+              /* A div, not a nested figure: VideoFigure is already one, and
+                 two figcaptions in a row is not a caption, it is a muddle. */
+              <div class="rise" style={`--step:${i}`}>
+                <VideoFigure
+                  src={v.src}
+                  poster={v.poster}
+                  durationSeconds={v.durationSeconds}
+                  title={v.title}
+                  captions={v.captions}
+                  autoplay={v.autoplay}
+                  showTitle={false}
+                  ratio={`${v.width} / ${v.height}`}
+                />
+                <h3 class="mt-6 font-display text-[1.125rem] leading-snug text-fg">{v.title}</h3>
+                <p class="measure mt-2.5 text-[0.9375rem] leading-relaxed text-fg-3">{v.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

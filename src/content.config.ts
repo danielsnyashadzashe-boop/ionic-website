@@ -89,26 +89,32 @@ const products = defineCollection({
       .array(z.object({ who: z.string(), name: z.string(), detail: z.string() }))
       .default([]),
     /**
-     * The explainer video for this platform, where one exists.
+     * Films for this platform. An array because Tippa has two of very
+     * different shapes, a 16:9 build story and a 9:16 phone explainer, and
+     * a single slot could only have held one of them properly.
      *
      * Dimensions and duration are recorded rather than read at runtime: the
-     * frame has to reserve its space before anything loads, and the
-     * VideoObject structured data needs a real duration.
+     * frame has to reserve its space before anything loads, and VideoObject
+     * needs a real duration.
      */
-    video: z
-      .object({
-        src: z.string(),
-        poster: z.string(),
-        durationSeconds: z.number(),
-        width: z.number(),
-        height: z.number(),
-        title: z.string(),
-        description: z.string(),
-        uploadDate: z.string(),
-        /** WebVTT track. Absent is surfaced on the page, not hidden. */
-        captions: z.string().optional(),
-      })
-      .optional(),
+    videos: z
+      .array(
+        z.object({
+          src: z.string(),
+          poster: z.string(),
+          durationSeconds: z.number(),
+          width: z.number(),
+          height: z.number(),
+          title: z.string(),
+          description: z.string(),
+          uploadDate: z.string(),
+          /** Muted and looping once in view. One per page at most. */
+          autoplay: z.boolean().default(false),
+          /** WebVTT track. Absent is surfaced on the page, not hidden. */
+          captions: z.string().optional(),
+        }),
+      )
+      .default([]),
     faqs: z
       .array(z.object({ q: z.string(), a: z.string() }))
       .default([]),

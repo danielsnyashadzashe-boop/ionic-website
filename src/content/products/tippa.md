@@ -20,6 +20,29 @@ seoDescription: >-
 showMetrics: false
 photo: qrTip
 homeProof: Live at 10 malls and centres, with automated bank reconciliation
+videos:
+  - src: /media/tippa-film.mp4
+    poster: /media/tippa-film-poster.jpg
+    durationSeconds: 92
+    width: 960
+    height: 540
+    title: How Tippa was built
+    description: >-
+      The build story: who did what, the phases it moved through, and the
+      platform as it stands. The screens are illustrative and client
+      branding has been removed.
+    uploadDate: '2026-10-06'
+  - src: /media/tippa-how-to-tip.mp4
+    poster: /media/tippa-how-to-tip-poster.jpg
+    durationSeconds: 120
+    width: 1080
+    height: 1920
+    title: How to tip with Tippa
+    description: >-
+      What a customer actually does: scan the code, choose how to pay, and
+      the money lands in the worker's wallet. Card, Instant EFT with Ozow,
+      Capitec Pay, Bank EFT, Scan to Pay or 1Voucher.
+    uploadDate: '2026-10-06'
 capabilities:
   - name: Scan-to-tip, no app required
     detail: >-

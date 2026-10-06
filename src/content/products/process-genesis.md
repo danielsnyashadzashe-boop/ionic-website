@@ -22,19 +22,20 @@ showMetrics: true
 photo: processGenesisKey
 homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
 compass: true
-video:
-  src: /media/process-genesis-explainer.mp4
-  poster: /media/process-genesis-poster.jpg
-  durationSeconds: 148
-  width: 1280
-  height: 720
-  title: How Process Genesis turns what your people know into a system
-  description: >-
-    A two and a half minute walkthrough of Process Genesis: how business
-    experts describe the work they already do, and how the platform turns
-    that into process maps, improvements, a business case and the
-    requirements a delivery team builds from.
-  uploadDate: '2026-10-06'
+videos:
+  - src: /media/process-genesis-explainer.mp4
+    poster: /media/process-genesis-poster.jpg
+    durationSeconds: 148
+    width: 1280
+    height: 720
+    title: How Process Genesis turns what your people know into a system
+    description: >-
+      A two and a half minute walkthrough of Process Genesis: how business
+      experts describe the work they already do, and how the platform turns
+      that into process maps, improvements, a business case and the
+      requirements a delivery team builds from.
+    uploadDate: '2026-10-06'
+    autoplay: true
 journey:
   - stage: Capture
     name: Bring in what people know
