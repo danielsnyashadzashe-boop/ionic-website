@@ -173,7 +173,17 @@ const schema = [
                 {/* No ratio: Figure gives photography the 16/10 crop and leaves brand
                     artwork at its own shape, which this one needs because its
                     strapline runs close to the bottom edge. */}
-                <Figure photo={d.photo} sizes="(min-width: 1024px) 30rem, 100vw" eager />
+                {/* Measured, not guessed. The aside renders at 382px at the lg
+                    breakpoint, 491px at xl and 559px above that, where the
+                    shell stops growing. The old 30rem told the browser 480px
+                    everywhere, so from 1280 up it fetched the 480w file and
+                    upscaled it. On a key visual made mostly of text that is
+                    the difference between crisp and soft. */}
+                <Figure
+                  photo={d.photo}
+                  sizes="(min-width: 1280px) 36rem, (min-width: 1024px) 24rem, 100vw"
+                  eager
+                />
               </div>
             )
           }
