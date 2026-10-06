@@ -248,7 +248,9 @@ const painOptions = [
           {
             painOptions.map((o) => (
               <button type="button" class="tile" role="radio" aria-checked="false" data-pain={o.key}>
-                <svg viewBox="0 0 24 24">
+                {/* Decorative: the tile is already named by its label below,
+                    so the icon would only be announced twice. */}
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                   {o.key === 'visibility' ? (
                     <>
                       <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" />
