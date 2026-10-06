@@ -129,10 +129,36 @@ const schema = [
 
           <div class="mt-11 flex flex-wrap items-center gap-4" style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:500ms">
             <a href="#contact" class="btn"><span>Request a demo</span></a>
-            {
-              <a href="#capabilities" class="link-u px-1 text-sm">See capabilities</a>
-            }
+            <a href="#capabilities" class="link-u px-1 text-sm">See capabilities</a>
           </div>
+
+          {/* The five questions sit well down the page, and something you
+              have to scroll to find is something most people never find.
+              Offered here, at the top, with enough of an explanation to
+              know whether it is worth a minute. */}
+          {
+            d.whereToStart && (
+              <div
+                class="mt-10 border-l-2 border-primary/50 pl-5"
+                style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:620ms"
+              >
+                <a href="#where-to-start" class="group inline-flex items-baseline gap-2 font-display text-[1.0625rem] leading-snug text-fg">
+                  <span class="link-u">Where should your process go next?</span>
+                  <span
+                    class="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+                </a>
+                <p class="measure mt-2 text-[0.9375rem] leading-relaxed text-fg-3">
+                  Five questions about one of your own processes, each answered with a
+                  click, and we tell you what we would do first and why. About a minute.
+                  Nothing is sent anywhere and nothing is stored.
+                </p>
+              </div>
+            )
+          }
         </div>
 
         <!-- Capability index: a table of contents that doubles as ornament -->
