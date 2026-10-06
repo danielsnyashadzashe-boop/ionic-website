@@ -572,20 +572,20 @@ const painOptions = [
     const tracks: Record<string, { title: string; summary: string; steps: string[]; time: string }> = {
       map: {
         title: 'Map it and make it dependable',
-        summary: 'Automation multiplies whatever it is given, so an unclear process becomes a fast unclear process. The first win is agreeing one way the work should happen, and proving it holds before any tooling is added.',
+        summary: 'Automation multiplies whatever it is given. An unclear process becomes a fast, unclear process. The first win here is agreeing on one way the work should happen, and proving it holds up before any tooling is added.',
         steps: [
           'Walk the process end to end with the people who actually run it.',
-          'Write down the one way it should work, including who decides what.',
-          'Run it that way for a few cycles and measure time and errors.',
+          'Write down the one way it should work, including where decisions get made and by whom.',
+          'Run it manually the new way for a few cycles and measure time and errors.',
         ],
         time: 'Typically three to five weeks.',
       },
       automate: {
         title: 'Automate the workflow',
-        summary: 'The process is clear enough to trust and runs often enough to pay back the effort, yet most of it is still done by hand. That is the sweet spot: real hours back, quickly, at low risk.',
+        summary: 'The process is clear enough to trust and runs often enough to pay back the effort, yet most of it is still done by hand. That is the sweet spot for workflow automation: real hours back, quickly, with low risk.',
         steps: [
           'Pick the three steps that consume the most hours or cause the most rework.',
-          'Build the flow with human checkpoints only where judgement is needed.',
+          'Build the automated flow with human checkpoints only where judgement is needed.',
           'Run old and new side by side for two weeks, then switch over.',
         ],
         time: 'Typically four to eight weeks.',
@@ -602,17 +602,17 @@ const painOptions = [
       },
       intelligence: {
         title: 'Add intelligence to the exceptions',
-        summary: 'The process is mature and largely automated. What is left for people is judgement: reading, classifying, deciding. That is where an AI assistant earns its place, with review built in.',
+        summary: 'The process is mature and largely automated. What is left for people is judgement: reading, classifying, deciding, handling exceptions. That is where an AI assistant earns its place, working alongside the team with review built in.',
         steps: [
-          'Identify the decisions people still make by hand, and how often each occurs.',
-          'Put an assistant on the highest-volume one, with a human review loop.',
+          'Identify the decisions people still make by hand and how often each occurs.',
+          'Put an AI assistant on the highest-volume one, with a human review loop.',
           'Widen its scope step by step as accuracy holds.',
         ],
         time: 'Typically six to twelve weeks.',
       },
       measure: {
         title: 'Measure it, then optimise',
-        summary: 'The machinery is built; what is missing is the instrument panel. Until the process reports on itself, improvements are guesses. Make the numbers visible and the next fix becomes obvious.',
+        summary: 'The machinery is built; what is missing is the instrument panel. Until the process reports on itself, improvements are guesses. Make the numbers visible first, and the next fix becomes obvious.',
         steps: [
           'Define the three numbers that show the process is healthy.',
           'Instrument the workflow so those numbers update themselves.',
@@ -640,7 +640,7 @@ const painOptions = [
         map: ' With the process still forming, tooling would lock in the inconsistency.',
         automate: ' The gap between how often it runs and how little runs itself is where the return is.',
         connect: ` With ${h} people in the chain, the delays live between the tools rather than inside them.`,
-        intelligence: ' The routine work is already handled; what remains is judgement.',
+        intelligence: ' The routine work is already handled; the remaining effort is judgement.',
         measure: ' The process is running, but nobody can tell how well.',
       };
       return base + tail[key];
