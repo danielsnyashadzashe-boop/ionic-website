@@ -21,7 +21,6 @@ seoDescription: >-
 showMetrics: true
 photo: processGenesisKey
 homeProof: Deployed at Old Mutual, Bidvest, Fidelity and 3Sixty Health
-compass: true
 videos:
   - src: /media/process-genesis-explainer.mp4
     poster: /media/process-genesis-poster.jpg

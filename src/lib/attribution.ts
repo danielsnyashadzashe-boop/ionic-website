@@ -138,19 +138,5 @@ export function attributionLine(a: Attribution): string {
   parts.push(`landing=${a.landing}`);
   if (a.referrer && a.referrer !== a.source) parts.push(`referrer=${a.referrer}`);
 
-  /**
-   * Whether this visit went through the Process Genesis taster, and how far.
-   * Written by TasterEmbed from the events the frame posts; it carries no
-   * part of what the visitor typed into it.
-   */
-  try {
-    const t = window.sessionStorage.getItem('ionic.taster');
-    const stage = window.sessionStorage.getItem('ionic.taster.stage');
-    if (t) parts.push(`taster=${t}`);
-    else if (stage) parts.push(`taster=${stage}`);
-  } catch {
-    /* no storage, no taster marker */
-  }
-
   return parts.join(' | ');
 }

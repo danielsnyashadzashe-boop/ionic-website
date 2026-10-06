@@ -130,8 +130,6 @@ $REGIONS = ['za' => 'South Africa', 'ca' => 'Canada', 'other' => 'Elsewhere'];
 $TOPICS  = [
     'consulting' => 'A transformation or automation project',
     'demo'       => 'A Process Genesis demo',
-    'compass'    => 'A process mapped on the site',
-    'taster'     => 'The Process Genesis taster',
     'build'      => 'An ERP, platform or app build',
     'investor'   => 'An investor enquiry',
     'other'      => 'Something else',

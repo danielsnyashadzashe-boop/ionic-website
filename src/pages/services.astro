@@ -117,20 +117,19 @@ const groups = [
                   <div>
                     <p class="t-lede measure text-fg-2">{s.summary}</p>
 
-                    <ul class="mt-8 grid gap-x-10 gap-y-3 sm:grid-cols-2">
-                      {s.includes.map((inc) => (
-                        <li class="flex items-baseline gap-3 border-b border-line pb-3 text-[0.9375rem] text-fg-3">
-                          <span class="h-1 w-1 shrink-0 translate-y-[-0.2em] rounded-full bg-primary" aria-hidden="true" />
-                          {inc}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {s.evidence && (
-                      <p class="mt-7">
-                        <a href={s.evidence.href} class="link-u text-sm">
-                          Delivered: {s.evidence.label} →
-                        </a>
+                    {s.seenIn.length > 0 && (
+                      <p class="mt-7 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm text-fg-4">
+                        <span class="font-mono text-[0.625rem] uppercase tracking-[0.12em]">Delivered for</span>
+                        {s.seenIn.map((c, n) => (
+                          <>
+                            {n > 0 && <span aria-hidden="true">·</span>}
+                            {c.href ? (
+                              <a href={c.href} class="link-u text-fg-3">{c.label}</a>
+                            ) : (
+                              <span class="text-fg-3">{c.label}</span>
+                            )}
+                          </>
+                        ))}
                       </p>
                     )}
                   </div>

@@ -36,8 +36,8 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * Where the enquiry is coming from and what it is about.
  *
  * Both are preselected from `?region=` and `?topic=` so a CTA can arrive
- * pre-qualified: the Canada page sends `?region=ca`, the Compass sends
- * `?topic=compass`. Two fewer things to ask on the call.
+ * pre-qualified: the Canada page sends `?region=ca`. Two fewer things
+ * to ask on the call.
  */
 const REGIONS = [
   { value: 'za', label: 'South Africa' },
@@ -48,8 +48,6 @@ const REGIONS = [
 const TOPICS = [
   { value: 'consulting', label: 'A transformation or automation project' },
   { value: 'demo', label: 'A Process Genesis demo' },
-  { value: 'compass', label: 'A process I mapped on your site' },
-  { value: 'taster', label: 'The Process Genesis taster I just ran' },
   { value: 'build', label: 'An ERP, platform or app build' },
   { value: 'investor', label: 'An investor enquiry' },
   { value: 'other', label: 'Something else' },
@@ -185,7 +183,7 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
 
   /**
    * Staged brief rather than one wall of fields, matching the Process
-   * Compass. Same rail, same counter, same one-thing-at-a-time rhythm, so
+   * staged flow. Same rail, same counter, same one-thing-at-a-time rhythm, so
    * the two flows read as one product.
    *
    * Two things this must not break. Every field stays mounted, hidden with

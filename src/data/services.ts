@@ -1,15 +1,16 @@
 /**
  * The service taxonomy.
  *
- * Two pillars, seven services. The split matters commercially: most firms do
- * one side or the other, and the gap between them is where transformation
- * programmes are lost. Strategy consultancies stop at the recommendation;
- * software houses start at the specification. Nobody owns the translation.
+ * Two pillars, seven services, and the wording is the wording Reneil already
+ * signed off in the handover rather than anything written here. An earlier
+ * version carried a summary and four bullet points per service that nobody
+ * had agreed to: thirty-five claims about what we deliver, generated from a
+ * one-line heading. They have been replaced by the real description and, in
+ * place of invented capability lists, the clients each service has actually
+ * been delivered for.
  *
- * Each service is an anchor on /services/ rather than its own page for now.
- * When one of them has enough delivered work behind it to carry a page of its
- * own, it should get one; a thin page per service is worse than a thick page
- * with seven sections.
+ * If a service has no client against it, that is the honest state and the
+ * page shows nothing rather than filling the gap.
  */
 
 export interface Service {
@@ -19,22 +20,20 @@ export interface Service {
   pillar: 'business' | 'digital';
   name: string;
   summary: string;
-  /** What is actually delivered. Concrete, not adjectives. */
-  includes: string[];
-  /** Case study slug or ledger client that evidences this service. */
-  evidence?: { label: string; href: string };
+  /** Clients this has been delivered for. Named, not described. */
+  seenIn: { label: string; href?: string }[];
 }
 
 export const pillars = {
   business: {
     label: 'Business transformation',
     heading: 'How the business runs',
-    lede: 'Strategy, structure, process and people. The largest gains often need no new software at all, which is an awkward thing for a software company to say and true often enough that we say it.',
+    lede: 'Strategy, structure, processes and people. We start here even when the answer ends up being software, because automating a process nobody has questioned only makes the wrong thing faster.',
   },
   digital: {
     label: 'Digital transformation',
     heading: 'The systems it runs on',
-    lede: 'When technology is genuinely the right answer, we build it, connect it and keep it running. We hold no reseller licences, so nothing rides on which technology that turns out to be.',
+    lede: 'When technology is the right answer, we design it, build it, connect it to what you already have and keep it running. We do not resell licences, so we recommend off-the-shelf where it fits.',
   },
 } as const;
 
@@ -45,13 +44,8 @@ export const services: Service[] = [
     pillar: 'business',
     name: 'Strategy and roadmap',
     summary:
-      'Where the business is trying to get to, what stands in the way, and the order things should happen in. Delivered as a sequence with costs attached, not as a deck.',
-    includes: [
-      'Operating model and structure review',
-      'Transformation roadmap with sequencing and cost',
-      'Business case and benefit tracking',
-      'Build, buy or leave-alone assessment',
-    ],
+      'Digital and operating strategy tied to what the business is trying to achieve, and a roadmap that sequences the work by value and effort. Includes operating model and organisation design where structure is part of the problem.',
+    seenIn: [{ label: 'Sirago', href: '/case-studies/sirago/' }],
   },
   {
     slug: 'process',
@@ -59,14 +53,11 @@ export const services: Service[] = [
     pillar: 'business',
     name: 'Process redesign and automation',
     summary:
-      'Mapping how work actually runs, workarounds included, then redesigning it. Automating a process nobody has understood only produces wrong answers faster.',
-    includes: [
-      'Process discovery and as-is mapping in BPMN',
-      'Bottleneck, rework and exception analysis',
-      'To-be design grounded in Lean and Six Sigma practice',
-      'Build-ready requirements and user stories',
+      'We map how work really runs with Process Genesis, find the bottlenecks, rework and manual effort, then redesign. What is worth automating gets automated; the rest gets simpler.',
+    seenIn: [
+      { label: 'Sirago', href: '/case-studies/sirago/' },
+      { label: 'Kruse Group', href: '/case-studies/kruse-group/' },
     ],
-    evidence: { label: 'Sirago and Genric', href: '/case-studies/sirago/' },
   },
   {
     slug: 'change',
@@ -74,14 +65,11 @@ export const services: Service[] = [
     pillar: 'business',
     name: 'Change management and training',
     summary:
-      'The half of a programme that decides whether any of the rest of it survives. A system nobody adopts is an expense, not a transformation.',
-    includes: [
-      'Stakeholder and impact assessment',
-      'Training built around the new process, not the new screens',
-      'Adoption tracking through the first operating cycles',
-      'Process skills that stay with your people',
+      'Adoption planning, communication and hands-on training, so people actually use what has been built. Process Genesis teaches process thinking along the way, which leaves skills behind when we step back.',
+    seenIn: [
+      { label: 'Tippa', href: '/case-studies/tippa/' },
+      { label: 'Genric', href: '/case-studies/sirago/' },
     ],
-    evidence: { label: 'Tippa field rollout', href: '/case-studies/tippa/' },
   },
   {
     slug: 'erp',
@@ -89,14 +77,12 @@ export const services: Service[] = [
     pillar: 'digital',
     name: 'ERP and operations platforms',
     summary:
-      'One system covering how the business actually operates, rather than a product you reshape the business around.',
-    includes: [
-      'Operations, logistics, finance and reporting',
-      'Scheduling, jobs, assets, fleet and field work',
-      'Health and safety, quality and compliance',
-      'Migration off systems you cannot easily leave',
+      'ERP selection, implementation and replacement, or a custom operations platform when off-the-shelf will not fit how you work. Finance, operations, logistics, jobs, assets, people and reporting in one place.',
+    seenIn: [
+      { label: 'Kruse Group', href: '/case-studies/kruse-group/' },
+      { label: 'Depot in Durban', href: '/case-studies/depot-durban/' },
+      { label: 'NVV', href: '/case-studies/national-video-vision/' },
     ],
-    evidence: { label: 'Kruse Group, sixteen functions', href: '/case-studies/kruse-group/' },
   },
   {
     slug: 'software',
@@ -104,14 +90,12 @@ export const services: Service[] = [
     pillar: 'digital',
     name: 'Custom software, apps and integration',
     summary:
-      'Built when nothing off the shelf fits, and only then. Including the boundaries where your systems have to speak to someone else’s.',
-    includes: [
-      'Web and mobile applications',
-      'Customer and partner portals',
-      'Integration with SAP, Oracle, Microsoft, CRM and legacy systems',
-      'Payment and banking integration',
+      'Web platforms, mobile apps and customer portals, connected to the systems you already run, including SAP, SharePoint and banking partners.',
+    seenIn: [
+      { label: 'Sappi' },
+      { label: 'Tippa', href: '/case-studies/tippa/' },
+      { label: 'Tradeway' },
     ],
-    evidence: { label: 'Depot in Durban, ten-day onboarding', href: '/case-studies/depot-durban/' },
   },
   {
     slug: 'ai',
@@ -119,14 +103,8 @@ export const services: Service[] = [
     pillar: 'digital',
     name: 'Data, AI and reporting',
     summary:
-      'Decisions made on evidence rather than on whoever spoke last. Including document extraction, anomaly detection and reporting that writes itself.',
-    includes: [
-      'Document extraction, classification and validation',
-      'Anomaly and fraud detection',
-      'Real-time dashboards for cycle time and compliance',
-      'AI-assisted reporting from field and operational data',
-    ],
-    evidence: { label: '3Sixty Health, fraud and waste monitoring', href: '/case-studies/3sixty-health/' },
+      'Dashboards and reporting that build themselves, document reading and classification, and AI assistants built into the process where they save real time. We use AI where it earns its place, not as a label.',
+    seenIn: [{ label: 'Tradeway' }, { label: 'ExpenseFlow', href: '/expenseflow/' }],
   },
   {
     slug: 'run',
@@ -134,14 +112,8 @@ export const services: Service[] = [
     pillar: 'digital',
     name: 'Managed operations and support',
     summary:
-      'Staying after go-live. Sometimes that is support and maintenance; sometimes it is our people embedded in the business running the thing day to day.',
-    includes: [
-      'Application support and maintenance',
-      'Embedded operations teams',
-      'Infrastructure stabilisation and service delivery',
-      'Monitoring, incident handling and continuous improvement',
-    ],
-    evidence: { label: 'Nogada Security', href: '/#work' },
+      'Support and maintenance after go-live, IT stabilisation when internal support falls away, and embedded people to run operations where you need them.',
+    seenIn: [{ label: 'Nogada Security' }, { label: 'Tippa', href: '/case-studies/tippa/' }],
   },
 ];
 
