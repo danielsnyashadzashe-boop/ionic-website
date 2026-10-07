@@ -15,7 +15,16 @@ import SectionHead from './SectionHead.astro';
  * quote real scale makes the row underneath supporting evidence rather than
  * six things competing.
  */
+/**
+ * One quote, from Tippa.
+ *
+ * The others are held with their client references. Widen this list as
+ * each one is approved; the layout already handles a lead plus a row.
+ */
+const SHOWING = ['tippa'];
+
 const all = (await getCollection('caseStudies', ({ data }) => data.published))
+  .filter((s) => SHOWING.includes(s.id))
   .filter((s) => s.data.quote && s.data.quote.trim().length > 0)
   .sort((a, b) => a.data.order - b.data.order);
 
@@ -148,7 +157,8 @@ const split = (attr: string) => {
         </div>
 
         {/* ── Supporting quotes ────────────────────────────────────── */}
-        <div class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Only renders once there is more than one approved quote. */}
+        <div class:list={['mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3', rest.length === 0 && 'hidden']}>
           {rest.map((s, i) => {
             const { person, org } = split(s.data.quoteAttribution);
             // A div, not a link to `/case-studies/${s.id}/`: the write-ups
@@ -195,7 +205,9 @@ const split = (attr: string) => {
         </div>
 
         <p class="rise mt-12 text-center text-[0.8125rem] text-fg-4" style="--step:7">
-          Every quote above is attributed to the engagement it came from.
+          {rest.length === 0
+            ? 'Attributed to the engagement it came from.'
+            : 'Every quote above is attributed to the engagement it came from.'}
         </p>
       </div>
     </section>
