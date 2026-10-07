@@ -28,6 +28,14 @@ interface Props {
   eager?: boolean;
   /** Gentle rise-and-settle, as the model site does with its imagery. */
   float?: boolean;
+  /**
+   * A plain rectangle: no cut corner, no tracing outline, no squares.
+   *
+   * The notch motif earns its keep once on a page. Repeated across a
+   * grid of cards it stops reading as a device and starts reading as
+   * decoration applied because it was available.
+   */
+  plain?: boolean;
   class?: string;
 }
 
@@ -38,6 +46,7 @@ const {
   showCaption = true,
   eager = false,
   float = false,
+  plain = false,
   class: className = '',
 } = Astro.props;
 
@@ -125,8 +134,8 @@ const specks = [
     style={`aspect-ratio: ${frameRatio}`}
   >
   <div
-    class:list={['notch surface absolute inset-0 overflow-hidden', isBrand && 'plate']}
-    style={`--nx: ${nxPct}%; --ny: ${nyPct.toFixed(3)}%`}
+    class:list={[!plain && 'notch', 'surface absolute inset-0 overflow-hidden', isBrand && 'plate']}
+    style={plain ? undefined : `--nx: ${nxPct}%; --ny: ${nyPct.toFixed(3)}%`}
   >
     <Image
       src={p.src}
@@ -162,6 +171,7 @@ const specks = [
 
   {/* Outline and squares sit outside the clipped frame, so they are siblings
       of it rather than children. Anything inside would be cut away. */}
+  {!plain && (
   <svg
     class="notch-line"
     viewBox={`0 0 ${VW} ${VH}`}
@@ -176,8 +186,9 @@ const specks = [
       vector-effect="non-scaling-stroke"
     />
   </svg>
+  )}
 
-  {specks.map((s) => <span class={s.class} style={s.style} aria-hidden="true" />)}
+  {!plain && specks.map((s) => <span class={s.class} style={s.style} aria-hidden="true" />)}
   </div>
 
   {

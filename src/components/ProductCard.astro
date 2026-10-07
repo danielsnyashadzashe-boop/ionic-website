@@ -20,9 +20,10 @@ const d = product.data;
   ]}
   style={`--step:${index}`}
 >
-  {/* Image header. The card is the place the notch motif actually earns its
-      keep: it is the element a visitor sees before any photograph deeper in
-      the page. Caption suppressed, because the card's own copy says it. */}
+  {/* Image header. A plain rectangle, and a wide crop: at 16/10 across a
+      two-up grid the picture was the card and the words were a footnote,
+      and the notch motif repeated on every tile read as decoration rather
+      than a device. Caption suppressed, the card's own copy says it. */}
   {
     /* `photo` is optional in the schema, so a product without one gets a
        text-only card rather than a broken frame. */
@@ -30,14 +31,15 @@ const d = product.data;
       <Figure
         photo={d.photo}
         showCaption={false}
-        ratio={wide ? '21 / 9' : '16 / 10'}
+        plain
+        ratio={wide ? '24 / 9' : '2 / 1'}
         sizes="(min-width: 1024px) 22rem, (min-width: 768px) 45vw, 92vw"
-        class="px-6 pt-6 md:px-7 md:pt-7"
+        class="px-7 pt-7 md:px-9 md:pt-9"
       />
     )
   }
 
-  <div class="flex flex-1 flex-col p-6 pt-5 md:p-7 md:pt-5">
+  <div class="flex flex-1 flex-col p-7 pt-6 md:p-9 md:pt-7">
   <!-- Tone wash keyed to the product's data hue -->
   <span
     class="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 blur-[60px] transition-opacity duration-500 group-hover:opacity-40"
