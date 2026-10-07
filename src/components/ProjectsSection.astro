@@ -18,7 +18,10 @@ const statusTone: Record<string, string> = {
 <section id="work" class="seam relative scroll-mt-16">
   <div class="shell pt-20 md:pt-24">
     <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
-      <SectionHead n="04" marker="Work" title="Delivered work," titleAccent="not a pitch deck." />
+      {/* "Running today" is a claim, so it is one the data has to support:
+          every row below is status Live, and prospects can never reach this
+          list because data/projects.ts filters them out before export. */}
+      <SectionHead n="04" marker="Client stories" title="Work that is" titleAccent="running today." />
 
       <dl class="rise flex flex-wrap gap-x-8 gap-y-4" style="--step:3">
         {

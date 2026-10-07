@@ -1,6 +1,7 @@
 ---
 import PageLayout from '@/layouts/PageLayout.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { Image } from 'astro:assets';
 import SectionHead from '@/components/SectionHead.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import { site, leadership, offices, compliance } from '@/data/site';
@@ -121,22 +122,34 @@ const principles = [
           leadership.map((p, i) => (
             <article class="rise grid gap-10 lg:grid-cols-[0.32fr_1fr] lg:gap-16" style={`--step:${i}`}>
               <div class="lg:sticky lg:top-28 lg:self-start">
-                {/* Initials until a photograph exists. An empty frame reads as
-                    a broken image and a stock face would be a lie, so the
-                    placeholder is given a treatment of its own: corner ticks,
-                    a faint grid and a slow pass across it. It should look
-                    reserved, not unfinished. */}
-                <div class="portrait relative aspect-[4/5] w-full max-w-[13rem] overflow-hidden border border-line bg-raised" aria-hidden="true">
-                  <span class="portrait-grid"></span>
-                  <span class="portrait-scan"></span>
-                  <span class="portrait-tick" data-c="tl"></span>
-                  <span class="portrait-tick" data-c="tr"></span>
-                  <span class="portrait-tick" data-c="bl"></span>
-                  <span class="portrait-tick" data-c="br"></span>
-                  <span class="absolute inset-0 flex items-center justify-center">
-                    <span class="figure text-[2.5rem] text-fg-4">{p.initials}</span>
-                  </span>
-                </div>
+                {/* The photograph where there is one. Where there is not,
+                    initials: an empty frame reads as a broken image and a
+                    stock face would be a lie, so the placeholder gets a
+                    treatment of its own, corner ticks and a slow pass across
+                    it. It should look reserved, not unfinished. */}
+                {'photo' in p && p.photo ? (
+                  <div class="relative aspect-[4/5] w-full max-w-[13rem] overflow-hidden border border-line bg-raised">
+                    <Image
+                      src={p.photo}
+                      alt={`${p.name}, ${p.role}`}
+                      widths={[208, 416]}
+                      sizes="13rem"
+                      class="absolute inset-0 h-full w-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div class="portrait relative aspect-[4/5] w-full max-w-[13rem] overflow-hidden border border-line bg-raised" aria-hidden="true">
+                    <span class="portrait-grid"></span>
+                    <span class="portrait-scan"></span>
+                    <span class="portrait-tick" data-c="tl"></span>
+                    <span class="portrait-tick" data-c="tr"></span>
+                    <span class="portrait-tick" data-c="bl"></span>
+                    <span class="portrait-tick" data-c="br"></span>
+                    <span class="absolute inset-0 flex items-center justify-center">
+                      <span class="figure text-[2.5rem] text-fg-4">{p.initials}</span>
+                    </span>
+                  </div>
+                )}
 
                 <h2 class="mt-6 font-display text-[1.375rem] leading-snug text-fg">{p.name}</h2>
                 <p class="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-primary">{p.role}</p>

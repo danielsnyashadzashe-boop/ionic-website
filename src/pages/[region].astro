@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import PageLayout from '@/layouts/PageLayout.astro';
@@ -179,12 +180,22 @@ const schema = [
       <section class="border-t border-line">
         <div class="shell py-28 md:py-36">
           <div class="flex flex-wrap items-center gap-x-10 gap-y-6">
-            <span
-              class="flex h-16 w-16 shrink-0 items-center justify-center border border-line bg-raised font-mono text-sm text-fg-4"
-              aria-hidden="true"
-            >
-              {lead.initials}
-            </span>
+            {'photo' in lead && lead.photo ? (
+              <Image
+                src={lead.photo}
+                alt={`${lead.name}, ${lead.role}`}
+                widths={[64, 128]}
+                sizes="4rem"
+                class="h-16 w-16 shrink-0 border border-line object-cover"
+              />
+            ) : (
+              <span
+                class="flex h-16 w-16 shrink-0 items-center justify-center border border-line bg-raised font-mono text-sm text-fg-4"
+                aria-hidden="true"
+              >
+                {lead.initials}
+              </span>
+            )}
             <div>
               <p class="font-display text-[1.375rem] leading-snug text-fg">{lead.name}</p>
               <p class="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-primary">{region.leadLine}</p>

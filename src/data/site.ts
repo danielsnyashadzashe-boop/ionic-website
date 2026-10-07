@@ -6,6 +6,8 @@
  * factual now lives here and is imported.
  */
 
+import reneilHarilall from '@/assets/people/reneil-harilall.jpg';
+
 export const site = {
   name: 'Ionic',
   legalName: 'Ionic Innovate',
@@ -71,6 +73,8 @@ export const leadership = [
     name: 'Reneil Harilall',
     role: 'Founder and Global CEO',
     base: 'Alberta, Canada',
+    /** Falls back to `initials` wherever this is absent. */
+    photo: reneilHarilall,
     initials: 'RH',
     /** TEAM: add the LinkedIn URL. */
     linkedin: '',

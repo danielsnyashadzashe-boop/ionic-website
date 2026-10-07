@@ -68,11 +68,27 @@ const principles = [
   },
 ];
 
+/* The four stages, in the wording Reneil uses. An earlier version of this
+   list said Discover / Design / Deploy / Operate, which was a paraphrase
+   nobody had signed off. */
 const method = [
-  { step: 'Discover', body: 'Process mining against reality. Bottlenecks quantified before anything is configured.' },
-  { step: 'Design', body: 'Scope, outcomes and costs. We recommend what fits, not what we sell.' },
-  { step: 'Deploy', body: 'Pilot first, scoped so being wrong is survivable. Expansion follows the result.' },
-  { step: 'Operate', body: 'Through production and beyond. Transformation nobody adopts is not transformation.' },
+  {
+    step: 'Understand',
+    body: 'We map the work as it really runs, workarounds included. You see your as-is within days.',
+  },
+  {
+    step: 'Design',
+    body:
+      'We recommend what fits your business and budget, from a better form to a full platform, each with its cost and its case.',
+  },
+  {
+    step: 'Build',
+    body: 'We deliver in small working pieces, pilot first, so a wrong turn is cheap to correct.',
+  },
+  {
+    step: 'Run',
+    body: 'We stay through adoption with training, support and embedded people where needed.',
+  },
 ];
 ---
 
@@ -218,8 +234,25 @@ const method = [
   <!-- ══════════ 04 · WORK ══════════ -->
   <ProjectsSection />
 
+  <!-- ══════════ 05 · HOW WE WORK ══════════ -->
   {/* Method stays on the page ground: the model site's process row is one of
       its dark sections, and two pale bands in a row loses the alternation. */}
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <SectionHead n="05" marker="How we work" title="Four stages," titleAccent="always in this order." />
+
+      <ol class="mt-20 grid gap-px overflow-hidden border border-line bg-line md:grid-cols-2 lg:grid-cols-4">
+        {method.map((m, i) => (
+          <li class="rise bg-base p-8 md:p-9" style={`--step:${i}`}>
+            <span class="figure text-xs text-primary">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="mt-5 font-display text-xl leading-snug text-fg">{m.step}</h3>
+            <p class="mt-3.5 text-[0.9375rem] leading-relaxed text-fg-3">{m.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
 
   {/* Testimonials sit after the case-study tiles and before the contact ask,
       which is the point at which a reader has seen the work and is deciding

@@ -34,12 +34,12 @@ export const pillars = {
   business: {
     label: 'Business transformation',
     heading: 'How the business runs',
-    lede: 'Strategy, structure, processes and people. We start here even when the answer ends up being software, because automating a process nobody has questioned only makes the wrong thing faster.',
+    lede: 'Strategy, structure, processes and people. Often the biggest gains need no new software at all.',
   },
   digital: {
     label: 'Digital transformation',
     heading: 'The systems it runs on',
-    lede: 'When technology is the right answer, we design it, build it, connect it to what you already have and keep it running. We do not resell licences, so we recommend off-the-shelf where it fits.',
+    lede: 'When technology is the right answer, we build it, connect it and keep it running.',
   },
 } as const;
 
