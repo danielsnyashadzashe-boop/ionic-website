@@ -127,9 +127,16 @@ $source  = clean((string)($_POST['source'] ?? ''), 100);
  * the mail body, which is also where header injection would start.
  */
 $REGIONS = ['za' => 'South Africa', 'ca' => 'Canada', 'other' => 'Elsewhere'];
+/**
+ * Must match TOPICS in src/components/ContactForm.tsx exactly. A value the
+ * form can post but this map does not hold is filed as "(not given)", and
+ * the enquiry arrives with no subject. Two of them were doing that.
+ */
 $TOPICS  = [
     'consulting' => 'A transformation or automation project',
     'demo'       => 'A Process Genesis demo',
+    'preview'    => 'The preview I ran on your site',
+    'compass'    => 'The discovery pass on your site',
     'build'      => 'An ERP, platform or app build',
     'investor'   => 'An investor enquiry',
     'other'      => 'Something else',

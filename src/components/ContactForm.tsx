@@ -45,15 +45,135 @@ const REGIONS = [
   { value: 'other', label: 'Elsewhere' },
 ] as const;
 
+/**
+ * Every value here must also exist in the $TOPICS map in public/contact.php.
+ * A value the handler does not know is silently filed as "(not given)", so
+ * the two lists are a pair and changing one alone loses enquiries.
+ *
+ * `taster` is not offered: the Process Genesis taster is not switched on
+ * (taster.host is empty in data/site.ts), so nobody can have run one.
+ * Restore it here and in contact.php at the same time as the host.
+ */
 const TOPICS = [
   { value: 'consulting', label: 'A transformation or automation project' },
   { value: 'demo', label: 'A Process Genesis demo' },
-  { value: 'compass', label: 'A process I mapped on your site' },
-  { value: 'taster', label: 'The Process Genesis taster I just ran' },
+  { value: 'preview', label: 'The preview I ran on your site' },
+  { value: 'compass', label: 'The discovery pass on your site' },
   { value: 'build', label: 'An ERP, platform or app build' },
   { value: 'investor', label: 'An investor enquiry' },
   { value: 'other', label: 'Something else' },
 ] as const;
+
+
+/**
+ * A dropdown that matches the rest of the site.
+ *
+ * The native control was styled `appearance-none` with no caret of our own,
+ * so the browser drew its arrow hard against the right edge. This is a
+ * button and a listbox: the caret sits in from the edge, the open state is
+ * visible, and arrow keys, Enter and Escape all work. The value posts
+ * through a hidden input, so the form and contact.php are unchanged.
+ */
+function Picker({
+  id,
+  name,
+  value,
+  onChange,
+  options,
+}: {
+  id: string;
+  name: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: readonly { value: string; label: string }[];
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const box = useRef<HTMLDivElement>(null);
+  const current = options.find((o) => o.value === value) ?? options[0];
+
+  useEffect(() => {
+    if (!open) return;
+    setActive(Math.max(0, options.findIndex((o) => o.value === value)));
+    const away = (e: MouseEvent) => {
+      if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', away);
+    return () => document.removeEventListener('mousedown', away);
+  }, [open, options, value]);
+
+  const keys = (e: React.KeyboardEvent) => {
+    if (!open && (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown')) {
+      e.preventDefault();
+      setOpen(true);
+      return;
+    }
+    if (!open) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive((i) => (i + 1) % options.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive((i) => (i - 1 + options.length) % options.length);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      onChange(options[active].value);
+      setOpen(false);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div className="cpick" ref={box}>
+      <input type="hidden" name={name} value={value} />
+      <button
+        type="button"
+        id={id}
+        className="cpick-btn"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={keys}
+      >
+        <span>{current.label}</span>
+        <svg className="cpick-caret" viewBox="0 0 12 8" aria-hidden="true">
+          <path
+            d="M1 1.5 6 6.5l5-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      {open && (
+        <ul className="cpick-list" role="listbox" aria-label="Options" onKeyDown={keys}>
+          {options.map((o, i) => (
+            <li key={o.value}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={o.value === value}
+                data-active={i === active ? '' : undefined}
+                className="cpick-opt"
+                onMouseEnter={() => setActive(i)}
+                onClick={() => {
+                  onChange(o.value);
+                  setOpen(false);
+                }}
+              >
+                {o.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export default function ContactForm({ source, returnPath, action = '/contact.php', email }: Props) {
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
@@ -265,37 +385,25 @@ export default function ContactForm({ source, returnPath, action = '/contact.php
             </Field>
 
             <Field id="region" label="Where are you based?">
-              <select
+              <Picker
                 id="region"
                 name="region"
-                className={"h-8 w-full min-w-0 appearance-none rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"}
                 value={region}
-                onChange={(e) => setRegion(e.target.value)}
-              >
-                {REGIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
+                onChange={setRegion}
+                options={REGIONS}
+              />
             </Field>
           </div>
 
           <div className="mt-5">
             <Field id="topic" label="What would you like to talk about?">
-              <select
+              <Picker
                 id="topic"
                 name="topic"
-                className={"h-8 w-full min-w-0 appearance-none rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"}
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-              >
-                {TOPICS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
+                onChange={setTopic}
+                options={TOPICS}
+              />
             </Field>
           </div>
         </div>
