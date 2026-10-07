@@ -121,17 +121,26 @@ const founder = leadership.find((x) => 'founderNote' in x);
 
           <div class="mt-16 grid gap-10 lg:grid-cols-[0.32fr_1fr] lg:gap-16">
             <div class="lg:sticky lg:top-28 lg:self-start">
+              {/* Shown at the size the file actually is. The source is 100px
+                  square; in a 13rem portrait frame it was being enlarged two
+                  and a half times and every softness in it was on display.
+                  At 1:1 it is sharp, and the frame does the work the size
+                  used to: a rule above it, a hairline border, and the name
+                  set against it rather than under a large picture. */}
               {'photo' in founder && founder.photo && (
-                <div class="relative aspect-[4/5] w-full max-w-[13rem] overflow-hidden border border-line bg-raised">
-                  <Image
-                    src={founder.photo}
-                    alt={`${founder.name}, ${founder.role} of ${site.name}`}
-                    widths={[208, 416]}
-                    sizes="13rem"
-                    quality={100}
-                    format="webp"
-                    class="absolute inset-0 h-full w-full object-cover"
-                  />
+                <div class="flex items-center gap-5">
+                  <div class="shrink-0 border border-line bg-raised p-1">
+                    <Image
+                      src={founder.photo}
+                      alt={`${founder.name}, ${founder.role} of ${site.name}`}
+                      widths={[100, 200]}
+                      sizes="6.25rem"
+                      quality={100}
+                      format="webp"
+                      class="block h-[6.25rem] w-[6.25rem] object-cover"
+                    />
+                  </div>
+                  <span class="rule hidden h-px flex-1 lg:block"></span>
                 </div>
               )}
               <p class="mt-6 font-display text-[1.375rem] leading-snug text-fg">{founder.name}</p>
