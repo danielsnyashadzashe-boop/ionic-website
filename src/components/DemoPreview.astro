@@ -1,0 +1,551 @@
+---
+import { INDUSTRIES, BANDS, COUNTRIES, PROCESSES, STAGES } from '@/data/demo';
+
+/**
+ * The Process Genesis preview, built to docs/WEBSITE_DEMO_SPEC.md.
+ *
+ * Five steps: your business, pick a process, four numbers, generate, result.
+ * No backend, which the spec anticipates in section 14 — steps one to three
+ * and the computed result ship on their own, and the live model call is an
+ * enhancement rather than a dependency. Nothing is sent anywhere and no
+ * email is asked for before the result. Value first, capture second.
+ *
+ * The arithmetic lives in lib/demo.ts and never touches generated prose, for
+ * the reason the spec gives: a figure a model chose is a figure you cannot
+ * defend in a sales conversation.
+ */
+
+const bandLabels = BANDS;
+---
+
+<div class="surface overflow-hidden" data-demo>
+  <div class="flex items-center gap-6 border-b border-line px-6 py-4 md:px-9">
+    <div class="stage-rail flex-1"><b data-rail style="width:20%"></b></div>
+    <p class="stage-count shrink-0" data-count>1 of 4</p>
+  </div>
+
+  <div class="px-6 py-10 md:px-9 md:py-12">
+    <!-- ══ 1 · Your business ══ -->
+    <section data-step="business">
+      <p class="marker"><b>01</b><span>Your business</span></p>
+
+      <h3 class="mt-7 text-[0.8125rem] font-medium text-fg">Industry</h3>
+      <div class="mt-3 flex flex-wrap gap-2" data-industry>
+        {
+          INDUSTRIES.map((n, i) => (
+            <button type="button" class="dchip" data-v={n} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {n}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="mt-9 grid gap-8 sm:grid-cols-2">
+        <div>
+          <h3 class="text-[0.8125rem] font-medium text-fg">People in the business</h3>
+          <div class="mt-3 flex flex-wrap gap-2" data-band>
+            {
+              bandLabels.map((n, i) => (
+                <button type="button" class="dchip" data-v={n} aria-pressed={i === 2 ? 'true' : 'false'}>
+                  {n}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-[0.8125rem] font-medium text-fg">Country</h3>
+          <select class="dfield mt-3" data-country>
+            {COUNTRIES.map((c) => <option value={c}>{c}</option>)}
+          </select>
+          <p class="mt-2 text-[0.8125rem] text-fg-4" data-rate-note></p>
+        </div>
+      </div>
+
+      <div class="mt-9 max-w-[26rem]">
+        <h3 class="text-[0.8125rem] font-medium text-fg">
+          Company name <span class="font-mono text-[0.625rem] uppercase tracking-[0.1em] text-fg-4">optional</span>
+        </h3>
+        <input type="text" class="dfield mt-3" data-company placeholder="" autocomplete="organization" />
+        <p class="mt-2 text-[0.8125rem] text-fg-4">Used only to label your demo. Nothing is sent anywhere.</p>
+      </div>
+
+      <div class="mt-10 flex items-center gap-5">
+        <button type="button" class="btn" data-go="process"><span>Next: your process</span><span aria-hidden="true">→</span></button>
+        <span class="text-[0.8125rem] text-fg-4">One process, about a minute.</span>
+      </div>
+    </section>
+
+    <!-- ══ 2 · Pick a process ══ -->
+    <section data-step="process" hidden>
+      <p class="marker"><b>02</b><span>Your process</span></p>
+      <h3 class="t-section mt-4" tabindex="-1">Which one would you fix first?</h3>
+      <p class="measure mt-3.5 text-[0.9375rem] leading-relaxed text-fg-3" data-proc-lede></p>
+
+      <div class="mt-9 grid gap-2.5 md:grid-cols-2 lg:grid-cols-3" data-processes></div>
+
+      <div class="mt-2.5">
+        <button type="button" class="dcard w-full text-left" data-other>
+          <b>Something else</b>
+          <small>Describe it in a few words</small>
+        </button>
+        <input type="text" class="dfield mt-2.5 hidden" data-other-text placeholder="Describe it in a few words" />
+      </div>
+
+      <div class="mt-10 flex items-center gap-4">
+        <button type="button" class="btn-ghost" data-back="business">Back</button>
+        <button type="button" class="btn" data-go="numbers"><span>Next: four numbers</span><span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <!-- ══ 3 · Four numbers ══ -->
+    <section data-step="numbers" hidden>
+      <p class="marker"><b>03</b><span>Four numbers</span></p>
+      <h3 class="t-section mt-4" tabindex="-1" data-num-title></h3>
+      <p class="measure mt-3.5 text-[0.9375rem] leading-relaxed text-fg-3">
+        Pre-filled with typical figures for a business your size. Adjust what you know; the
+        rest can stay as it is.
+      </p>
+
+      <div class="mt-9 grid max-w-[44rem] gap-7" data-sliders></div>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <button type="button" class="btn-ghost" data-back="process">Back</button>
+        <button type="button" class="btn" data-go="run"><span>See the result</span><span aria-hidden="true">→</span></button>
+        <button type="button" class="link-u text-sm" data-reset>Use typical values</button>
+      </div>
+    </section>
+
+    <!-- ══ 4 · Generating ══ -->
+    <section data-step="run" hidden>
+      <p class="marker"><b>04</b><span>Analysing</span></p>
+      <h3 class="t-section mt-4" tabindex="-1">Reading the process.</h3>
+      <ol class="mt-9 grid max-w-[34rem] gap-3.5" data-stages>
+        {
+          STAGES.map((s) => (
+            <li class="dstage" data-stage-row>
+              <span class="dstage-dot" aria-hidden="true" />
+              <span>
+                <b>{s.name}</b>
+                <small>{s.detail}</small>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="mt-8 text-[0.8125rem] text-fg-4">These are the stages a full run goes through.</p>
+    </section>
+
+    <!-- ══ 5 · Result ══ -->
+    <section data-step="result" hidden>
+      <p class="marker"><b>—</b><span>Your preview</span></p>
+      <h3 class="t-title mt-4" tabindex="-1" data-r-process></h3>
+      <p class="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-fg-4" data-r-company></p>
+
+      <dl class="mt-10 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3" data-r-headline></dl>
+      <p class="measure mt-4 text-[0.8125rem] leading-relaxed text-fg-4" data-r-footnote></p>
+
+      <div class="mt-14 grid gap-10 lg:grid-cols-2">
+        <div>
+          <p class="mono-label">Today</p>
+          <ol class="mt-5 grid gap-2" data-r-current></ol>
+        </div>
+        <div>
+          <p class="mono-label">Tomorrow</p>
+          <ol class="mt-5 grid gap-2" data-r-target></ol>
+        </div>
+      </div>
+
+      <div class="mt-14">
+        <p class="mono-label">Where the cost sits</p>
+        <div class="mt-5 grid gap-px overflow-hidden border border-line bg-line md:grid-cols-3" data-r-pains></div>
+      </div>
+
+      <div class="mt-14">
+        <p class="mono-label">What we would build</p>
+        <ol class="mt-5 grid max-w-[40rem] gap-2.5" data-r-reqs></ol>
+        <p class="measure mt-5 text-[0.8125rem] leading-relaxed text-fg-4">
+          In a full analysis these become working software, committed to your repository.
+        </p>
+      </div>
+
+      <div class="mt-16 border-t border-line pt-12">
+        <p class="t-lede measure text-fg-2">
+          This is one process, from four numbers, in about a minute.
+        </p>
+        <p class="measure mt-4 text-[0.9375rem] leading-relaxed text-fg-3">
+          A full analysis reads your documents, maps your systems and produces the complete
+          document set: SOP, requirements, business case, RACI, risk and implementation plan.
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <a class="btn" href="/contact/?topic=demo"><span>Book a 30-minute walkthrough</span><span aria-hidden="true">→</span></a>
+          <button type="button" class="btn-ghost" data-restart>Start again</button>
+        </div>
+        <p class="measure mt-7 text-[0.8125rem] leading-relaxed text-fg-4">
+          A preview from four inputs. It runs entirely in your browser: nothing you typed
+          has been sent to us or stored.
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
+
+{/* `is:global`, prefixed with [data-demo]: most of this markup is built by
+    JavaScript at runtime, so it never carries Astro's scoping attribute. */}
+<style is:global>
+  [data-demo] .dchip {
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.45rem 0.95rem;
+    font-size: 0.875rem;
+    color: var(--fg-2);
+    background: transparent;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+  [data-demo] .dchip:hover { border-color: var(--primary); color: var(--fg); }
+  [data-demo] .dchip:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  [data-demo] .dchip[aria-pressed='true'] {
+    border-color: var(--primary);
+    background: color-mix(in oklch, var(--primary) 16%, transparent);
+    color: var(--fg);
+  }
+
+  [data-demo] .dfield {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.9375rem;
+    color: var(--fg);
+    background: var(--base);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+  [data-demo] .dfield:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+
+  [data-demo] .dcard {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.95rem 1.1rem;
+    text-align: left;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: transparent;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  [data-demo] .dcard:hover { border-color: var(--primary); background: color-mix(in oklch, var(--primary) 7%, transparent); }
+  [data-demo] .dcard:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  [data-demo] .dcard[aria-pressed='true'] {
+    border-color: var(--primary);
+    background: color-mix(in oklch, var(--primary) 14%, transparent);
+  }
+  [data-demo] .dcard b { font-weight: 500; font-size: 0.9375rem; color: var(--fg); }
+  [data-demo] .dcard small { font-size: 0.8125rem; line-height: 1.45; color: var(--fg-3); }
+
+  [data-demo] .dslider b { display: block; font-weight: 500; font-size: 0.9375rem; color: var(--fg); }
+  [data-demo] .dslider small { display: block; margin-top: 0.15rem; font-size: 0.8125rem; color: var(--fg-4); }
+  [data-demo] .dslider .dval {
+    font-family: var(--font-mono);
+    font-size: 1.0625rem;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-demo] .dstage {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    opacity: 0.35;
+    transition: opacity 0.4s;
+  }
+  [data-demo] .dstage[data-on] { opacity: 1; }
+  [data-demo] .dstage-dot {
+    margin-top: 0.42rem;
+    width: 0.5rem; height: 0.5rem;
+    flex: none;
+    border-radius: 999px;
+    background: var(--line-strong);
+    transition: background 0.4s, transform 0.4s;
+  }
+  [data-demo] .dstage[data-on] .dstage-dot { background: var(--primary); transform: scale(1.25); }
+  [data-demo] .dstage b { display: block; font-weight: 500; font-size: 0.9375rem; color: var(--fg); }
+  [data-demo] .dstage small { display: block; font-size: 0.8125rem; color: var(--fg-4); }
+
+  [data-demo] .dstep {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  [data-demo] .dstep i {
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    line-height: 2.1;
+    color: var(--fg-4);
+  }
+  [data-demo] .dstep em { font-style: normal; display: block; color: var(--fg); }
+  [data-demo] .dstep span.actor {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-4);
+    margin-top: 0.2rem;
+  }
+  [data-demo] .dstep span.note { display: block; margin-top: 0.3rem; color: var(--fg-3); font-size: 0.8125rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-demo] .dchip, [data-demo] .dcard, [data-demo] .dstage, [data-demo] .dstage-dot { transition: none; }
+  }
+</style>
+
+<script>
+  import { PROCESSES, BAND_DEFAULTS, RATES, TARGET_REDUCTION } from '@/data/demo';
+  import { compute, contentFor, defaultsFor, type Inputs } from '@/lib/demo';
+
+  const root = document.querySelector<HTMLElement>('[data-demo]');
+  if (root) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const state = {
+      industry: 'Manufacturing',
+      band: '51-200',
+      country: 'United States',
+      company: '',
+      process: '',
+      inputs: null as Inputs | null,
+    };
+
+    const ORDER = ['business', 'process', 'numbers', 'run', 'result'];
+    const show = (name: string) => {
+      ORDER.forEach((n) => {
+        const el = root.querySelector<HTMLElement>(`[data-step="${n}"]`)!;
+        el.hidden = n !== name;
+      });
+      const i = ORDER.indexOf(name);
+      $<HTMLElement>('[data-rail]').style.width = `${Math.round(((i + 1) / ORDER.length) * 100)}%`;
+      $<HTMLElement>('[data-count]').textContent = name === 'result' ? '' : `${Math.min(i + 1, 4)} of 4`;
+      root.querySelector<HTMLElement>(`[data-step="${name}"] h3`)?.focus({ preventScroll: true });
+      const top = root.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top: Math.max(0, top), behavior: reduced ? 'auto' : 'smooth' });
+    };
+
+    /* ── Step 1 ── */
+    const pick = (group: string, value: string) => {
+      root.querySelectorAll<HTMLElement>(`[${group}] .dchip`).forEach((b) =>
+        b.setAttribute('aria-pressed', String(b.dataset.v === value)),
+      );
+    };
+    const rateNote = () => {
+      const r = RATES[state.country];
+      $<HTMLElement>('[data-rate-note]').textContent = `Money in ${r.currency}, at a typical office rate there.`;
+    };
+    root.querySelector('[data-industry]')!.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('.dchip');
+      if (!b) return;
+      state.industry = b.dataset.v!;
+      pick('data-industry', state.industry);
+    });
+    root.querySelector('[data-band]')!.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('.dchip');
+      if (!b) return;
+      state.band = b.dataset.v!;
+      pick('data-band', state.band);
+    });
+    $<HTMLSelectElement>('[data-country]').addEventListener('change', (e) => {
+      state.country = (e.target as HTMLSelectElement).value;
+      rateNote();
+    });
+    $<HTMLInputElement>('[data-company]').addEventListener('input', (e) => {
+      state.company = (e.target as HTMLInputElement).value.trim();
+    });
+    rateNote();
+
+    /* ── Step 2 ── */
+    const paintProcesses = () => {
+      const list = PROCESSES[state.industry] ?? PROCESSES.Other;
+      $<HTMLElement>('[data-proc-lede]').textContent =
+        state.industry === 'Other'
+          ? 'Six that come up in most businesses. Pick the closest.'
+          : `Six that come up again and again in ${state.industry.toLowerCase()}. Pick the closest.`;
+      $<HTMLElement>('[data-processes]').innerHTML = list
+        .map(
+          (p) =>
+            `<button type="button" class="dcard" data-proc="${p.name.replace(/"/g, '&quot;')}" aria-pressed="false">` +
+            `<b>${p.name}</b><small>${p.desc}</small></button>`,
+        )
+        .join('');
+      state.process = '';
+    };
+    const markProcess = (name: string) => {
+      state.process = name;
+      root.querySelectorAll<HTMLElement>('[data-proc]').forEach((b) =>
+        b.setAttribute('aria-pressed', String(b.dataset.proc === name)),
+      );
+      $<HTMLElement>('[data-other]').setAttribute('aria-pressed', 'false');
+    };
+    $<HTMLElement>('[data-processes]').addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('[data-proc]');
+      if (b) {
+        markProcess(b.dataset.proc!);
+        $<HTMLInputElement>('[data-other-text]').classList.add('hidden');
+      }
+    });
+    $<HTMLElement>('[data-other]').addEventListener('click', () => {
+      root.querySelectorAll<HTMLElement>('[data-proc]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      $<HTMLElement>('[data-other]').setAttribute('aria-pressed', 'true');
+      const t = $<HTMLInputElement>('[data-other-text]');
+      t.classList.remove('hidden');
+      t.focus();
+      state.process = t.value.trim() || 'Your process';
+    });
+    $<HTMLInputElement>('[data-other-text]').addEventListener('input', (e) => {
+      state.process = (e.target as HTMLInputElement).value.trim() || 'Your process';
+    });
+
+    /* ── Step 3 ── */
+    const SLIDERS = [
+      { k: 'volume', label: 'How many times a month does this run?', hint: 'Roughly. An estimate is fine.', min: 5, max: 2000, step: 5, unit: 'a month' },
+      { k: 'minutes', label: 'How long does it take, start to finish?', hint: 'Hands-on time across everyone involved, not how long it sits waiting.', min: 10, max: 480, step: 5, unit: 'minutes' },
+      { k: 'people', label: 'How many people touch it?', hint: 'Anyone who touches it, including approvers.', min: 1, max: 12, step: 1, unit: 'people' },
+      { k: 'rework', label: 'How often does it need rework?', hint: 'How often something has to be chased, corrected or redone.', min: 0, max: 50, step: 1, unit: '%' },
+    ] as const;
+
+    const paintSliders = () => {
+      state.inputs = defaultsFor(state.band, state.process || 'process');
+      $<HTMLElement>('[data-num-title]').textContent = state.process || 'Your process';
+      $<HTMLElement>('[data-sliders]').innerHTML = SLIDERS.map(
+        (s) => `
+        <label class="dslider">
+          <span class="flex items-baseline justify-between gap-4">
+            <b>${s.label}</b>
+            <span class="dval"><span data-out="${s.k}"></span> ${s.unit}</span>
+          </span>
+          <small>${s.hint}</small>
+          <input class="dial mt-3" type="range" min="${s.min}" max="${s.max}" step="${s.step}"
+                 data-in="${s.k}" aria-label="${s.label}" />
+        </label>`,
+      ).join('');
+      SLIDERS.forEach((s) => {
+        const input = root.querySelector<HTMLInputElement>(`[data-in="${s.k}"]`)!;
+        input.value = String(state.inputs![s.k]);
+        root.querySelector<HTMLElement>(`[data-out="${s.k}"]`)!.textContent = input.value;
+        input.addEventListener('input', () => {
+          state.inputs![s.k] = Number(input.value);
+          root.querySelector<HTMLElement>(`[data-out="${s.k}"]`)!.textContent = input.value;
+        });
+      });
+    };
+    $<HTMLElement>('[data-reset]').addEventListener('click', paintSliders);
+
+    /* ── Step 4, then 5 ── */
+    const runStages = async () => {
+      const rows = [...root.querySelectorAll<HTMLElement>('[data-stage-row]')];
+      rows.forEach((r) => r.removeAttribute('data-on'));
+      const each = reduced ? 0 : 1200;
+      for (const r of rows) {
+        r.setAttribute('data-on', '');
+        if (each) await new Promise((res) => window.setTimeout(res, each));
+      }
+      if (!each) await new Promise((res) => window.setTimeout(res, 150));
+    };
+
+    const esc = (s: string) =>
+      s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    const paintResult = () => {
+      const f = compute(state.inputs!, state.country);
+      const c = contentFor(state.process, state.industry);
+
+      $<HTMLElement>('[data-r-process]').textContent = state.process;
+      $<HTMLElement>('[data-r-company]').textContent = state.company
+        ? `${state.company} · ${state.industry}`
+        : state.industry;
+
+      const cell = (v: string, l: string) =>
+        `<div class="bg-raised px-5 py-5"><dd class="figure text-[1.5rem] leading-none text-fg">${v}</dd>` +
+        `<dt class="mono-label mt-2.5">${l}</dt></div>`;
+      $<HTMLElement>('[data-r-headline]').innerHTML =
+        cell(`${f.minutesSaved} min`, 'Saved every time it runs') +
+        cell(f.hoursPerYear.toLocaleString('en-US'), 'Hours given back a year') +
+        cell(f.money(f.annualValue) + (f.rising ? '+' : ''), 'A year');
+
+      $<HTMLElement>('[data-r-footnote]').textContent =
+        `Based on a ${Math.round(TARGET_REDUCTION * 100)}% cycle-time reduction, typical of the processes we have ` +
+        `measured, applied to the figures you entered. Labour at a typical office rate for ${state.country}. ` +
+        `Your result will depend on your process. This is a preview from four inputs, not a full analysis.`;
+
+      const steps = (arr: typeof c.current, cls: string) =>
+        arr
+          .map(
+            (s, i) =>
+              `<li class="dstep ${cls}"><i>${String(i + 1).padStart(2, '0')}</i><span>` +
+              `<em>${esc(s.name)}</em><span class="actor">${esc(s.actor)}</span>` +
+              (s.note ? `<span class="note">${esc(s.note)}</span>` : '') +
+              `</span></li>`,
+          )
+          .join('');
+      $<HTMLElement>('[data-r-current]').innerHTML = steps(c.current, '');
+      $<HTMLElement>('[data-r-target]').innerHTML = steps(c.target, '');
+
+      $<HTMLElement>('[data-r-pains]').innerHTML = c.pains
+        .map(
+          (p, i) =>
+            `<article class="bg-base p-6"><p class="figure text-[1.0625rem] text-primary">${f.money(f.chips[i])}</p>` +
+            `<h4 class="mt-3 font-display text-[1rem] leading-snug text-fg">${esc(p.title)}</h4>` +
+            `<p class="mt-2 text-[0.875rem] leading-relaxed text-fg-3">${esc(p.description)}</p></article>`,
+        )
+        .join('');
+
+      $<HTMLElement>('[data-r-reqs]').innerHTML = c.requirements
+        .map(
+          (r, i) =>
+            `<li class="dstep"><i>FR${String(i + 1).padStart(2, '0')}</i><span><em>${esc(r)}</em></span></li>`,
+        )
+        .join('');
+    };
+
+    /* ── Navigation ── */
+    root.addEventListener('click', async (e) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('[data-go],[data-back],[data-restart]');
+      if (!el) return;
+
+      if (el.hasAttribute('data-restart')) {
+        show('business');
+        return;
+      }
+      if (el.dataset.back) {
+        show(el.dataset.back);
+        return;
+      }
+
+      const to = el.dataset.go!;
+      if (to === 'process') {
+        paintProcesses();
+        show('process');
+        return;
+      }
+      if (to === 'numbers') {
+        if (!state.process) {
+          const first = root.querySelector<HTMLElement>('[data-proc]');
+          if (first) markProcess(first.dataset.proc!);
+        }
+        paintSliders();
+        show('numbers');
+        return;
+      }
+      if (to === 'run') {
+        show('run');
+        await runStages();
+        paintResult();
+        show('result');
+      }
+    });
+  }
+</script>

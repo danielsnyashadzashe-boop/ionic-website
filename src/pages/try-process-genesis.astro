@@ -4,6 +4,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import TasterEmbed from '@/components/TasterEmbed.astro';
+import DemoPreview from '@/components/DemoPreview.astro';
 import { site, taster } from '@/data/site';
 
 /**
@@ -24,10 +25,10 @@ import { site, taster } from '@/data/site';
 const url = new URL('/try-process-genesis/', site.domain).href;
 
 const steps = [
-  'Tell us your business and goal',
-  'Walk through one process',
-  'Watch it being analysed',
-  'Get your mini workspace',
+  'Tell us about your business',
+  'Pick the process you would fix first',
+  'Four numbers, already filled in',
+  'Your before and after, with the figure',
 ];
 
 const yield_ = [
@@ -91,8 +92,8 @@ const schema = {
         class="t-lede measure mt-9 text-fg-3"
         style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:360ms"
       >
-        From how you work today to a working demo of the fix, in about three minutes.
-        Nothing to download, no sign-up.
+        From how the work runs today to what fixing it is worth, in about a minute.
+        Nothing to download, no sign-up, and nothing you type leaves your browser.
       </p>
 
       {/* The four steps read as one line of the journey, so they are a row
@@ -124,28 +125,21 @@ const schema = {
         lede="Process Genesis maps your process, scores its health, sizes what fixing it is worth, shows where AI agents fit, and builds a clickable demo of the improved system."
       />
 
-      {/* Renders nothing until taster.host is set in data/site.ts. A live
-          page should not carry a frame pointed at a host that does not
-          answer, so until then the page says plainly where it stands. */}
-      {
-        taster.host ? (
-          <div class="mt-16">
-            <TasterEmbed contactPath="/contact/?topic=taster" />
-          </div>
-        ) : (
-          <div class="mt-16 max-w-[44rem] border-l-2 border-primary/50 pl-5">
-            <p class="font-display text-[1.0625rem] leading-snug text-fg">Not switched on yet</p>
-            <p class="measure mt-2 text-[0.9375rem] leading-relaxed text-fg-3">
-              The taster runs on the Process Genesis deployment rather than on this site,
-              and that connection is not live. Until it is, tell us the process you would
-              bring and we will run it with you.
-            </p>
-            <p class="mt-6">
-              <a href="/contact/?topic=demo" class="btn"><span>Book a session instead</span></a>
-            </p>
-          </div>
-        )
-      }
+      {/* The preview itself, built to docs/WEBSITE_DEMO_SPEC.md. It runs
+          entirely in the browser: the spec's section 14 says steps one to
+          three and the computed result ship without a backend, and the
+          live model call is an enhancement rather than a dependency. */}
+      <div class="mt-14">
+        <DemoPreview />
+      </div>
+
+      {/* The deeper version, on the Process Genesis deployment rather than
+          here. Renders nothing until taster.host is set in data/site.ts. */}
+      {taster.host && (
+        <div class="mt-20 border-t border-line pt-16">
+          <TasterEmbed contactPath="/contact/?topic=taster" />
+        </div>
+      )}
     </div>
   </section>
 
