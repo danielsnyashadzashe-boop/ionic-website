@@ -20,7 +20,7 @@ export default defineConfig({
   // The Process Compass moved onto the platform it belongs to. This URL was
   // shared before the move, so it redirects rather than 404s.
   redirects: {
-    '/compass': '/process-genesis/#compass',
+    '/compass': '/process-genesis/#discovery-pass',
   },
 
   integrations: [

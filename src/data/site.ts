@@ -259,7 +259,7 @@ export const nav = {
     { label: 'Engagement ledger', href: '/#work' },
     // { label: 'Case studies', href: '/case-studies/' },
     // { label: 'Insights', href: '/insights/' },
-    { label: 'Process Compass', href: '/process-genesis/#compass' },
+    { label: 'Discovery pass', href: '/process-genesis/#discovery-pass' },
     { label: 'Privacy', href: '/privacy/' },
     { label: 'Contact', href: '/contact/' },
   ],

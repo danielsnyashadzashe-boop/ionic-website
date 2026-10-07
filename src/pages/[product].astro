@@ -54,10 +54,10 @@ const { Content } = await render(product);
 const compassSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'Process Compass',
+  name: 'Discovery pass',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Any',
-  url: new URL(`/${d.slug}/#compass`, site.domain).href,
+  url: new URL(`/${d.slug}/#discovery-pass`, site.domain).href,
   publisher: { '@type': 'Organization', name: site.name },
   isPartOf: { '@type': 'SoftwareApplication', name: d.name },
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -160,7 +160,7 @@ const schema = [
             <a href="#contact" class="btn"><span>Request a demo</span></a>
             {
               d.compass ? (
-                <a href="#compass" class="link-u px-1 text-sm">Try the Process Compass</a>
+                <a href="#discovery-pass" class="link-u px-1 text-sm">Try the discovery pass</a>
               ) : (
                 <a href="#capabilities" class="link-u px-1 text-sm">See capabilities</a>
               )
@@ -177,7 +177,7 @@ const schema = [
                 class="mt-10 border-l-2 border-primary/50 pl-5"
                 style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:620ms"
               >
-                <a href="#compass" class="group inline-flex items-baseline gap-2 font-display text-[1.0625rem] leading-snug text-fg">
+                <a href="#discovery-pass" class="group inline-flex items-baseline gap-2 font-display text-[1.0625rem] leading-snug text-fg">
                   <span class="link-u">Where should your process go next?</span>
                   <span
                     class="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
@@ -293,7 +293,7 @@ const schema = [
                   reach a page without the Compass on it. */}
               {d.compass && (
                 <p class="mt-8">
-                  <a href="#compass" class="link-u text-sm">Or try it on your own process →</a>
+                  <a href="#discovery-pass" class="link-u text-sm">Or try it on your own process →</a>
                 </p>
               )}
             </div>
@@ -461,13 +461,13 @@ const schema = [
       interruption. */}
   {
     d.compass && (
-      <section id="compass" class="band-alt seam scroll-mt-20">
+      <section id="discovery-pass" class="band-alt seam scroll-mt-20">
         <div class="shell py-32 md:py-44">
           <SectionHead
             marker="Try it yourself"
             title="A discovery pass,"
             titleAccent="in about two minutes."
-            lede={`Every ${d.name} engagement opens with discovery: we map how the work actually runs before a single thing is configured. The Compass is that first conversation in miniature, run on one of your own processes. Nothing is sent anywhere and nothing is stored, so you can answer honestly.`}
+            lede={`Every ${d.name} engagement opens with discovery: we map how the work actually runs before a single thing is configured. It is that first conversation in miniature, run on one of your own processes. Nothing is sent anywhere and nothing is stored, so you can answer honestly.`}
           />
 
           {/* The instruments, shown before anything is clicked. The Compass
@@ -502,7 +502,7 @@ const schema = [
             marker="Run the real thing"
             title="Five questions,"
             titleAccent="and the platform answers."
-            lede={`The Compass above is our rule of thumb. This is ${d.name} itself: describe one process and it draws how it runs today against the improved flow, then generates a preview of the system behind it. It takes about a minute to think, which is the honest cost of it being real.`}
+            lede={`The discovery pass above is our rule of thumb. This is ${d.name} itself: describe one process and it draws how it runs today against the improved flow, then generates a preview of the system behind it. It takes about a minute to think, which is the honest cost of it being real.`}
           />
 
           <div class="mt-20">
