@@ -75,6 +75,7 @@ const principles = [
       'If a number is an estimate, we label it. If something is not a fit for us, we say so and point you elsewhere.',
   },
 ];
+const founder = leadership.find((x) => 'founderNote' in x);
 ---
 
 <PageLayout
@@ -107,6 +108,53 @@ const principles = [
     </div>
   </section>
 
+  <!-- ══ FOUNDER’S NOTE ═══════════════════════════════════════════════ -->
+  {/* In his own words and signed, so it reads as a note from him rather
+      than copy written about him. He is filtered out of the leadership
+      list below for the same reason: a founder's note and a team card are
+      not the same thing. */}
+  {
+    founder && (
+      <section class="band-alt seam">
+        <div class="shell py-32 md:py-44">
+          <SectionHead marker="Founder’s note" title="Why we" titleAccent="exist." />
+
+          <div class="mt-16 grid gap-10 lg:grid-cols-[0.32fr_1fr] lg:gap-16">
+            <div class="lg:sticky lg:top-28 lg:self-start">
+              {'photo' in founder && founder.photo && (
+                <div class="relative aspect-[4/5] w-full max-w-[13rem] overflow-hidden border border-line bg-raised">
+                  <Image
+                    src={founder.photo}
+                    alt={`${founder.name}, ${founder.role} of ${site.name}`}
+                    widths={[208, 416]}
+                    sizes="13rem"
+                    class="absolute inset-0 h-full w-full object-cover"
+                  />
+                </div>
+              )}
+              <p class="mt-6 font-display text-[1.375rem] leading-snug text-fg">{founder.name}</p>
+              <p class="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-primary">
+                {founder.role} · {founder.base}
+              </p>
+            </div>
+
+            <div>
+              <div class="prose-tech">
+                {founder.founderNote.map((para) => (
+                  <p>{para}</p>
+                ))}
+              </div>
+              <p class="mt-10 font-display text-[1.0625rem] leading-snug text-fg">{founder.name}</p>
+              <p class="mt-1 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-fg-4">
+                {founder.role}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   <!-- ══ LEADERSHIP ════════════════════════════════════════════════════ -->
   <section id="leadership" class="border-t border-line scroll-mt-20">
     <div class="shell py-32 md:py-44">
@@ -119,7 +167,7 @@ const principles = [
 
       <div class="mt-20 space-y-20">
         {
-          leadership.map((p, i) => (
+          leadership.filter((x) => !('founderNote' in x)).map((p, i) => (
             <article class="rise grid gap-10 lg:grid-cols-[0.32fr_1fr] lg:gap-16" style={`--step:${i}`}>
               <div class="lg:sticky lg:top-28 lg:self-start">
                 {/* The photograph where there is one. Where there is not,

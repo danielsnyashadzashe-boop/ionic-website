@@ -1,0 +1,178 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import TasterEmbed from '@/components/TasterEmbed.astro';
+import { site, taster } from '@/data/site';
+
+/**
+ * Try Process Genesis.
+ *
+ * Its own page rather than a section on the platform page, because it is a
+ * different kind of visit: the platform page is read, this one is used, and
+ * a reader who has decided to try something should not have to scroll past
+ * a capability list to do it.
+ *
+ * The taster itself is served by the Process Genesis deployment, not by
+ * this site. `taster.host` in data/site.ts is still empty, so TasterEmbed
+ * renders nothing and the page shows what to expect instead of an iframe
+ * pointed at a host that will not answer. Everything described below is
+ * what the taster produces; none of it is a claim about an engagement.
+ */
+
+const url = new URL('/try-process-genesis/', site.domain).href;
+
+const steps = [
+  'Tell us your business and goal',
+  'Walk through one process',
+  'Watch it being analysed',
+  'Get your mini workspace',
+];
+
+const yield_ = [
+  {
+    name: 'What fixing it is worth',
+    body: 'An estimate of the time and cost tied up in the process today, and what changes once it is fixed.',
+  },
+  {
+    name: 'Before-and-after map',
+    body: 'Your process as it runs now, next to the improved version.',
+  },
+  {
+    name: 'A health score',
+    body: 'Where the process stands today, and which parts drag it down.',
+  },
+  {
+    name: 'Where AI agents fit',
+    body: 'The steps where AI can take work off people, and the ones where it should not.',
+  },
+  {
+    name: 'A clickable demo',
+    body: 'A working preview of the improved system, built from what you told us.',
+  },
+  {
+    name: 'A walkthrough if you want one',
+    body: 'Book thirty minutes with us to go through the results and what a full Process Genesis run would add.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Try Process Genesis',
+  url,
+  description:
+    'Run one of your own processes through Process Genesis: a before-and-after map, a health score, what fixing it is worth, where AI agents fit, and a clickable demo of the improved system.',
+  isPartOf: { '@type': 'WebSite', name: site.name, url: site.domain },
+};
+---
+
+<PageLayout
+  title="Try Process Genesis on your own process | Ionic"
+  description="From how you work today to a working demo of the fix, in about three minutes. Nothing to download, no sign-up."
+  schema={schema}
+>
+  <!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+  <section class="relative overflow-hidden">
+    <div class="shell relative pb-20 pt-14 md:pb-28 md:pt-16">
+      <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Try Process Genesis' }]} />
+
+      <h1
+        class="mt-20 max-w-4xl font-display"
+        style="font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.06;animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:150ms"
+      >
+        Try Process Genesis on your own process.
+      </h1>
+
+      <div class="rule mt-9 w-28" style="animation-delay:300ms"></div>
+
+      <p
+        class="t-lede measure mt-9 text-fg-3"
+        style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:360ms"
+      >
+        From how you work today to a working demo of the fix, in about three minutes.
+        Nothing to download, no sign-up.
+      </p>
+
+      {/* The four steps read as one line of the journey, so they are a row
+          rather than four cards: this is the shape of the thing, not four
+          separate propositions. */}
+      <ol
+        class="mt-14 grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
+        style="animation:rise 1s cubic-bezier(0.2,0.7,0.15,1) both;animation-delay:480ms"
+      >
+        {
+          steps.map((s, i) => (
+            <li class="bg-base px-6 py-7">
+              <span class="figure text-xs text-primary">{i + 1}</span>
+              <p class="mt-4 text-[0.9375rem] leading-snug text-fg">{s}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══ THE TASTER ════════════════════════════════════════════════════ -->
+  <section id="taster" class="band-alt seam scroll-mt-20">
+    <div class="shell py-32 md:py-44">
+      <SectionHead
+        marker="Process Genesis taster"
+        title="Map it, score it, size it,"
+        titleAccent="and see the fix."
+        lede="Process Genesis maps your process, scores its health, sizes what fixing it is worth, shows where AI agents fit, and builds a clickable demo of the improved system."
+      />
+
+      {/* Renders nothing until taster.host is set in data/site.ts. A live
+          page should not carry a frame pointed at a host that does not
+          answer, so until then the page says plainly where it stands. */}
+      {
+        taster.host ? (
+          <div class="mt-16">
+            <TasterEmbed contactPath="/contact/?topic=taster" />
+          </div>
+        ) : (
+          <div class="mt-16 max-w-[44rem] border-l-2 border-primary/50 pl-5">
+            <p class="font-display text-[1.0625rem] leading-snug text-fg">Not switched on yet</p>
+            <p class="measure mt-2 text-[0.9375rem] leading-relaxed text-fg-3">
+              The taster runs on the Process Genesis deployment rather than on this site,
+              and that connection is not live. Until it is, tell us the process you would
+              bring and we will run it with you.
+            </p>
+            <p class="mt-6">
+              <a href="/contact/?topic=demo" class="btn"><span>Book a session instead</span></a>
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ══ WHAT YOU GET ══════════════════════════════════════════════════ -->
+  <section class="border-t border-line">
+    <div class="shell py-32 md:py-44">
+      <SectionHead marker="What you get" title="A mini workspace" titleAccent="for your process." />
+
+      <div class="mt-20 grid gap-px overflow-hidden border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+        {
+          yield_.map((y, i) => (
+            <article class="rise bg-base p-8 md:p-9" style={`--step:${i}`}>
+              <span class="figure text-xs text-primary">{String(i + 1).padStart(2, '0')}</span>
+              <h2 class="mt-5 font-display text-lg leading-snug text-fg">{y.name}</h2>
+              <p class="mt-3 text-[0.9375rem] leading-relaxed text-fg-3">{y.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <ContactSection
+    source="try-process-genesis"
+    returnPath="/try-process-genesis/"
+    title="Rather talk it"
+    titleAccent="through?"
+    lede="Bring one process to a live session and we will run it through Process Genesis with you, and show you what comes out the other side."
+  />
+</PageLayout>

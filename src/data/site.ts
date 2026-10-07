@@ -79,12 +79,19 @@ export const leadership = [
     /** TEAM: add the LinkedIn URL. */
     linkedin: '',
     lede: 'Built Ionic Innovate to work the opposite way round from the consultancies he came from.',
-    bio: [
-      'Reneil spent his career in consulting, at EY and at boutique firms, across almost every sector and business unit. That work took him through Africa, Europe, Australia and Canada.',
-      'The pattern he kept seeing was clients paying for buzzwords, and for recommendations that lined up neatly with whichever technology the consultancy had partnered with. Every business is different, and transformation that ignores what makes a company itself rarely survives contact with the people who have to live with it.',
-      'He started Ionic Innovate to do it the other way round: understand the business and what sets it apart, then recommend what fits. Sometimes that is a better paper form. Sometimes it is advanced AI. Usually it is a combination, and the foundations stay intact.',
-      'He built Process Genesis so the approach works at every size, from a listed group to a business of ten people, without asking anyone to become a technical expert overnight.',
+    /**
+     * First person, and signed. The third-person version read as copy
+     * written about him rather than a note from him, which is the whole
+     * point of a founder's note.
+     */
+    founderNote: [
+      "I spent my career in consulting, at EY and at boutique firms, working across almost every sector and business unit. The clients ranged from mining houses such as Anglo American, Glencore, Exxaro and Ivanhoe Mines, to Sasol, PepsiCo, Tiger Brands, Johnson & Johnson, McDonald's, Discovery and the South African Reserve Bank. The work took me through Africa, Europe, Australia and Canada.",
+      'Over those years I watched a pattern repeat. Clients paid for buzzwords, and for recommendations that lined up neatly with whichever technology the consultancy had partnered with. Every business is different, and transformation that ignores what makes a company itself rarely lasts.',
+      "I started Ionic Innovate to work the other way round. We are technology-agnostic. We take the time to understand the business, its objectives and what sets it apart, and we recommend what fits. Sometimes that is a better paper form. Sometimes it is advanced AI. Usually it is a combination, and the company's foundations stay intact.",
+      'I built Process Genesis so that this approach works at every level, from a blue chip to a business of ten people. Your people keep doing what they do best, and the platform turns their knowledge into transformation work without asking them to become technical experts overnight.',
+      'Everyone needs to digitise and automate. Not everyone can pay what that usually costs. Having been part of the leadership in one of the large firms, I know what that work is billed at. With Process Genesis we deliver comparable results for up to 90% less, and the business stays in control.',
     ],
+    bio: [],
   },
   {
     name: 'Rabind Deoraj',
@@ -228,6 +235,7 @@ export const nav = {
   primary: [
     { label: 'Platforms', href: '/#platforms', children: true },
     { label: 'Services', href: '/services/' },
+    { label: 'Try Process Genesis', href: '/try-process-genesis/' },
     // Case studies and insights are off the site for now; their routes
     // are parked under src/pages/_case-studies and _insights. Put these
     // two back at the same time as the folders.
@@ -247,6 +255,7 @@ export const nav = {
     { label: 'Ionic in South Africa', href: '/za/' },
     { label: 'Services', href: '/services/' },
     { label: 'Platforms', href: '/#platforms' },
+    { label: 'Try Process Genesis', href: '/try-process-genesis/' },
     { label: 'Engagement ledger', href: '/#work' },
     // { label: 'Case studies', href: '/case-studies/' },
     // { label: 'Insights', href: '/insights/' },
