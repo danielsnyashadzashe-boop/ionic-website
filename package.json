@@ -16,7 +16,8 @@
     "responsive": "node scripts/responsive.mjs",
     "hover": "node scripts/hover.mjs",
     "hovershots": "node scripts/hovershots.mjs",
-    "hoverdiff": "node scripts/hoverdiff.mjs"
+    "hoverdiff": "node scripts/hoverdiff.mjs",
+    "links": "node scripts/links.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.4",
